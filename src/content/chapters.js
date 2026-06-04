@@ -111,7 +111,7 @@ export const chapters = [
   {
     id: "wk7-dns",
     week: "WK7",
-    title: "DNS, Mail & RPC",
+    title: "DNS & Mail",
     filename: "WK7-DNS-Mail-RPC.md",
     group: "Application Layer",
     lab: "dns",
@@ -138,7 +138,7 @@ export const chapters = [
     group: "Application Layer",
     lab: "http",
     image: imagePath("WK8-HTTP-Request-Example.png"),
-    focus: ["request/response", "headers", "cookies", "cache", "HTTP/2"],
+    focus: ["request/response", "headers", "HTTPS", "HTTP/2", "HTTP/3"],
     md: wk8Http
   },
   {
@@ -193,7 +193,7 @@ export const chapters = [
     group: "Network Layer",
     lab: "dijkstra",
     image: imagePath("WK11-Dijkstra-Graph-Step.png"),
-    focus: ["forwarding vs routing", "Dijkstra", "link state", "distance vector"],
+    focus: ["forwarding vs routing", "Dijkstra", "flooding", "link state"],
     md: wk11Routing
   },
   {

@@ -2,7 +2,7 @@
 
 ## 课件概述
 
-本课件介绍了**Socket编程（Socket Programming）**的基础知识，Socket是应用层和传输层之间的接口。课件详细讲解了Socket的概念、客户端和服务器端Socket的创建流程、阻塞/非阻塞读取、TLS安全Socket，以及Socket编程在C语言中的实现。最后简要介绍了QUIC协议的Socket模型。
+本课件介绍了**Socket编程（Socket Programming）**的基础知识，Socket是应用层和传输层之间的接口。课件重点讲解Socket的概念、客户端和服务器端Socket的创建流程、服务器为什么有两个socket、阻塞/非阻塞读取，以及TLS在普通socket之上提供加密的概念。QUIC属于课件保留的old/draft非考试材料，只需作为背景简单了解。
 
 ---
 
@@ -184,7 +184,7 @@ s = getaddrinfo("localhost", "5000", &hints, &res);
 
 ---
 
-### 9. TLS/SSL Socket ⚠️ TLS in Rust 部分为非考试内容（Not examinable）
+### 9. TLS/SSL Socket（概念掌握；Rust实现非考试内容）
 
 **What（是什么）：** TLS（Transport Layer Security）在Socket之上提供加密通信。
 
@@ -211,27 +211,11 @@ IP (路由)
 
 ---
 
-### 10. QUIC协议
+### 10. QUIC协议 ⚠️ old/draft slides，非考试范围（Not assessable）
 
-**What（是什么）：** 2021年标准化的可靠传输协议，最初为HTTP设计，但可用于任何应用。
+**What（是什么）：** QUIC 是运行在 UDP 之上的可靠传输协议，HTTP/3 使用它来降低延迟并改善丢包时的并行性。
 
-**特点：**
-- 运行在UDP之上（因为防火墙通常只允许TCP/UDP）
-- 支持**多字节流**（multiple byte streams）而非单一字节流
-- TLS握手与TCP握手**合并**，减少RTT
-- 支持连接中途**切换IP地址**（如从Wi-Fi切换到4G）
-
-**三种Socket类型：**
-| 类型 | 描述 |
-|------|------|
-| Listener Socket | 绑定端口，接受传入连接 |
-| Connection Socket | 由connect/accept创建，管理连接的流 |
-| Stream Socket | 实际发送/接收数据的Socket |
-
-**优势：**
-- 丢包时只有一个流需要等待重传（而非整个连接）
-- 更少的空闲RTT
-- 支持网络切换
+**复习处理：** 这部分在课件中位于"The following old/draft slides are not assessable"之后。期末不用背QUIC socket类型、API细节或优缺点列表；知道"QUIC over UDP，HTTP/3基于QUIC"即可。
 
 ---
 
@@ -247,7 +231,7 @@ IP (路由)
 | 阻塞读取 | Blocking Read | 没有数据时阻塞等待 |
 | 非阻塞读取 | Non-blocking Read | 没有数据时立即返回 |
 | TLS | Transport Layer Security | 传输层安全协议 |
-| QUIC | QUIC | 基于UDP的可靠传输协议 |
+| QUIC | QUIC | 基于UDP的可靠传输协议；old/draft非考试材料，背景了解 |
 
 ---
 
@@ -274,12 +258,9 @@ IP (路由)
 | 编程复杂度 | 简单 | 需要事件循环（select/poll） |
 | 适用场景 | 简单的请求-响应 | 需要同时处理多个连接 |
 
-### Q4: QUIC相比TCP有什么优势？
+### Q4: QUIC需要作为考试重点吗？
 
-1. **多流支持：** 一个连接可以有多个独立的字节流，丢包只影响一个流
-2. **更快的握手：** TLS握手与传输握手合并，减少RTT
-3. **连接迁移：** 支持在连接中途切换IP地址
-4. **更好的防火墙穿透：** 运行在UDP之上
+不需要。QUIC在本课件中属于old/draft非考试材料，只需知道它运行在UDP之上、HTTP/3使用它；不需要背QUIC socket API或详细优势。
 
 ---
 
@@ -303,7 +284,7 @@ Socket API (本课件)
 **与其他课件的联系：**
 - **WK6（OSI）：** Socket是应用层和传输层之间的接口
 - **WK7-DNS-Mail：** DNS和Email都使用Socket进行通信
-- **WK8-HTTP：** HTTP通过Socket发送请求和响应
+- **WK8-HTTP：** HTTP通过Socket发送请求和响应；HTTP/3与QUIC的关系只作背景理解
 - **WK9-TCP：** TCP提供Socket底层的可靠传输
 - **WK5（Secure Communication）：** TLS在Socket之上提供安全
 
@@ -315,7 +296,7 @@ Socket API (本课件)
 2. **SSH客户端：** 通过Socket连接远程服务器，建立加密通道
 3. **邮件客户端：** 通过SMTP Socket发送邮件，IMAP Socket接收邮件
 4. **在线游戏：** 使用UDP Socket进行实时数据传输
-5. **视频流：** WebSocket或QUIC Socket进行实时流媒体传输
+5. **视频流：** 可使用UDP或应用层流媒体机制；QUIC细节不是本课件考试重点
 
 ---
 
@@ -343,8 +324,8 @@ Socket API (本课件)
 2. **客户端/服务器模型：** 客户端主动连接，服务器被动等待
 3. **Socket原语：** socket、bind、listen、accept、connect、read、write、close
 4. **阻塞/非阻塞：** 两种读取模式，各有适用场景
-5. **安全Socket：** TLS在Socket之上提供加密
-6. **QUIC：** 新一代传输协议，基于UDP，支持多流和连接迁移
+5. **安全Socket：** TLS在Socket之上提供加密；Rust实现不考
+6. **QUIC：** old/draft非考试材料，只需背景了解其与UDP/HTTP3的关系
 
 ---
 
@@ -354,4 +335,4 @@ Socket API (本课件)
 2. **区分listening和connection socket：** 理解服务器为什么需要两个Socket。
 3. **掌握5元组：** 理解Socket如何被唯一标识。
 4. **理解阻塞/非阻塞：** 能够描述两种模式的区别和适用场景。
-5. **了解TLS和QUIC：** 理解它们在Socket模型中的位置和作用。
+5. **掌握TLS概念，淡化QUIC：** TLS在socket之上提供加密；QUIC属于非考试背景，不背细节。

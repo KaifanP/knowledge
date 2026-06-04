@@ -1,7 +1,7 @@
 # COMP30023 WK8 - Application Layer: HTTP
 
 ## 课件概述
-本课件介绍了**超文本传输协议（HTTP）**——World Wide Web 的核心协议。内容涵盖 Web 的组成部分（client/server/URL）、HTTP 协议的工作流程、请求与响应的格式、persistent vs non-persistent 连接、HTTP 方法和状态码、HTTPS、HTTP/2 和 HTTP/3 的改进，以及 cookies 和 web cache 等重要概念。
+本课件介绍了**超文本传输协议（HTTP）**——World Wide Web 的核心协议。考试重点是 Web 的组成部分（client/server/URL）、HTTP 协议的工作流程、请求与响应格式、persistent vs non-persistent 连接、HTTP 方法和状态码、常见HTTP headers、HTTPS、HTTP/2 和 HTTP/3。Cookies、web cache/proxy 和多线程web server位于课件后半的背景/非考材料中，只需简单了解。
 
 ---
 
@@ -236,38 +236,26 @@ Content-Type: text/html
 
 ---
 
-### 10. Cookies
+### 10. Cookies ⚠️ 背景补充，非核心考试范围
 
 **What**: Cookie 是服务器发送给浏览器的一小段数据（<4KB），浏览器会在后续请求中自动回传。
 
-**Why**: HTTP 本身是无状态的（stateless），但很多 Web 应用需要跟踪用户状态（如登录状态、购物车）。Cookie 是保持状态的主要机制。
+**复习处理：** Cookies在课件"And finally/Background"附近出现，后续详细cookie例子在not assessable部分。期末重点仍是HTTP请求/响应、headers、状态码、连接管理和HTTP/2/3；Cookie只需知道它用于在HTTP消息中携带状态。
 
 **How**:
 1. 服务器在响应中通过 `Set-Cookie` 头部设置 cookie
 2. 浏览器保存 cookie（包括 domain、path、content、expiry、security 五个字段）
 3. 后续向同一 domain 发送请求时，浏览器自动在 `Cookie` 头部中携带 cookie
 
-**Cookie 的争议**:
-- 可用于用户跟踪（tracking），引发隐私问题
-- 第三方 cookie 被用于跨站跟踪
-
-**超越 Cookie 的追踪技术：** 追踪公司已经超越了简单的cookie，采用更隐蔽的方法：
-- **浏览器指纹识别（Browser Fingerprinting）：** 利用浏览器的独特配置组合（字体、插件、屏幕分辨率、时区等）来唯一标识用户。EFF的Cover Your Tracks项目研究发现大多数浏览器的指纹是唯一的（参见Peter Eckersley论文"How Unique Is Your Browser?"）
-- **插件追踪：** 通过浏览器插件或扩展来识别用户
+**Cookie 的争议：** 可用于用户跟踪（tracking），引发隐私问题。课件只用它作为"tracking with cookies is well known"的背景提醒，不需要背浏览器指纹等扩展材料。
 
 ---
 
-### 11. Web Cache（Web 缓存/代理）
+### 11. Web Cache（Web 缓存/代理）⚠️ not assessable，简单了解
 
 **What**: Web cache（也叫 proxy cache）是位于客户端和源服务器之间的中间服务器，用于缓存经常访问的内容。
 
-**Why**: 减少响应时间，减轻源服务器和网络的负载。
-
-**How**:
-- 浏览器将请求发送到 proxy 而非源服务器
-- 如果 proxy 有缓存的副本（cache hit），直接返回
-- 如果没有（cache miss），proxy 向源服务器请求，缓存一份后返回给客户端
-- Proxy 既是 client（对源服务器）又是 server（对浏览器）
+**复习处理：** Web cache/proxy在课件"The remainder of these slides are not assessable"之后。只需知道目标是减少响应时间、降低源服务器负载；不需要背proxy工作细节或多线程web server图。
 
 ![多线程Web服务器架构：Front end + Processing modules (threads) + Cache + Disk](./images/WK8-Multi-threaded-Server.png)
 
@@ -301,8 +289,8 @@ Content-Type: text/html
 | Persistent Connection | 持久连接，TCP 连接在多个请求间复用 |
 | Pipelining | 管线化，无需等待响应即可发送后续请求 |
 | MIME Type | 内容类型标识（如 text/html, image/png） |
-| Cookie | 服务器存储在客户端的状态数据 |
-| Web Cache | Web 缓存/代理服务器 |
+| Cookie | 服务器存储在客户端的状态数据；背景了解 |
+| Web Cache | Web 缓存/代理服务器；not assessable背景 |
 | HTTPS | HTTP over TLS，加密的 HTTP |
 | TLS | Transport Layer Security，传输层安全协议 |
 | QUIC | 基于 UDP 的传输协议，HTTP/3 的基础 |
@@ -319,8 +307,8 @@ Content-Type: text/html
 ### Q2: HTTP/2 解决了队头阻塞问题，为什么还需要 HTTP/3？
 **A**: HTTP/2 在同一 TCP 连接上多路复用，但 TCP 层面仍然有队头阻塞——一个 TCP 段丢失会阻塞该连接上的所有流。HTTP/3 使用 QUIC（基于 UDP），每个流独立处理丢包，真正消除了队头阻塞。
 
-### Q3: Cookie 和 Session 有什么区别？
-**A**: Cookie 存储在客户端（浏览器），Session 存储在服务器端。Session 通常通过 cookie 中的 session ID 来关联。Cookie 是实现 session 的一种方式。
+### Q3: Cookies 和 Web Cache 需要背吗？
+**A**: 不作为核心考试重点。Cookies只需知道用于在HTTP消息中携带状态；Web cache/proxy位于not assessable背景部分，知道其目标是减少响应时间即可。
 
 ---
 
@@ -332,8 +320,8 @@ HTTP 协议
 ├── 运行在 TCP 之上 → WK8-Transport-Services (TCP 端口)
 ├── HTTPS 使用 TLS → WK5-Secure-Communication
 ├── HTTP/3 使用 QUIC → 基于 UDP → WK7-Sockets
-├── Cookie 维持状态 → 应用层设计
-└── Web Cache → 性能优化
+├── Cookie 维持状态 → 背景了解
+└── Web Cache → not assessable背景
 ```
 
 ---
@@ -342,8 +330,8 @@ HTTP 协议
 
 1. **浏览网页**: 输入 URL → DNS 解析 → TCP 连接 → HTTP 请求 → 服务器返回 HTML → 浏览器请求图片/CSS/JS → 渲染页面
 2. **API 调用**: RESTful API 使用 GET/POST/PUT/DELETE 方法操作资源
-3. **CDN**: Content Delivery Network 利用 Web Cache 原理，将内容缓存到全球各地的节点
-4. **登录认证**: 通过 Cookie 或 JWT token 维持登录状态
+3. **CDN**: Content Delivery Network 利用缓存思想，将内容缓存到全球各地的节点（背景了解）
+4. **登录认证**: 通过 Cookie 或 token 维持登录状态（背景了解）
 
 ---
 
@@ -353,7 +341,7 @@ HTTP 协议
 2. **忽略 Host 头部**: HTTP/1.1 要求 Host 头部是必须的，因为同一 IP 可能托管多个网站（虚拟主机）。
 3. **混淆 HTTP 版本特性**: HTTP/1.0 是 non-persistent，HTTP/1.1 默认 persistent，HTTP/2 是 multiplexing over TCP，HTTP/3 是 over QUIC/UDP。
 4. **误解 HTTPS**: HTTPS 不仅仅是"加密的 HTTP"，URL 路径也被加密（不像有些人认为的只有 body 被加密）。
-5. **Cookie 安全问题**: 不设置 HttpOnly 标志可能导致 XSS 攻击窃取 cookie；不设置 Secure 标志可能导致 cookie 通过 HTTP 明文传输。
+5. **Cookie细节过度复习**: Cookie和Web Cache不是本课件核心考试范围，不要把浏览器指纹、具体cookie字段或proxy实现当作重点。
 
 ---
 
@@ -361,9 +349,8 @@ HTTP 协议
 
 HTTP 是 Web 的核心协议，从 HTTP/1.0 的简单请求-响应模型演进到 HTTP/3 基于 QUIC 的高效传输。关键概念包括：
 - **连接管理**: non-persistent → persistent → pipelining → multiplexing
-- **状态管理**: 通过 Cookie 维持无状态协议的状态
 - **安全**: 通过 TLS/HTTPS 保护数据
-- **性能**: 通过 Web Cache、Header 压缩、Server Push 优化
+- **性能**: 通过 Header 压缩、Server Push、HTTP/3 over QUIC 降低延迟；Web Cache是背景材料
 
 ---
 
@@ -372,6 +359,6 @@ HTTP 是 Web 的核心协议，从 HTTP/1.0 的简单请求-响应模型演进�
 1. 掌握 HTTP 请求和响应的完整格式（包括请求行、状态行、头部）
 2. 理解 persistent vs non-persistent 的性能差异（RTT 计算）
 3. 记住常见的状态码分类（1xx-5xx）和几个重要的具体状态码
-4. 理解 Cookie 的工作原理和安全问题
-5. 对比 HTTP/1.1、HTTP/2、HTTP/3 的主要区别
-6. 了解 HTTPS 如何保护通信（结合 WK5 的 TLS 知识）
+4. 对比 HTTP/1.1、HTTP/2、HTTP/3 的主要区别
+5. 了解 HTTPS 如何保护通信（结合 WK5 的 TLS 知识）
+6. Cookies/Web Cache只作背景了解，不要作为主要背诵点

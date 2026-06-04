@@ -96,7 +96,7 @@
 
 ---
 
-### 5. UPnP (Universal Plug and Play)
+### 5. UPnP (Universal Plug and Play)（And finally：功能概念）
 
 #### What（是什么）
 - 试图克服 NAT 的弱点
@@ -109,6 +109,8 @@
 
 #### 安全问题
 - UPnP 的**不良实现**允许攻击者从外部 IP 地址修改转换表
+
+**复习处理：** 记住UPnP的功能：允许内部主机在NAT上创建端口映射，从而运行服务器；以及风险：坏实现可能让外部攻击者改NAT表。不需要背Internet Gateway Device Protocol细节。
 
 ---
 
@@ -136,19 +138,20 @@
 
 #### 调试工具
 
-| 工具 | 用途 |
-|------|------|
-| `ifconfig`/`ipconfig` | 查看网络接口配置 |
-| `route` | 查看路由表 |
-| `arp` | 查看 ARP 缓存 |
-| `ping` | 测试连通性（ICMP Echo） |
-| `traceroute`/`tracert` | 追踪路径（ICMP Time Exceeded） |
-| `dig`/`host`/`nslookup` | DNS 查询 |
-| `cURL`/`wget` | HTTP 请求 |
-| Speedtest | 测试带宽 |
-| Downdetector | 检查服务是否宕机 |
-| Browser Dev Tools | 网络请求分析 |
-| Task Manager | 检查系统资源 |
+| 功能 | 工具例子 |
+|------|----------|
+| 查看本机网络配置 | `ifconfig`/`ipconfig` |
+| 查看路由表 | `route` |
+| 查看 ARP 缓存 | `arp` |
+| 测试连通性 | `ping` |
+| 追踪路径 | `traceroute`/`tracert` |
+| 查询 DNS | `dig`/`host`/`nslookup` |
+| 直接发 HTTP 请求 | `cURL`/`wget` |
+| 测试带宽或外部服务状态 | Speedtest、Downdetector |
+| 分析浏览器请求 | Browser Dev Tools 的 Network tab |
+| 检查本机资源 | Task Manager |
+
+**考试提示：** 课件明确说：考试记住这些"功能"可用，不需要背所有命令名或网站名。
 
 #### 常见问题
 - **IP 黑名单**: 目标服务器封锁了你的 IP
@@ -297,7 +300,7 @@ NAT 是互联网的重要组成部分，理解它有助于网络编程和故障�
 1. **理解 NAT 的工作原理**: 私有地址转换、端口映射、checksum 重算
 2. **掌握 NAT 的批评**: 端到端连接性、层级违规、连接状态
 3. **理解 NAT 的安全优势**: 屏蔽入站未请求 packets
-4. **掌握调试工具**: ping、traceroute、dig、cURL 等
+4. **掌握调试思路**: 能按症状、空间位置和协议栈位置缩小问题；工具记功能，不背所有命令名
 5. **理解 Carrier Grade NAT**: ISP 如何进一步节省地址
 
 ---

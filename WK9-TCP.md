@@ -96,7 +96,7 @@ Web browser (client)                  Web server
 | **Acknowledgement Number** | 32 bits | 如果 ACK=1: 发送方期望接收的下一个序列号 |
 | **Data offset** | 4 bits | TCP Header 大小（20-60 bytes = 5-15 × 32-bit words） |
 | **Flags** | 6 bits | SYN, ACK, RST, FIN, URG, PSH 等单 bit 标志 |
-| **Window size** | 16 bits | 接收窗口大小——发送方愿意接收的数据量 |
+| **Window size** | 16 bits | 本segment发送者通告的接收窗口大小——表示自己还能接收多少数据 |
 
 #### 关键问题
 - **Source port** 存的是本地还是远程端口号？→ 本地

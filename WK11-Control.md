@@ -316,8 +316,8 @@ ARP **没有任何认证机制**，是安全噩梦。
 - MAC 地址: 硬件标识，48/64 bits，本地网络使用
 - IP 地址: 逻辑标识，32/128 bits，路由使用
 
-### ❌ 错误 5: 认为 Traceroute 使用 UDP
-Traceroute 使用 **ICMP**（在某些实现中使用 UDP）。
+### ❌ 错误 5: 只背某一种 Traceroute 实现
+本课件重点是 **TTL逐步增加，路由器返回ICMP Time Exceeded**。不同系统的探测包可能是ICMP、UDP或TCP，但路径发现依赖的是ICMP错误消息。
 
 ---
 

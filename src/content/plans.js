@@ -42,7 +42,7 @@ export const weekPlans = {
   "wk7-dns": {
     goal: "把 DNS 理解为分层、可缓存的分布式数据库。",
     lab: "DNS lookup path：local DNS、root、TLD、authoritative 逐步解析。",
-    exam: ["recursive vs iterative", "A/MX/CNAME/NS record", "SMTP vs IMAP/POP3"]
+    exam: ["recursive vs iterative", "A/MX/CNAME/NS record", "SMTP vs IMAP"]
   },
   "wk8-udp": {
     goal: "理解 transport layer 的 process-to-process 角色，以及 UDP 简单但有用的原因。",
@@ -50,9 +50,9 @@ export const weekPlans = {
     exam: ["transport vs network", "UDP socket tuple", "UDP 为什么适合 DNS/实时应用"]
   },
   "wk8-http": {
-    goal: "把 HTTP 看成 request/response message protocol，连接、header、cookie、cache 都围绕它展开。",
+    goal: "把 HTTP 看成 request/response message protocol，重点抓连接、message format、headers、HTTPS、HTTP/2/3。",
     lab: "HTTP request builder：选择 method、path、headers，生成原始请求报文。",
-    exam: ["persistent connection", "cookie vs session", "HTTP/2 与 HTTP/3 动机"]
+    exam: ["persistent connection", "request/response format", "HTTP/2 与 HTTP/3 动机"]
   },
   "wk9-tcp": {
     goal: "掌握 reliable byte stream、sequence/ack、三次握手、四次挥手和 window。",

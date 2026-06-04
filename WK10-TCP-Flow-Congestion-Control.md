@@ -230,7 +230,7 @@ Rate ≈ W/T = √(2/p)/T
 
 ---
 
-### 11. 现代拥塞控制
+### 11. 现代拥塞控制 ⚠️ 背景了解，不背细节
 
 #### 问题
 - 对于高带宽、长距离的网络（如跨洲数据中心），TCP Reno 需要**不现实的小丢包率**
@@ -240,6 +240,8 @@ Rate ≈ W/T = √(2/p)/T
 - **DCTCP**: 数据中心内部使用
 - **Google's BBR**: 数据中心之间使用
 - IETF 不愿改变标准，公司自己实现
+
+**复习处理：** 课件把DCTCP/BBR放在"And finally"里，用来说明为什么Reno不适合所有现代网络。期末重点仍是Sliding Window、CWND、Slow Start、Congestion Avoidance、Tahoe/Reno；不需要背DCTCP/BBR算法细节。
 
 ---
 
@@ -285,7 +287,7 @@ Rate ≈ W/T = √(2/p)/T
 - Reno: 3 DupACKs 触发 Fast Recovery，直接进入 Congestion Avoidance
 
 ### Q5: 什么是 RTT 不公平性？
-对于相同的丢包率，RTT 更长的流获得更少的吞吐量（Rate ≈ √(2/p)/T）。这意味着长距离连接在与短距离连接竞争时处于劣势。
+这是宏观模型给出的背景洞察，属于not examinable部分。知道"长RTT流可能吃亏"即可，不需要背公式或推导。
 
 ---
 
@@ -305,6 +307,7 @@ WK11-Routing (路由算法)
 - **CWND** 与 **Receive Window** 共同决定发送速率
 - **Fast Retransmit** 解决了拥塞崩溃问题
 - **TCP Tahoe/Reno** 是拥塞控制的演进
+- **宏观模型、DCTCP/BBR** 是背景材料，不作为主要复习对象
 
 ---
 
@@ -324,12 +327,13 @@ WK11-Routing (路由算法)
 ### 案例 2: 视频流的拥塞控制
 - 实时视频流使用 TCP 可能导致延迟
 - 更好的选择：UDP + 应用层拥塞控制
-- WebRTC 使用 GCC (Google Congestion Control)
+- WebRTC 使用 GCC (Google Congestion Control)，属于背景理解
 
 ### 案例 3: 数据中心网络
 - 传统 TCP Reno 在数据中心环境中表现不佳
 - DCTCP (Data Center TCP) 使用 ECN 标记来更早检测拥塞
 - Google's BBR 基于带宽和延迟建模，而不是丢包
+- 这些现代算法不用背细节
 
 ---
 
@@ -360,7 +364,7 @@ ssthresh 只在**丢包时**更新：ssthresh = CWND / 2
 1. **Sliding Window**: 流量控制、可靠传输、有序传输
 2. **Congestion Control**: Slow Start → Congestion Avoidance → Fast Retransmit/Fast Recovery
 
-TCP 的拥塞控制从最初的简单机制演进到 Tahoe（1988）和 Reno，解决了拥塞崩溃问题。现代网络（数据中心、长距离传输）需要新的拥塞控制算法（DCTCP, BBR）。
+TCP 的拥塞控制从最初的简单机制演进到 Tahoe（1988）和 Reno，解决了拥塞崩溃问题。现代网络（数据中心、长距离传输）需要新的拥塞控制算法（DCTCP, BBR），但这些只需作为背景了解。
 
 ---
 
@@ -370,7 +374,7 @@ TCP 的拥塞控制从最初的简单机制演进到 Tahoe（1988）和 Reno，�
 2. **理解 Slow Start 和 Congestion Avoidance 的区别**：指数 vs 线性增长
 3. **掌握 Fast Retransmit 的触发条件**：3 个重复 ACK
 4. **对比 TCP Tahoe 和 Reno**：Fast Recovery 的作用
-5. **理解宏观模型**：W ≈ √(2/p) 的含义和推导
+5. **不要把宏观模型当重点**：W ≈ √(2/p) 和速率公式明确属于not examinable背景，最多理解结论。
 
 ---
 

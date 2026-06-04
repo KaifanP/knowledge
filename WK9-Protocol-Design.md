@@ -209,7 +209,7 @@ RPC (远程过程调用)
 ```
 
 - **TCP SYN/FIN/RST** 与 **WK8-Transport-Services** 中的连接建立/关闭直接相关
-- **RPC Marshalling** 与 **WK7-DNS-Mail-RPC** 中的 RPC 概念相连
+- **RPC Marshalling** 是本章协议设计练习的核心例子
 - **协议设计方法论**适用于所有网络协议的开发
 
 ---

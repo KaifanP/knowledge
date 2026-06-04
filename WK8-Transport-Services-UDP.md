@@ -267,8 +267,8 @@ App3 (port 80)   ──┘                └── App3 (port 80)
 ├── 端口号用于 MUX/DEMUX → WK7-Sockets (5-tuple)
 ├── UDP 是 TCP 的基础对比 → WK9-TCP (可靠传输)
 ├── UDP 用于 DNS → WK7-DNS
-├── UDP 用于 QUIC → WK7-Sockets (QUIC over UDP)
-├── UDP 用于实时流媒体 → RTP (non-assessable)
+├── UDP 用于 QUIC → 背景了解（WK7-Sockets old/draft非考）
+├── UDP 用于实时流媒体 → RTP (not assessable背景)
 └── Checksum 和 Pseudo-header → 网络安全基础
 ```
 
@@ -277,7 +277,7 @@ App3 (port 80)   ──┘                └── App3 (port 80)
 ## 实际应用案例
 
 1. **DNS 查询**: 使用 UDP 端口 53。客户端发送查询请求，服务器返回响应。如果丢失，客户端超时后重试。
-2. **VoIP（网络电话）**: 使用 UDP + RTP。语音数据实时传输，丢包时用静音或前一帧的近似值填充。
+2. **VoIP（网络电话）**: 常使用UDP承载实时数据；RTP细节在课件not assessable部分，背景了解即可。
 3. **在线游戏**: 使用 UDP 传输玩家操作。游戏状态更新频率高，丢失一个操作不值得等待重传。
 4. **Memcached DDoS**: 展示了 UDP 的安全风险——无连接特性可被滥用。
 

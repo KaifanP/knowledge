@@ -54,7 +54,7 @@ export const quizzes = {
   "wk8-http": [
     make("HTTP 的基本交互模型是？", ["request/response", "peer-to-peer flooding", "CPU interrupt only"], 0, "客户端发请求，服务器回响应。"),
     make("Persistent connection 的主要收益是？", ["复用 TCP 连接，减少重复握手开销", "让 UDP 变可靠", "完全取消 header"], 0, "多个对象可以使用同一 TCP connection。"),
-    make("Cookie 通常用于什么？", ["在无状态 HTTP 上携带会话相关标识", "替代 IP 地址", "加密 TCP header"], 0, "HTTP 本身无状态，cookie 帮助服务端关联请求。")
+    make("HTTPS 和 HTTP 的关系更准确的是？", ["HTTP over TLS，通常使用 443 端口", "完全不使用 HTTP message format", "HTTP over UDP 必然就是 HTTPS"], 0, "课件重点是 HTTPS 是普通 HTTP 运行在 TLS 服务之上。")
   ],
   "wk9-tcp": [
     make("TCP 为什么叫 byte stream？", ["应用写入的消息边界不被 TCP 保留", "TCP 只能发送一个 byte", "TCP 不使用 sequence number"], 0, "接收方看到的是有序字节流。"),

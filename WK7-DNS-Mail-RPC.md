@@ -1,8 +1,8 @@
-# WK7 - DNS, Email & Application Layer Services
+# WK7 - DNS & Email Application Layer Services
 
 ## 课件概述
 
-本课件介绍了应用层的两个核心服务：**DNS（域名系统）**和**Email（电子邮件）**。DNS负责将人类可读的域名映射为计算机使用的IP地址，是互联网基础设施的关键组成部分。电子邮件部分介绍了SMTP、MIME、POP3和IMAP等协议，以及邮件系统的整体架构。
+本课件介绍了应用层的两个核心服务：**DNS（域名系统）**和**Email（电子邮件）**。DNS负责将人类可读的域名映射为计算机使用的IP地址，是互联网基础设施的关键组成部分。电子邮件部分重点介绍邮件系统架构、SMTP、MIME、Message Transfer & Access，以及IMAP。课件第40页之后明确标为non-examinable，DNS记录插入、HOSTS文件、DNS安全、POP3详细命令和Streaming只作背景。
 
 ---
 
@@ -136,14 +136,14 @@
 - 减少DNS查询延迟
 - 减少根服务器和TLD服务器的负载
 
-**HOSTS文件：** 一种简单的域名映射方式，硬编码在本地文件中：
+**HOSTS文件（非考试背景）：** 课件中HOSTS File位于"The following is non-examinable material"之后，只需知道它是本地硬编码域名映射：
 - Unix: `/etc/hosts`
 - Windows: `C:\Windows\System32\drivers\etc\hosts`
 - 可用于广告屏蔽（将广告域名映射到 `0.0.0.0`）
 
 ---
 
-### 7. DNS安全
+### 7. DNS安全 ⚠️ 非考试背景（non-examinable）
 
 **问题：** 原始DNS设计没有考虑安全性
 - **DNS Spoofing（DNS欺骗）：** 攻击者伪造DNS响应
@@ -152,6 +152,8 @@
 **解决方案：**
 - **DNSSEC（DNS Security Extensions）：** 为DNS响应提供数字签名验证
 - **Root Signing：** 根服务器的签名
+
+**复习处理：** DNS Security在课件第40页之后，属于removed/non-examinable material。期末只需把它当作安全背景，不要背DNSSEC细节。
 
 ---
 
@@ -230,10 +232,10 @@
 
 ![Message Transfer & Access：SMTP传输到服务器，POP3/IMAP/HTTP访问邮箱](./images/WK7-Message-Transfer-Access.png)
 
-#### (a) POP3（Post Office Protocol）
-- **三个阶段：** Authorization（授权）→ Transactions（事务）→ Update（更新）
-- **命令：** USER/PASS（登录）、LIST（列出邮件）、RETR（检索）、DELE（删除）、QUIT
-- **问题：** "下载并删除"模式不允许重新阅读邮件
+#### (a) POP3（Post Office Protocol，简单了解）
+- 课件的Message Transfer & Access页只要求知道POP3用于authorization和download。
+- POP3的三个阶段、USER/PASS/LIST/RETR/DELE/QUIT命令位于non-examinable部分，不需要背。
+- 高层问题：传统"download and delete"模式不方便重新阅读邮件。
 
 #### (b) IMAP（Internet Message Access Protocol）
 - 允许用户查询MTA
@@ -266,7 +268,7 @@
 | 用户代理 | User Agent (UA) | 用户读写邮件的程序 |
 | 消息传输代理 | MTA | 传输邮件的服务器程序 |
 | 简单邮件传输协议 | SMTP | 邮件传输协议，端口25 |
-| 邮局协议 | POP3 | 邮件下载协议 |
+| 邮局协议 | POP3 | 邮件下载协议；详细命令非考试 |
 | 互联网邮件访问协议 | IMAP | 邮件服务器访问协议 |
 | 多用途互联网邮件扩展 | MIME | 扩展邮件格式支持多媒体 |
 
@@ -329,7 +331,7 @@ MIME通过添加Content-Type等头部，支持多种内容类型。
 - **WK6（OSI）：** DNS和Email都是应用层协议
 - **WK7-Sockets：** DNS和Email都使用Socket进行通信
 - **WK8-HTTP：** HTTP也用于访问邮件（Gmail等Web邮件）
-- **WK5（Secure Communication）：** DNS安全（DNSSEC）、邮件加密
+- **WK5（Secure Communication）：** DNS安全和邮件加密只作背景联系
 
 ---
 
@@ -338,7 +340,7 @@ MIME通过添加Content-Type等头部，支持多种内容类型。
 1. **访问网站时的DNS查询：** 输入 `www.google.com` → 浏览器向本地DNS查询 → 递归/迭代解析 → 获得IP地址 → 建立TCP连接
 2. **发送邮件的过程：** 撰写 → UA通过SMTP发送到邮件服务器 → SMTP中继 → 接收方邮件服务器
 3. **Gmail：** 使用Web界面（HTTP）而非IMAP/POP3，MIME支持附件和HTML
-4. **广告屏蔽：** 修改HOSTS文件，将广告域名映射到 `0.0.0.0`
+4. **广告屏蔽：** 修改HOSTS文件属于non-examinable背景示例，不作为重点
 
 ---
 
@@ -356,9 +358,7 @@ MIME通过添加Content-Type等头部，支持多种内容类型。
 
 5. **MIME不是独立协议：** MIME是邮件格式的扩展，不是传输协议。SMTP仍然用于传输MIME格式的邮件。
 
-6. **POP3 vs IMAP混淆：**
-   - POP3：下载邮件到本地，通常从服务器删除
-   - IMAP：邮件保留在服务器，支持多设备同步
+6. **POP3细节过度复习：** 期末只需知道POP3是邮件下载/访问方式之一；POP3状态机和命令不考。IMAP的"服务器端保留状态、可操作在线邮箱"更接近本课件重点。
 
 ---
 
@@ -370,12 +370,12 @@ MIME通过添加Content-Type等头部，支持多种内容类型。
    - 分布式、层次化的数据库
    - 多级服务器：Root → TLD → Authoritative
    - 缓存机制提高效率
-   - 安全问题和DNSSEC解决方案
+   - DNS安全/DNSSEC在本课件中为non-examinable背景
 
 2. **Email：** 互联网最古老的应用之一
    - 发送：SMTP（push-based）
    - 格式：RFC 2822 + MIME（支持多媒体）
-   - 接收：POP3（下载）、IMAP（服务器端管理）、HTTP（Web邮件）
+   - 接收：POP3（概念了解）、IMAP（服务器端管理）、HTTP（Web邮件）
 
 ---
 
@@ -383,6 +383,6 @@ MIME通过添加Content-Type等头部，支持多种内容类型。
 
 1. **理解DNS查询过程：** 能够描述从输入域名到获得IP地址的完整DNS查询流程，区分递归和迭代查询。
 2. **掌握RR类型：** 理解A、AAAA、NS、CNAME、MX记录的含义和用途。
-3. **对比POP3和IMAP：** 理解两者的区别，特别是在邮件存储和状态管理方面。
+3. **重点掌握IMAP，POP3只高层了解：** IMAP在服务器端保留状态并支持在线邮箱操作；POP3命令和状态机不考。
 4. **理解邮件传输流程：** 从发件人到收件人的完整邮件传输路径。
 5. **了解MIME的作用：** 为什么需要MIME，它如何扩展邮件格式。

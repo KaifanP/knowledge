@@ -2,7 +2,7 @@
 
 ## 课件概述
 
-本课件介绍网络层的路由算法，包括静态路由、自适应路由、Flooding（洪泛）、Dijkstra 最短路径算法，以及 Link State Routing（链路状态路由，如 OSPF）。路由算法决定了 packets 如何从源端到达目的端，是互联网高效运行的核心。
+本课件介绍网络层的路由算法，包括静态路由、自适应路由、Flooding（洪泛）、Bellman最优性原理、Dijkstra 最短路径算法，以及 Link State Routing（链路状态路由，如 OSPF）。本课件考试重点是会区分forwarding/routing、理解flooding的性质、能手动执行Dijkstra、掌握Link State Routing的五步。Distance Vector和BGP只作背景对比。
 
 ---
 
@@ -204,15 +204,14 @@
 
 ---
 
-### 9. Distance Vector Routing vs Link State Routing
+### 9. Distance Vector Routing vs Link State Routing ⚠️ 背景对比，非本课件重点
 
-| 特性 | Distance Vector | Link State |
-|------|-----------------|------------|
-| 信息来源 | 邻居 | 所有 router |
-| 算法 | Bellman-Ford | Dijkstra |
-| 收敛速度 | 慢 | 快 |
-| 消息大小 | 小 | 大 |
-| 计算 | 分布式 | 本地 |
+课件只明确提到：Link State Routing 取代了收敛慢的 Distance Vector Routing（Bellman-Ford），最常见的Link State Routing是OSPF。
+
+**复习处理：** 不需要背完整DV vs LS表格，也不需要掌握Bellman-Ford算法。重点放在：
+- Link State Routing的五步：发现邻居、设置cost、构造link state packet、可靠洪泛、运行Dijkstra
+- Link State packet包含ID、sequence number、age、邻居及cost
+- sequence number和age如何避免旧信息造成问题
 
 ---
 
@@ -226,7 +225,7 @@
 | Flooding | 洪泛，将 packet 发送给所有邻居 |
 | Dijkstra's Algorithm | 最短路径算法 |
 | Link State Routing | 链路状态路由，OSPF 的基础 |
-| Distance Vector Routing | 距离向量路由，Bellman-Ford |
+| Distance Vector Routing | 距离向量路由，Bellman-Ford；本课件背景对比 |
 | OSPF | Open Shortest Path First，链路状态路由协议 |
 | Sink Tree | 汇树，最优路由形成的树 |
 | HELLO Packet | 用于发现邻居的 packet |
@@ -248,16 +247,13 @@
 因为会产生**大量重复 packets**，极度低效。但它极其 robust，如果有路径就能找到。
 
 ### Q3: Dijkstra 算法的时间复杂度是多少？
-- 使用简单实现：O(V²)
-- 使用优先队列：O((V+E) log V)
-- 其中 V 是节点数，E 是边数
+课件没有要求背复杂度。期末更可能考手动执行Dijkstra：维护unseen/open/closed节点，反复选择当前距离最小的open节点并更新邻居。
 
 ### Q4: 为什么需要 Age 字段？
 因为 router 崩溃重启后，sequence number 可能从 0 开始。Age 字段每秒减 1，到 0 时丢弃信息，避免使用过时的路由信息。
 
 ### Q5: OSPF 和 BGP 有什么区别？
-- **OSPF**: 域内路由（within a domain），使用 Link State Routing
-- **BGP**: 域间路由（between domains），使用 Path Vector Routing
+OSPF在本课件中作为Link State Routing的常见实现出现；BGP不属于本课件重点。只需知道OSPF是基于Link State的域内路由协议，BGP细节不用背。
 
 ---
 
@@ -268,14 +264,14 @@ WK10-Addressing-Switching (IP 地址)
     ↓ 路由基础
 WK11-Routing (路由算法)
     ↓ 实现
-OSPF, BGP (实际路由协议)
+OSPF (Link State Routing的常见实现)
     ↓ 地址转换
 WK12-NAT (网络地址转换)
 ```
 
 - **IP 地址**是路由的基础（前缀匹配）
 - **Dijkstra 算法**是 OSPF 的核心
-- **Link State Routing** 解决了 Distance Vector 的收敛问题
+- **Link State Routing** 取代了收敛慢的 Distance Vector，但DV算法细节不是本课件重点
 - **Flooding** 是 Link State Routing 的一部分（可靠洪泛）
 
 ---
@@ -297,6 +293,7 @@ WK12-NAT (网络地址转换)
 - 使用 ECMP (Equal-Cost Multi-Path) 路由
 - 多条等成本路径，负载均衡
 - 需要快速收敛，避免服务中断
+- 这是现实背景，不是课件核心考点
 
 ---
 
@@ -316,8 +313,7 @@ Flooding 产生大量重复 packets，极度低效，不实用。
 Age 字段用于处理 router 崩溃重启后 sequence number 从 0 开始的问题。
 
 ### ❌ 错误 5: 混淆 OSPF 和 BGP
-- OSPF: 域内路由，Link State
-- BGP: 域间路由，Path Vector
+OSPF是本课件提到的Link State Routing实现；BGP不在本课件核心范围内，不要把BGP细节当作复习重点。
 
 ---
 
@@ -327,7 +323,7 @@ Age 字段用于处理 router 崩溃重启后 sequence number 从 0 开始的问
 1. **Forwarding vs Routing**: 本地转发 vs 全局决策
 2. **Flooding**: 简单但低效的洪泛算法
 3. **Dijkstra's Algorithm**: 最短路径算法，OSPF 的基础
-4. **Link State Routing**: 分布式算法，可靠洪泛 + 本地计算
+4. **Link State Routing**: 分布式算法，可靠洪泛 + 本地计算；OSPF是常见实现
 
 路由算法是互联网高效运行的核心，理解它们有助于网络设计和故障排查。
 
@@ -338,8 +334,8 @@ Age 字段用于处理 router 崩溃重启后 sequence number 从 0 开始的问
 1. **手动执行 Dijkstra 算法**: 给定一个图，逐步计算最短路径
 2. **理解 Link State Routing 的 5 个步骤**: 发现邻居、设置成本、构建包、洪泛、计算
 3. **对比 Flooding 和 Link State Routing**: 效率、robustness、复杂度
-4. **理解 OSPF 和 BGP 的区别**: 域内 vs 域间
-5. **掌握 Bellman's Optimality Principle**: 为什么最优路径形成 Sink Tree？
+4. **掌握 Bellman's Optimality Principle**: 为什么最优路径形成 Sink Tree？
+5. **淡化背景内容**: Distance Vector/BGP/ECMP只作背景，不背算法细节。
 
 ---
 
