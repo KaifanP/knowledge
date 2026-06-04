@@ -1,11 +1,12 @@
 import { marked } from "marked";
 
 const renderer = new marked.Renderer();
+const basePath = import.meta.env?.BASE_URL || "/";
 
 renderer.image = ({ href, title, text }) => {
-  const safeHref = String(href || "").replace(/^\.\/images\//, "/images/");
+  const safeHref = resolveAssetHref(href);
   const safeTitle = title ? ` title="${escapeHtml(title)}"` : "";
-  return `<figure><img src="${safeHref}" alt="${escapeHtml(text || "")}"${safeTitle} loading="lazy" /><figcaption>${escapeHtml(text || "")}</figcaption></figure>`;
+  return `<figure><img src="${escapeHtml(safeHref)}" alt="${escapeHtml(text || "")}"${safeTitle} loading="lazy" /><figcaption>${escapeHtml(text || "")}</figcaption></figure>`;
 };
 
 renderer.heading = ({ tokens, depth }) => {
@@ -84,6 +85,15 @@ function escapeHtml(value) {
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
+}
+
+function resolveAssetHref(href) {
+  const raw = String(href || "");
+  if (/^(https?:|data:|mailto:|#)/i.test(raw)) return raw;
+  const normalized = raw.replace(/^\.?\//, "");
+  if (!normalized.startsWith("images/")) return raw;
+  const normalizedBase = basePath.endsWith("/") ? basePath : `${basePath}/`;
+  return `${normalizedBase}${normalized}`;
 }
 
 function renderCodeVisual(text) {

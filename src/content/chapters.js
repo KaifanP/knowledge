@@ -17,6 +17,8 @@ import wk11Routing from "../../WK11-Routing.md?raw";
 import wk11Control from "../../WK11-Control.md?raw";
 import wk12Nat from "../../WK12-NAT.md?raw";
 
+const imagePath = (filename) => `${import.meta.env.BASE_URL}images/${filename}`;
+
 export const chapters = [
   {
     id: "wk1-os",
@@ -25,7 +27,7 @@ export const chapters = [
     filename: "WK1-OS-Overview.md",
     group: "Operating Systems",
     lab: "system-call",
-    image: "/images/WK1-OS-Overview.png",
+    image: imagePath("WK1-OS-Overview.png"),
     focus: ["hardware abstraction", "resource management", "system calls", "interrupts"],
     md: wk1
   },
@@ -36,7 +38,7 @@ export const chapters = [
     filename: "WK2-Process-Intro.md",
     group: "Operating Systems",
     lab: "process-thread",
-    image: "/images/WK2-Process-States.png",
+    image: imagePath("WK2-Process-States.png"),
     focus: ["process states", "PCB/TCB", "fork", "threads"],
     md: wk2
   },
@@ -47,7 +49,7 @@ export const chapters = [
     filename: "WK3-CPU-Scheduling.md",
     group: "Operating Systems",
     lab: "scheduling",
-    image: "/images/WK3-RR-Example.png",
+    image: imagePath("WK3-RR-Example.png"),
     focus: ["FCFS", "SJF", "RR", "response time", "turnaround time"],
     md: wk3Cpu
   },
@@ -58,7 +60,7 @@ export const chapters = [
     filename: "WK3-IPC.md",
     group: "Operating Systems",
     lab: "race-condition",
-    image: "/images/WK3-Race-Condition-Execution.png",
+    image: imagePath("WK3-Race-Condition-Execution.png"),
     focus: ["race condition", "critical region", "mutual exclusion", "TSL"],
     md: wk3Ipc
   },
@@ -69,7 +71,7 @@ export const chapters = [
     filename: "WK4-Memory-Management.md",
     group: "Operating Systems",
     lab: "paging",
-    image: "/images/WK4-Paging-Model.png",
+    image: imagePath("WK4-Paging-Model.png"),
     focus: ["base/limit", "paging", "page fault", "TLB"],
     md: wk4
   },
@@ -80,7 +82,7 @@ export const chapters = [
     filename: "WK5-Secure-Communication.md",
     group: "Security",
     lab: "crypto",
-    image: "/images/WK5-Certificates.png",
+    image: imagePath("WK5-Certificates.png"),
     focus: ["confidentiality", "integrity", "authentication", "MAC", "signature"],
     md: wk5
   },
@@ -91,7 +93,7 @@ export const chapters = [
     filename: "WK6-Intro-OSI.md",
     group: "Networks",
     lab: "encapsulation",
-    image: "/images/WK6-OSI-Model.png",
+    image: imagePath("WK6-OSI-Model.png"),
     focus: ["layering", "service vs protocol", "encapsulation", "narrow waist"],
     md: wk6
   },
@@ -102,7 +104,7 @@ export const chapters = [
     filename: "WK7-Sockets.md",
     group: "Networks",
     lab: "sockets",
-    image: "/images/WK7-Socket-Primitives.png",
+    image: imagePath("WK7-Socket-Primitives.png"),
     focus: ["socket primitives", "5-tuple", "blocking read", "server two sockets"],
     md: wk7Sockets
   },
@@ -113,7 +115,7 @@ export const chapters = [
     filename: "WK7-DNS-Mail-RPC.md",
     group: "Application Layer",
     lab: "dns",
-    image: "/images/WK7-DNS-Hierarchy.png",
+    image: imagePath("WK7-DNS-Hierarchy.png"),
     focus: ["DNS hierarchy", "resource records", "SMTP", "IMAP"],
     md: wk7Dns
   },
@@ -124,7 +126,7 @@ export const chapters = [
     filename: "WK8-Transport-Services-UDP.md",
     group: "Transport Layer",
     lab: "udp-demux",
-    image: "/images/WK8-Transport-MUX-DEMUX.png",
+    image: imagePath("WK8-Transport-MUX-DEMUX.png"),
     focus: ["process-to-process", "ports", "UDP header", "mux/demux"],
     md: wk8Udp
   },
@@ -135,7 +137,7 @@ export const chapters = [
     filename: "WK8-HTTP.md",
     group: "Application Layer",
     lab: "http",
-    image: "/images/WK8-HTTP-Request-Example.png",
+    image: imagePath("WK8-HTTP-Request-Example.png"),
     focus: ["request/response", "headers", "cookies", "cache", "HTTP/2"],
     md: wk8Http
   },
@@ -146,7 +148,7 @@ export const chapters = [
     filename: "WK9-TCP.md",
     group: "Transport Layer",
     lab: "tcp-handshake",
-    image: "/images/WK9-TCP-Header-Format.png",
+    image: imagePath("WK9-TCP-Header-Format.png"),
     focus: ["three-way handshake", "byte stream", "sequence number", "window"],
     md: wk9Tcp
   },
@@ -157,7 +159,7 @@ export const chapters = [
     filename: "WK9-Protocol-Design.md",
     group: "Application Layer",
     lab: "rpc",
-    image: "/images/WK9-RPC-Architecture.png",
+    image: imagePath("WK9-RPC-Architecture.png"),
     focus: ["syntax", "semantics", "timing", "RPC", "marshalling"],
     md: wk9Protocol
   },
@@ -168,7 +170,7 @@ export const chapters = [
     filename: "WK10-Addressing-Switching.md",
     group: "Network Layer",
     lab: "cidr",
-    image: "/images/WK10-Network-Host-Addresses.png",
+    image: imagePath("WK10-Network-Host-Addresses.png"),
     focus: ["IPv4", "CIDR", "route aggregation", "packet switching"],
     md: wk10Addressing
   },
@@ -179,7 +181,7 @@ export const chapters = [
     filename: "WK10-TCP-Flow-Congestion-Control.md",
     group: "Transport Layer",
     lab: "cwnd",
-    image: "/images/WK10-TCP-Tahoe.png",
+    image: imagePath("WK10-TCP-Tahoe.png"),
     focus: ["sliding window", "zero window probe", "CWND", "slow start"],
     md: wk10Congestion
   },
@@ -190,7 +192,7 @@ export const chapters = [
     filename: "WK11-Routing.md",
     group: "Network Layer",
     lab: "dijkstra",
-    image: "/images/WK11-Dijkstra-Graph-Step.png",
+    image: imagePath("WK11-Dijkstra-Graph-Step.png"),
     focus: ["forwarding vs routing", "Dijkstra", "link state", "distance vector"],
     md: wk11Routing
   },
@@ -201,7 +203,7 @@ export const chapters = [
     filename: "WK11-Control.md",
     group: "Network Layer",
     lab: "control-plane",
-    image: "/images/WK11-ICMP-Message-Types.png",
+    image: imagePath("WK11-ICMP-Message-Types.png"),
     focus: ["ARP", "ICMP", "traceroute", "data/control plane"],
     md: wk11Control
   },
@@ -212,7 +214,7 @@ export const chapters = [
     filename: "WK12-NAT.md",
     group: "Network Layer",
     lab: "nat",
-    image: "/images/WK12-NAT-Mechanism.png",
+    image: imagePath("WK12-NAT-Mechanism.png"),
     focus: ["private address", "port mapping", "end-to-end", "debugging"],
     md: wk12Nat
   }
