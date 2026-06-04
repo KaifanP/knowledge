@@ -1,0 +1,377 @@
+# WK10 - TCP Sliding Window and Congestion Control
+
+## 课件概述
+
+本课件深入讲解 TCP 的核心机制：Sliding Window（滑动窗口）和 Congestion Control（拥塞控制）。Sliding Window 是 TCP 的"魔法"，它同时提供可靠性、有序传输和速率控制。拥塞控制是 TCP 在网络拥塞时自动降低发送速率的机制，是互联网稳定运行的关键。
+
+---
+
+## 必须掌握的知识点
+
+### 1. TCP Sliding Window 回顾
+
+![TCP Sliding Window 缓冲区机制](./images/WK10-Sliding-Window-Buffer.png)
+*TCP Sliding Window 机制：发送方和接收方维护缓冲区，接收方通过 ACK 告知可用窗口大小，发送方据此控制发送速率*
+
+#### What（是什么）
+Sliding Window 提供三大功能：
+- **Reliability**（可靠性）：确保数据正确到达
+- **In-order delivery**（有序传输）：数据按顺序到达
+- **Rate control**（速率控制）：防止发送过快
+
+#### How（工作原理）
+
+**窗口类型**：
+- **Send Window**: 发送方能发送的数据 = 未确认 segments + 能装入接收窗口的未发送数据
+- **Receive Window**: 接收方愿意接收的数据量（在 ACK 中通告）
+- **Other windows**: 用于拥塞控制（CWND）
+
+**关键不变量**：
+```
+LastByteSent - LastByteAcked <= ReceiveWindowAdvertised
+```
+
+**窗口为 0 时的处理**：
+- 发送方不应发送数据
+- 但可以发送 **URGENT data**
+- 可以发送 **ACK packets**（0 bytes data）
+- 可以发送 **zero window probe**（0 字节 segment），让接收方重新通告窗口大小，防止死锁
+
+**死锁场景与 Persist Timer：**
+- 当接收方缓冲区满（window=0）且应用层不读取数据时，接收方不会发送ACK
+- 发送方收到 window=0 后停止发送，等待接收方的 WindowUpdate
+- 但接收方也在等待发送方发送数据——造成**死锁**
+- **解决方案：** 发送方启动 **Persist Timer**（坚持定时器），超时后发送 **ZeroWindowProbe**，强制接收方重新通告窗口大小
+- 注意区分：**WindowUpdate** 由接收方发起（有数据可读时），**ZeroWindowProbe** 由发送方主动发起（防止死锁）
+
+![TCP Sliding Window 避免死锁](./images/WK10-Sliding-Window-Deadlock.png)
+*避免死锁：应用层读取数据后，接收方发送 ACK 通告新的窗口大小，发送方窗口向前滑动*
+
+![TCP Sliding Window 滑动过程](./images/WK10-Sliding-Window-Slide.png)
+*窗口滑动：接收方确认数据后，发送窗口向前移动，允许发送更多数据*
+
+**延迟发送**：
+- 发送方可能延迟发送，等待更多数据填满窗口
+- 例如：不立即发送 1000B，而是等待更多数据填满 1500B packet
+
+**缓冲区独立于应用：** 发送方和接收方的缓冲区独立于应用层运行。发送方可能缓冲数据等待填充更大的 segment，接收方也可能延迟将数据交付给应用——**不能保证数据立即被发送或读取**。这意味着窗口不会总是在应用读写后立即滑动。
+
+---
+
+### 2. Segment Loss 处理
+
+#### 问题
+当 segment 丢失时，接收方会收到乱序的数据，需要机制来检测和重传丢失的 segment。
+
+#### 解决方案：Fast Retransmit（快速重传）
+
+**触发条件**：收到 **3 个重复 ACK**（3 DupACKs）
+
+**过程**：
+1. 发送方发送 segments: 1, 11, 21, 31, 41, 51
+2. Segment 21 丢失
+3. 接收方收到 31, 41, 51（乱序），发送 ACK:21（重复）
+4. 发送方收到 3 个重复 ACK:21
+5. 发送方**立即重传** segment 21，不等待超时
+
+**为什么是 3 个重复 ACK？**
+- 1-2 个重复 ACK 可能是网络乱序导致
+- 3 个重复 ACK 强烈暗示 segment 丢失
+
+---
+
+### 3. 两种流控机制
+
+#### Go-back-N（回退 N）
+- 当 packet 丢失时，从丢失点开始，**重传所有后续 packets**
+- 优点：接收方不需要存储/重排 packets
+- 缺点：重传大量可能已正确到达的数据
+
+#### Selective Repeat（选择性重传）
+- 只重传**丢失的 packet**
+- Packets 可能乱序到达，接收方必须**存储乱序 packets**，然后按顺序交给应用层
+- 更复杂，只在丢包常见时才有优势
+
+#### 历史背景
+- 链路层已经有流控和错误控制
+- TCP 最初使用链路层的经验（Go-back-N）
+- **这是一个糟糕的设计决定**
+
+**为什么是糟糕的决定：** 链路层假设错误很少（因为它在物理链路上运行，出错率低），Go-back-N 在错误少时效率尚可。但 TCP 运行在互联网上，丢包是**常态**。每次丢包时 Go-back-N 重传 N 个 packets，这**加剧了拥塞**——每次丢包导致更多数据进入网络，形成恶性循环，直接导致了 1980 年代的拥塞崩溃。
+
+---
+
+### 4. Congestion Collapse（拥塞崩溃）
+
+#### What（是什么）
+1980 年代末，互联网发生了**拥塞崩溃**：
+- 发送一个 packet 到隔壁大楼需要**几十分钟**
+
+#### Why（为什么会发生）
+- Router buffers 溢出，导致高丢包率
+- 发送方使用 Go-back-N，每次丢包导致 **N 个更多 packets** 进入系统
+- 形成恶性循环：丢包 → 重传 → 更多 packets → 更多丢包
+
+#### How（如何解决）
+Van Jacobson 诊断并解决了问题：
+- 引入 **Selective Repeat**（fast retransmit）
+- 引入 **Congestion Window (CWND)**
+- **"Packet conservation" principle**: 只有在旧 packet 离开网络后才发送新 packet
+
+---
+
+### 5. Congestion Control Window (CWND)
+
+#### What（是什么）
+- **CWND (Congestion Window)**: 拥塞窗口，由**发送方**维护
+- 动态调整，基于 packet loss 来限制发送速率到网络容量
+- 与 Receive Window 不同：CWND 是发送方自己维护的，不需要修改 packet 格式
+
+#### Why（为什么需要）
+- Receive Window 只能防止**接收方缓冲区溢出**
+- 但不能防止**网络拥塞**
+- CWND 解决了网络拥塞问题
+
+---
+
+### 6. Slow Start（慢启动）
+
+#### What（是什么）
+- 初始：CWND = Maximum Segment Size (MSS)
+- 发送方只发送 1 个 segment
+
+#### How（增长过程）
+1. 每收到一个 ACK：CWND += MSS
+2. 发送方发送 2 个更多 segments（1 个替换已 ACK 的，1 个因为窗口增长）
+3. 每个完整窗口的 ACK 使拥塞窗口**翻倍**
+4. **指数增长**，直到：
+   - 超时（timeout）
+   - 达到阈值 **ssthresh**
+
+#### 关键理解
+- "Slow Start" 名称有误导性——实际上是**指数增长**
+- "Slow" 是相对于最初一次发送整个窗口来说的
+
+---
+
+### 7. Congestion Avoidance（拥塞避免）
+
+#### 机制
+- 当 CWND 达到 **ssthresh** 时，增长变为**线性**
+- 实现：每个完整窗口的 ACK，CWND += MSS
+- 称为 **"Additive Increase"**（加法增长）
+
+#### 丢包处理
+- 当发生丢包时：**ssthresh = CWND / 2**
+- 重新开始 slow start
+
+---
+
+### 8. TCP Tahoe (1988)
+
+![Incremental Congestion Control - TCP Tahoe](./images/WK10-TCP-Tahoe.png)
+*TCP Tahoe 拥塞控制：Slow Start（指数增长）→ 达到 ssthresh 后 Congestion Avoidance（线性增长）→ 丢包时 ssthresh=CWND/2 重新 Slow Start*
+
+#### What（是什么）
+TCP Tahoe 是 BSD Tahoe 版本中的 TCP 实现，引入了：
+- **Slow Start**
+- **Congestion Avoidance**
+- **Fast Retransmit**
+
+#### 工作流程
+1. 初始：CWND = MSS, ssthresh = 大值
+2. Slow Start：指数增长
+3. 达到 ssthresh → Congestion Avoidance：线性增长
+4. 超时或 3 DupACKs → ssthresh = CWND/2, 重新 Slow Start
+
+---
+
+### 9. TCP Reno（优化）
+
+#### What（是什么）
+TCP Reno 在 Tahoe 基础上增加了 **Fast Recovery**（快速恢复）：
+
+#### 改进
+- 当 fast retransmit 触发时：
+  - ssthresh = CWND / 2
+  - CWND = ssthresh + 3（因为有 3 个 DupACKs 说明有 3 个 packets 到达了接收方）
+  - 直接进入 **Congestion Avoidance**，跳过 Slow Start
+
+#### 对比
+
+| 事件 | TCP Tahoe | TCP Reno |
+|------|-----------|----------|
+| 超时 | ssthresh=CWND/2, Slow Start | ssthresh=CWND/2, Slow Start |
+| 3 DupACKs | ssthresh=CWND/2, Slow Start | ssthresh=CWND/2, **Fast Recovery** |
+
+---
+
+### 10. 宏观模型（Macroscopic Model）⚠️ 以下内容为扩展知识，非考试范围（not examinable）
+
+#### 窗口大小公式
+- W 每个窗口增加一次
+- 近似：每个到达的 packet 使 W 增加 1/W
+- 当丢包发生（概率 p）时，W 减半
+
+**平衡状态**：
+```
+W ≈ √(2/p)
+```
+
+#### 速率公式
+- 窗口每 RTT (T) 发送一次
+```
+Rate ≈ W/T = √(2/p)/T
+```
+
+#### 两个重要洞察
+1. **RTT 不公平性**：对于给定的丢包率，RTT 更长的流获得更少的速率
+2. **如果 RTT 很小，TCP 会强制丢包率很高**
+
+---
+
+### 11. 现代拥塞控制
+
+#### 问题
+- 对于高带宽、长距离的网络（如跨洲数据中心），TCP Reno 需要**不现实的小丢包率**
+- 数据中心内部的需求又不同
+
+#### 解决方案
+- **DCTCP**: 数据中心内部使用
+- **Google's BBR**: 数据中心之间使用
+- IETF 不愿改变标准，公司自己实现
+
+---
+
+## 关键术语
+
+| 术语 | 定义 |
+|------|------|
+| Sliding Window | 滑动窗口，TCP 流量控制机制 |
+| Receive Window | 接收窗口，接收方通告的可接收数据量 |
+| CWND | Congestion Window，拥塞窗口，发送方维护 |
+| ssthresh | Slow Start Threshold，慢启动阈值 |
+| Slow Start | 慢启动，指数增长阶段 |
+| Additive Increase | 加法增长，线性增长阶段 |
+| Multiplicative Decrease | 乘法减少，丢包时窗口减半 |
+| Fast Retransmit | 快速重传，3 DupACKs 触发 |
+| Fast Recovery | 快速恢复，TCP Reno 的优化 |
+| Go-back-N | 回退 N，重传丢失点之后的所有数据 |
+| Selective Repeat | 选择性重传，只重传丢失的数据 |
+| Congestion Collapse | 拥塞崩溃，网络严重过载 |
+| MSS | Maximum Segment Size，最大 segment 大小 |
+| RTT | Round Trip Time，往返时间 |
+| DupACK | Duplicate ACK，重复确认 |
+
+---
+
+## 常见问题
+
+### Q1: Slow Start 为什么叫"慢"？
+实际上 Slow Start 是**指数增长**，并不慢。"Slow" 是相对于最初一次发送整个窗口来说的。它从 1 个 segment 开始，逐步探测网络容量。
+
+### Q2: CWND 和 Receive Window 有什么区别？
+- **Receive Window**: 接收方通告，防止接收方缓冲区溢出
+- **CWND**: 发送方维护，防止网络拥塞
+- 实际发送窗口 = min(CWND, Receive Window)
+
+### Q3: 为什么是 3 个重复 ACK 触发 Fast Retransmit？
+- 1-2 个重复 ACK 可能是网络乱序
+- 3 个重复 ACK 强烈暗示 segment 丢失
+- 这是一个启发式（heuristic），不是绝对正确
+
+### Q4: TCP Tahoe 和 Reno 的主要区别？
+- Tahoe: 无论超时还是 3 DupACKs，都回到 Slow Start
+- Reno: 3 DupACKs 触发 Fast Recovery，直接进入 Congestion Avoidance
+
+### Q5: 什么是 RTT 不公平性？
+对于相同的丢包率，RTT 更长的流获得更少的吞吐量（Rate ≈ √(2/p)/T）。这意味着长距离连接在与短距离连接竞争时处于劣势。
+
+---
+
+## 知识点之间的联系
+
+```
+WK9-TCP (TCP 基础)
+    ↓ Sliding Window
+WK10-TCP-Flow-Congestion-Control (流控和拥塞控制)
+    ↓ 网络层
+WK10-Addressing-Switching (IP 寻址)
+    ↓ 路由
+WK11-Routing (路由算法)
+```
+
+- **Sliding Window** 是 TCP 的核心机制
+- **CWND** 与 **Receive Window** 共同决定发送速率
+- **Fast Retransmit** 解决了拥塞崩溃问题
+- **TCP Tahoe/Reno** 是拥塞控制的演进
+
+---
+
+## 实际应用案例
+
+### 案例 1: 文件传输的拥塞控制
+```
+1. 连接建立，CWND = 1 MSS
+2. Slow Start: 1 → 2 → 4 → 8 → 16 segments
+3. 达到 ssthresh，进入 Congestion Avoidance
+4. 线性增长：16 → 17 → 18 → ...
+5. 检测到丢包（3 DupACKs）
+6. Fast Retransmit + Fast Recovery
+7. ssthresh = CWND/2, 继Congestion Avoidance
+```
+
+### 案例 2: 视频流的拥塞控制
+- 实时视频流使用 TCP 可能导致延迟
+- 更好的选择：UDP + 应用层拥塞控制
+- WebRTC 使用 GCC (Google Congestion Control)
+
+### 案例 3: 数据中心网络
+- 传统 TCP Reno 在数据中心环境中表现不佳
+- DCTCP (Data Center TCP) 使用 ECN 标记来更早检测拥塞
+- Google's BBR 基于带宽和延迟建模，而不是丢包
+
+---
+
+## 常见错误和易错点
+
+### ❌ 错误 1: 认为 Slow Start 是线性增长
+Slow Start 是**指数增长**（每 RTT 翻倍）。Congestion Avoidance 才是线性增长。
+
+### ❌ 错误 2: 混淆 Receive Window 和 CWND
+- Receive Window: 接收方控制，防止接收方溢出
+- CWND: 发送方控制，防止网络拥塞
+
+### ❌ 错误 3: 认为 Fast Retransmit 需要等待超时
+Fast Retransmit 在收到 **3 个重复 ACK** 时立即触发，不需要等待超时。
+
+### ❌ 错误 4: 认为 TCP Tahoe 和 Reno 处理 3 DupACKs 的方式相同
+- Tahoe: 回到 Slow Start
+- Reno: Fast Recovery，直接进入 Congestion Avoidance
+
+### ❌ 错误 5: 忘记 ssthresh 的更新时机
+ssthresh 只在**丢包时**更新：ssthresh = CWND / 2
+
+---
+
+## 课件总结
+
+本课件深入讲解了 TCP 的两大核心机制：
+1. **Sliding Window**: 流量控制、可靠传输、有序传输
+2. **Congestion Control**: Slow Start → Congestion Avoidance → Fast Retransmit/Fast Recovery
+
+TCP 的拥塞控制从最初的简单机制演进到 Tahoe（1988）和 Reno，解决了拥塞崩溃问题。现代网络（数据中心、长距离传输）需要新的拥塞控制算法（DCTCP, BBR）。
+
+---
+
+## 复习建议
+
+1. **画出 Sliding Window 的变化过程**：理解窗口如何滑动、ACK 如何影响窗口
+2. **理解 Slow Start 和 Congestion Avoidance 的区别**：指数 vs 线性增长
+3. **掌握 Fast Retransmit 的触发条件**：3 个重复 ACK
+4. **对比 TCP Tahoe 和 Reno**：Fast Recovery 的作用
+5. **理解宏观模型**：W ≈ √(2/p) 的含义和推导
+
+---
+
+*课件来源: COMP30023 2026 S1 WK10*

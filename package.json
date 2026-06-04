@@ -1,0 +1,21 @@
+{
+  "name": "comp30023-interactive-revision",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync-images": "rm -rf public/images && cp -R images public/images",
+    "dev": "npm run sync-images && vite --host 127.0.0.1",
+    "build": "npm run sync-images && vite build",
+    "preview": "vite preview --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^5.1.1",
+    "lucide-react": "^0.556.0",
+    "marked": "^17.0.1",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "vite": "^7.2.6"
+  },
+  "devDependencies": {}
+}
