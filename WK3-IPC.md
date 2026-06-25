@@ -303,7 +303,9 @@ void threadFunction() {
 ### 5. Busy Waiting and Priority Inversion (忙等待和优先级反转)
 
 #### What（是什么）
-**忙等待（Busy Waiting）**：进程循环检查条件，不释放CPU。
+**忙等待（Busy Waiting）**：进程循环检查条件，不释放CPU。课件原文（slide p.17–18）："**busy waiting – spin until lock becomes 0**"——线程在一个循环里自旋，直到锁变量变成 0 才进临界区。
+
+**上下文切换的形式定义（对应 slide p.18）**：context switch = **OS 停止一个线程、启动另一个线程**的过程，期间要保存旧线程的 PC/SP/寄存器到它的 TCB，并从新线程的 TCB 恢复。它是竞态条件的"温床"——任何在"检查"和"设置"之间发生的 context switch 都可能破坏不变式。
 
 **优先级反转（Priority Inversion）**：高优先级进程等待低优先级进程释放资源，但低优先级进程无法获得CPU。
 
@@ -391,8 +393,8 @@ void threadB() {
 - 交替执行
 
 **问题**：
-- 线程B阻塞线程A进入临界区，即使线程B在临界区外
-- 不满足互斥条件3（临界区外的进程不能阻塞其他进程）
+- 课件原话（slide p.35）："**Thread B is blocking Thread A … but Thread B is outside of the critical region**"——线程 B 在临界区**外**却仍能阻塞线程 A 进入临界区
+- 违反互斥条件 3（临界区外的进程不能阻塞其他进程）：进度性被破坏
 
 #### Why（为什么重要）
 严格交替的重要性：
@@ -516,7 +518,7 @@ TSL的实现：
 ### 8. Blocking (阻塞)
 
 #### What（是什么）
-阻塞是另一种实现互斥的方式，进程等待时释放CPU。
+阻塞是另一种实现互斥的方式，进程等待时释放CPU。课件里 Blocking 这一支下的锁统称为 **Mutex**（互斥锁，对应 slide p.20）：忙等待靠自旋，阻塞靠把线程挂起并在锁可用时唤醒。所以"mutex"在课件语境里常特指**阻塞型**的互斥实现，与 spinlock 相对。
 
 **阻塞机制**：
 - 检查是否可以进入临界区
@@ -588,7 +590,7 @@ void unlock() {
 ### 9. Deadlocks (死锁) ⚠️ 非考试内容（Not Examinable）
 
 #### What（是什么）
-死锁是多个进程相互等待对方释放资源，导致所有进程都无法继续执行的情况。
+死锁是多个进程相互等待对方释放资源，导致所有进程都无法继续执行的情况。课件定义原话（slide p.41）：进程在"**waiting for an event that only another process in the set can cause**"（等待一个只有该进程组里另一个进程才能引发的事件）。
 
 **死锁的条件**（四个必要条件）：
 1. **互斥**：资源不能共享

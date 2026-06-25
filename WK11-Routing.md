@@ -8,6 +8,21 @@
 
 ## 必须掌握的知识点
 
+### 0. IPv6 开场（对应 slide p.1–4，背景但要点名）
+
+课件在进入 routing 之前先用 IPv6 做"为什么需要网络层演进"的开场，要点：
+- **IPv6 约 30 年前**为缓解 IPv4 地址耗尽而设计，地址 **128 位**（vs IPv4 的 32 位）
+- **IPv6 header 更简单**，安全性后被**回移植到 IPv4**，并带 **QoS** 字段
+- 自检：**`http://test-ipv6.com`**
+- **IPv6 header 字段**：Version=6、**Differentiated services**（6-bit class + 2-bit ECN）、**Flow label**（伪虚电路标识）、**Payload length**、**Next header**、**Hop limit**（即 IPv4 的 TTL）、**16 字节** src/dst
+- **地址格式**：`8000:0000:0000:0000:0123:4567:89AB:CDEF`，可缩写为 `8000::123:4567:89AB:CDEF`（连续全 0 段用 `::` 压缩，只能压一次）；带端口写成 `[addr]:port`
+- **IPv4-mapped IPv6**：`::ffff:192.31.2.46`——把 IPv4 地址嵌入 IPv6 后 32 位
+- **部署**：Google 统计约 **50% 全球、35% 澳大利亚**已支持 IPv6
+
+> 注：本课件 IPv6 是开场背景，routing 才是考试重点；但 IPv6 头部字段和地址缩写是可考的硬知识。
+
+---
+
 ### 1. Forwarding vs Routing
 
 #### What（是什么）
@@ -91,6 +106,8 @@
 | 速度基准 | 高度低效 |
 | 极其 robust——如果有路径就能找到 | 必须有丢弃 packet 的机制（TTL） |
 
+**课件 flooding 演练 A→D（对应 slide p.14–17）**：在一个有多条路径的图里从 A 发到 D，packet 会沿所有路径同时扩散。关键观察：**E 会从两条不同路径收到同一 packet 的两份副本**（"E receives two copies"）；但 E **只转发其中一份**（"E forwards only one copy"），靠的就是"已转发过这个 packet 就丢弃后续副本"的去重机制（用序号/记录表实现）。这正是 flooding 既要保证到达、又要靠去重避免无限复制的体现。
+
 ---
 
 ### 6. Bellman's Optimality Principle（最优性原理）
@@ -169,6 +186,7 @@
 - 距离必须**非负**
 - 标签从**临时（tentative/open）**变为**永久（permanent/closed）**
 - 一旦 closed，标签不会再改变
+- **提前终止（对应 slide p.41）**：如果你只关心**到某个目的地 D** 的最短路径，那么当 D 成为**当前最低 tentative 的节点**被选中时就可以停——因为 D 一旦被选为最小，它的标签就是最终答案，不会再被改进。本例中步骤 8 选 D(10) 即可终止，无需继续 closed C。
 
 ---
 

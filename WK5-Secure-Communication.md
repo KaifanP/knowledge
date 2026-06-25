@@ -10,13 +10,16 @@
 
 ### 1. 安全通信的三个核心属性
 
-**What（是什么）：** 安全通信需要满足的三个基本属性：
+**What（是什么）：** 安全通信需要满足的三个基本属性。
+
+**课件里的具体场景（对应 slide p.2）：** Alice/Bob 在课件中是抽象代号，实际对应多种通信对——**路由器之间**、**浏览器 ↔ web server**、**SSH client ↔ VM**、**Git ↔ GitHub** 等。安全通信的目标就是让这些对端在不可信网络上仍能保密、防篡改、确认身份。
 
 ![Confidentiality：Eve窃听Alice和Bob的通信](./images/WK5-Confidentiality-Eve.png)
 
 #### (a) Confidentiality（机密性）
 - 只有发送方和接收方能够理解通信的内容
 - 防止第三方（如Eve）窃听和理解消息内容
+- 课件例子（slide p.4）：Eve 拦截到的信用卡号 `123 456 789` 应当对她不可读
 - 实现方式：**Encryption（加密）**
 
 #### (b) Integrity（完整性）
@@ -44,6 +47,7 @@
 **Kerckhoffs' Principle（柯克霍夫原则）：**
 - 安全性应该**只依赖于密钥的保密性**，而不依赖于算法的保密性
 - 即使攻击者知道加密算法，只要密钥不泄露，安全性就有保障
+- 课件精确化（slide p.8）：保密性依赖的是**解密密钥（decryption key）**保持秘密——加密密钥可以公开（公钥密码就是这样），真正必须藏好的是能解密的那一把
 
 ---
 
@@ -234,17 +238,20 @@
 - **Record Protocol（记录协议）：** 使用建立的密钥保护数据传输
 
 **TLS 1.2 握手流程（简化）：**
-1. Client Hello → 协议版本、支持的密码套件、客户端随机数
-2. Server Hello → 选定的密码套件、服务器随机数
+1. Client Hello → 协议版本、支持的密码套件、客户端随机数（client random）
+2. Server Hello → 选定的密码套件、服务器随机数（server random）
 3. Server Certificate → 服务器公钥证书
-4. Client Key Exchange → 客户端生成premaster secret，用服务器公钥加密发送
-5. 双方用premaster secret和随机数生成会话密钥
-6. Change Cipher Spec → 通知对方开始使用加密通信
-7. Finished → 第一条加密消息，验证握手完整性
+4. **Server Hello Done** → 通知客户端服务器一侧的 hello 阶段消息发完（对应 slide p.41）
+5. Client Key Exchange → 客户端生成 premaster secret，用服务器公钥加密发送
+6. 双方用 **premaster secret + client random + server random** 派生出会话密钥
+7. **Change Cipher Spec** → 通知对方后续消息开始用协商好的参数加密
+8. **Finished** → 握手后**第一条受保护的消息**，用来验证握手本身没被篡改
 
-**TLS 1.3 vs TLS 1.2：**
-- TLS 1.3使用**Diffie-Hellman密钥交换**代替RSA密钥交换
-- 提供**Forward Secrecy（前向保密）**：即使长期私钥泄露，过去的会话仍然安全
+**TLS 1.3 vs TLS 1.2（对应 slide p.42–43）：**
+- TLS 1.3使用**Diffie-Hellman密钥交换**代替RSA密钥交换——**不再支持 RSA 密钥交换**
+- 握手中带 **Key share**（客户端 gx、服务器 gy），在第一次往返里就完成密钥协商，更少 RTT
+- **CertificateVerify**：服务器用私钥对**整个握手记录**签名（而不只签证书），认证更强
+- 提供**Forward Secrecy（前向保密）**：即使长期私钥泄露，过去的会话仍然安全（因为会话密钥来自一次性 DH，不靠私钥解密）
 
 ---
 

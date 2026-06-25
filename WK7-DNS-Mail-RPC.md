@@ -120,6 +120,8 @@
 | CNAME | 别名到规范名 | (alias, canonical name) |
 | MX | 域名到邮件服务器 | (domain, mail server hostname) |
 
+**AAAA 记录的具体示例（对应 slide p.14）：** `1062::A22:AAE9:51C7:8451` —— 一条 IPv6 地址，注意 AAAA 与 A 的区别只在地址族（IPv6 vs IPv4），记录语义相同。
+
 **绝对域名 vs 相对域名：**
 - 绝对域名以"."结尾（如 `www.google.com.`）
 - 相对域名以TLD结尾（如 `www.google.com`）
@@ -131,6 +133,8 @@
 ### 6. DNS缓存
 
 **What（是什么）：** DNS查询结果会被缓存，后续相同的查询可以直接使用缓存结果，无需再次查询层次结构。
+
+**部分缓存（partial caching，对应 slide p.42 讨论）：** 本地 DNS / resolver 不必缓存**整个域**的所有记录，可以只缓存它**已查到的那一段**。例如查 `robot.cs.washington.edu` 时，如果本地 NS 只查到了 `cs.washington.edu` 这一层的 NS 记录却没拿到最终主机记录，它仍可以缓存这条 NS 记录——下次查同子域下其它主机时就能从这一层开始，而不必再从根走。这种"查到哪缓存到哪"的策略叫部分缓存，能显著降低根/TLD 负载。
 
 **Why（为什么重要）：**
 - 减少DNS查询延迟
@@ -165,7 +169,9 @@
 
 #### (a) User Agent (UA) / Mail User Agent (MUA)
 - 用户用来阅读和发送邮件的程序（如Outlook、Thunderbird、Gmail网页）
-- 基本功能：compose（撰写）、report（报告）、display（显示）、dispose（处理）
+- 基本功能：**compose**（撰写）、**report**（报告）、**display**（显示）、**dispose**（处理）（对应 slide p.46）
+- 寻址方案：`user@dns-address`——收件人地址用 DNS 域名定位邮件域，用本地名定位域内用户
+- 邮件三层结构（对应 slide p.46）：**envelope**（信封，MTA 用来路由，含 MAIL FROM / RCPT TO）+ **header**（头部，给 UA/人看的 To/From/Subject）+ **body**（正文）。信封和头部可能看起来一样，但语义不同：信封是传输用的，头部是展示用的
 
 #### (b) Message Transfer Agent (MTA)
 - 负责将邮件从源传输到目的地的程序
@@ -251,6 +257,8 @@
 **本地 vs 远程邮件接收：**
 - **本地（已过时）：** 用户的机器直接运行MTA，有永久网络连接
 - **远程（现代）：** 笔记本/手机不是MTA，通过POP3/IMAP/HTTP从邮件服务器获取邮件，网络连接可能是间歇性的
+
+**流媒体与 WebSocket 补充（对应 slide p.50，非考背景）：** 课件在邮件之后顺带讲了实时/流媒体传输：流媒体约占**互联网下载流量的 40%**；常用协议包括 **WebSocket**（`ws://`、`wss://`，跑在端口 80/443，在 HTTP 之上做双向升级）、**RTP + RTCP / RTSP**（音视频实时传输与控制）、以及早期的 **RTMP**（Flash 时代直播）。它们大多跑在 UDP 或 HTTP 之上，是应用层多样性的体现，了解即可。
 
 ---
 

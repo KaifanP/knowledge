@@ -136,6 +136,12 @@ close()          → 关闭连接
 1. **listening Socket（listenfd）：** "半Socket"，只包含协议、本地IP、本地端口。像接待员，等待来电并转接到另一条线路。
 2. **connection Socket（connfd）：** 完整的5元组Socket，用于实际的读写通信。
 
+**服务器被动绑定的关键细节（对应 slide p.16、p.35–36）：**
+- `listen(listenfd, 10)` 的第二个参数是**backlog**，课件用 **10**——表示在 accept 之前内核最多为 **10** 个待完成连接排队；超过这个数新 SYN 可能被丢弃。
+- 服务器端用 `getaddrinfo(NULL, "5000", &hints, &res)`，第一个参数传 **NULL**，并设 `hints.ai_flags = AI_PASSIVE`——这样得到的地址会绑定到**所有可用接口的通配地址**（INADDR_ANY），适合服务器被动监听；而客户端用 `getaddrinfo("localhost", ...)` 绑定到具体主机。
+
+**TCP 连接的 6 状态管理图（对应 slide p.15，TB 6-4）**：课件用一张 6 状态图展示一条连接从建立到释放的状态流转，呼应"you hang up / no, you hang up"的半关闭场景——主动关闭方进 TIME_WAIT 等待，被动关闭方仍可发完剩余数据。这解释了为什么 FIN 是**方向性**的、要双向各发一次。
+
 ![服务器的两个Socket：listenfd（半Socket）和connfd（完整5元组）](./images/WK7-Server-Two-Sockets.png)
 
 > **图片来源：** WK7-Sockets课件第18页。服务器有两个Socket：listening socket（listenfd）是"半Socket"，只有协议、本地IP、端口，像接待员等待来电；connection socket（connfd）是完整5元组，用于实际读写。
@@ -203,7 +209,7 @@ IP (路由)
 1. **简单加密：** 只加密数据，不验证身份——适用于不需要信任服务器的场景
 2. **带身份验证的加密：** 验证服务器身份——需要信任服务器时使用（如提供个人信息的网站）
 
-**C语言OpenSSL示例：** 使用 `SSL_CTX`、`SSL`、`BIO` 等结构实现TLS连接。
+**C语言OpenSSL示例（对应 slide p.24）：** 使用 `SSL_CTX`、`SSL`、`BIO` 等结构实现TLS连接，课件具体示例连接 `localhost:993`（IMAPS 端口），用 `SSLv23_client_method` 创建 TLS 上下文，通过 `BIO_new_ssl_connect` 建立带 TLS 的连接，并设 `SSL_MODE_AUTO_RETRY` 让底层自动处理重试。这些是 C/OpenSSL 的具体调用名，理解概念即可，不必背 API。
 
 ![TLS/SSL层次：TLS协议运行在TCP之上，提供加密通信](./images/WK7-TLS-Layer.png)
 

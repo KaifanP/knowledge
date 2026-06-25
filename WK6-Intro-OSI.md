@@ -173,7 +173,11 @@ Application Data
 - SMS最初运行在非IP网络上
 - 一个网络可以支持多种网络层协议
 
-**新趋势：** HTTP正在成为新的"窄腰"——许多新协议将数据封装在HTTP请求/响应中，以穿越只允许HTTP的防火墙。
+**新趋势：** HTTP正在成为新的"窄腰"——许多新协议将数据封装在HTTP请求/响应中，以穿越只允许HTTP的防火墙。课件新版窄腰图（slide p.25）在 HTTP 下方同时画了 **TCP 和 QUIC** 两种传输——即新协议可以跑在 TCP 上，也可以跑在 QUIC（HTTP/3 的选择）上，HTTP 仍是穿越防火墙的汇合点。
+
+**关于"HTTP 是不是 connectionless"的对照（对应 slide p.13）：** 课件在某页把 **HTTP 与 UDP 并列**作为"无连接"的例子来介绍——这容易引起误解。准确说：HTTP 本身是**无状态（stateless）**的请求/响应协议，但它**传统上跑在 TCP（面向连接）之上**，所以不是传输层意义上的 connectionless。把它和 UDP 并列，是为了强调"每次请求独立、服务器不保留会话状态"这个**应用层**的无连接性，而非传输语义。
+
+**IS-IS 补充（对应 slide p.42，非考背景）：** **IS-IS**（Intermediate System to Intermediate System）路由协议最初是 **OSI 协议族**为 CLNP 设计的，后来被 **TCP/IP 社区**广泛采用（很多大型运营商用它跑 IP 路由）。这是一个"OSI 设计、TCP/IP 接手"的有趣案例，说明 OSI 协议族并非全输——它的部分成果被互联网吸收。
 
 ---
 

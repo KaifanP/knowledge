@@ -27,6 +27,8 @@ TCP（Transmission Control Protocol）是一种**面向连接的、可靠的、�
 
 TCP 提供了"更干净、更友好"的服务集。其中TCP使用**校验和（Checksum）**检测损坏的segment——这是一种廉价哈希（而非数字签名），只检测意外损坏，不是用于安全目的。
 
+**传输层类比（对应 slide p.2–3）**：课件把 **UDP 比作短信（text messages）**——发出去就完事，不保证送达、不需要先"接通"；把 **TCP 比作电话（phone call）**——先拨号建立连接（握手），确认对方在听，然后双向持续对话，挂断前要正式道别（FIN）。这个类比帮助记住"connectionless vs connection-oriented"的根本差别。
+
 #### How（工作原理）
 TCP transport entity 接受用户数据流，将其分段为 <64KB 的 segments（通常 1460 bytes，以便 IP + TCP header 能装入单个 Ethernet frame），每个 segment 作为独立的 IP datagram 发送。接收端 TCP entity 从封装中重建原始字节流。
 
@@ -43,8 +45,10 @@ TCP transport entity 接受用户数据流，将其分段为 <64KB 的 segments�
 
 **重要理解**：TCP 是**字节流**而非**消息流**。这意味着：
 - 不能区分一次 `write()` 和下一次 `write()` 的边界
-- 发送端发送 4 个 512-byte 的 segments，接收端可能一次 `READ` 收到全部 2048 bytes
-- 多次 `write()` 可能合并到同一个 packet 中（Nagle's algorithm）
+- 发送端发 4 个 512-byte segment，接收端可能一次 `READ` 收到全部 2048 bytes
+- 多次 `write()` 可能合并到同一 packet（Nagle's algorithm）
+
+**缓冲的权衡（对应 slide p.13）**：TCP entity 可以攒一批数据再发，这是"Buffer capable"带来的好处——**减少开销**（更少的 header、更少的 segment）但**增加延迟**（等数据攒满才走）。所以 TCP 在"立刻发小包"和"攒着发大包"之间有取舍，Nagle 算法就是为小包做合并的典型策略。
 
 ---
 
@@ -152,6 +156,7 @@ Client                              Server
 - 每个 FIN 是**方向性的**：一旦确认，该方向不能再发新数据
 - 反方向的数据传输可以继续
 - 通常需要 **4 个 segment**（每个方向 FIN + ACK）
+- **FIN 会重传（对应 slide p.31）**：发 FIN 的一方如果收不到对端的 ACK，会**重传未确认的 segment（包括 FIN 本身）**——FIN 和普通数据一样受可靠传输保护，不是"发了就完事"。
 
 ```
 Client                              Server
@@ -214,6 +219,19 @@ Sliding Window 提供：
 ```
 LastByteSent - LastByteAcked <= ReceiveWindowAdvertised
 ```
+
+**课件完整字节追踪（对应 slide p.41–52，seg size = 10 bytes，byte 位置 1…141）**——把窗口推进串成一条线：
+```
+握手后：  SYN:1, ACK:1, Window:50          （双方就绪，接收方通告 50）
+发送 seg1 (byte 1-10) →
+接收方回：ACK:11, Window:40                （已收 1-10，期望 11；应用还没读，缓冲占 10，可用 40）
+应用读走 10 bytes →
+接收方回：ACK:11, Window:50（WindowUpdate） （数据被取走，窗口恢复 50）
+发送 seg2 (byte 11-20) →
+接收方回：ACK:21, Window:40 → 应用读 → ACK:21, Window:50
+...如此推进，窗口在 50/40/50 之间随"发-收-读"循环
+```
+要点：① **ACK 号 = 期望的下一个字节**（所以收到 1-10 后回 ACK:11）；② **Window 缩小是因为缓冲被占、增大是因为应用读走数据**（WindowUpdate）；③ 整个过程受不变量 `LastByteSent − LastByteAcked ≤ RWND` 约束；④ 这条 trace 在 WK10 会被扩展成"丢包 → fast retransmit → Window:0 死锁 → persist/probe"的完整故事。
 
 **窗口为 0 时**：
 - 发送方不应发送数据

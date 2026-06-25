@@ -53,6 +53,21 @@ LastByteSent - LastByteAcked <= ReceiveWindowAdvertised
 **延迟发送**：
 - 发送方可能延迟发送，等待更多数据填满窗口
 - 例如：不立即发送 1000B，而是等待更多数据填满 1500B packet
+- **课件数值（对应 slide p.8）**：另一种说法是"已有 1000B，再等 **500B** 凑满一个 **1500B** 的 packet 才发"——核心都是用延迟换更少的 segment/header 开销，但代价是延迟
+
+**把零窗口、丢包、persist/probe 串成一条完整 trace（对应 slide p.23–41，承接 WK9 的 byte trace，seg size=10）**：
+```
+正常发送中，seg 21 在路上丢失，31/41/51/... 到达接收方
+→ 接收方对每个收到的乱序 segment 回 DupACK:21, Window:50（重复确认，窗口仍 50）
+→ 发送方收到 ACK + 3 个 DupACK:21 → 触发 Fast Retransmit，重传 seg 21
+→ seg 21 到达，接收方按序收到 1-70 → 回 ACK:71, Window:0（缓冲被占满！）
+→ 发送方收到 Window:0，停止发送，等接收方应用读数据
+→ 死锁风险：若那条 WindowUpdate 丢了，双方互等
+→ 发送方 Persist Timer 超时 → 发 ZeroWindowProbe
+→ 接收方回 ZeroWindowProbeACK:71, Window:50（应用已读，窗口恢复）
+→ 发送方恢复发送
+```
+这条 trace 把"丢包→3 DupACK→fast retransmit→Window:0→persist→probe→恢复"串成一个闭环，是 WK9 滑动窗口 + WK10 拥塞/死锁的合体考点。
 
 **缓冲区独立于应用：** 发送方和接收方的缓冲区独立于应用层运行。发送方可能缓冲数据等待填充更大的 segment，接收方也可能延迟将数据交付给应用——**不能保证数据立即被发送或读取**。这意味着窗口不会总是在应用读写后立即滑动。
 
@@ -111,6 +126,8 @@ LastByteSent - LastByteAcked <= ReceiveWindowAdvertised
 - Router buffers 溢出，导致高丢包率
 - 发送方使用 Go-back-N，每次丢包导致 **N 个更多 packets** 进入系统
 - 形成恶性循环：丢包 → 重传 → 更多 packets → 更多丢包
+
+**Pre-Jacobson 的基线（对应 slide p.44）**：在 Jacobson 之前，TCP **只有接收窗口（rwnd）做流控**，没有拥塞窗口——发送方完全不知道网络中间拥塞了，只看接收方还能不能收。所以拥塞发生在**网络**（路由器缓冲）而非**接收方缓冲**，rwnd 根本感知不到，于是窗口开得很大、持续往已拥塞的网络里灌包。Jacobson 引入 **CWND** 正是为了让发送方对"网络这一侧"也有限制。
 
 #### How（如何解决）
 Van Jacobson 诊断并解决了问题：
@@ -203,6 +220,8 @@ TCP Reno 在 Tahoe 基础上增加了 **Fast Recovery**（快速恢复）：
 |------|-----------|----------|
 | 超时 | ssthresh=CWND/2, Slow Start | ssthresh=CWND/2, Slow Start |
 | 3 DupACKs | ssthresh=CWND/2, Slow Start | ssthresh=CWND/2, **Fast Recovery** |
+
+**SACK（Selective Acknowledgment，对应 slide p.54，非考）**：标准 TCP 的累积 ACK 只能说"我连续收到到第 N 字节"，中间多段丢失时发送方不知道哪些段其实到了。**SACK** 在 TCP option 里额外通告**最多 3 段已收到的字节范围**，让发送方只重传真正缺的段，而非 go-back-N 式全重传。这对高带宽延迟乘积（BDP）链路特别有用，但不属于期末考点，了解概念即可。
 
 ---
 

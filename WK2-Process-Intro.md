@@ -249,6 +249,8 @@ if (pid == 0) {
 
 *进程三状态模型：Running/Ready/Blocked 及其转换条件（TB Figure 2-2）*
 
+> 补充参考：OSEP（*Operating Systems: Three Easy Pieces*, Arpaci-Dusseau 2023）Figure 4.4 给出了一段具体的状态转移轨迹示例——一个进程在 running / ready / blocked 之间来回切换的时间线，配合 slide p.13 阅读，能更直观看到"调度点"和"I/O 等待点"如何驱动状态变化。
+
 #### Why（为什么重要）
 进程状态的重要性：
 
@@ -390,6 +392,7 @@ PCB的使用：
 - Web服务器：每个请求一个线程
 - 数据库服务器：多个查询并行执行
 - 图形界面：一个线程处理界面，另一个执行计算
+- **大数组并行（对应 slide p.22）**：把一个很大的数组按段切分，每个线程处理数组的一段，所有线程在多核上并行推进——这是"embarrassingly parallel"模式的典型应用。
 
 ![Per-process vs Per-thread items](./images/WK2-Per-process-thread.png)
 
@@ -417,6 +420,8 @@ PCB的使用：
 2. 选择下一个线程
 3. 从TCB恢复下一个线程的PC、SP、寄存器
 4. 继续执行
+
+**线程"不在运行"时的寄存器细节（对应 slide p.15）**：当一个线程没在运行时，它的上下文（PC、SP、寄存器值）保存在内存（TCB）里；而 CPU 当前的 PC/SP **指向另一个正在运行的线程**的指令和栈。换句话说"寄存器属于当前运行的线程，未运行线程的寄存器状态在内存里等着被恢复"。
 
 #### 关键术语
 - **Thread**：线程，进程内的执行单元

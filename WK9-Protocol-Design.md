@@ -91,6 +91,11 @@ TCP 使用 **FIN flag** 来请求关闭连接。关闭是**方向性的（direct
 #### Why（为什么重要）
 设计协议时不能一开始就锁定 API（如 Waterfall 方法会锁定 API 和整体设计），也不能没有整体设计就开始编码（如纯粹的 Agile 中"客户端"嵌入在开发过程中难以解耦）。正确的方法是**从简单功能开始，逐步扩展**。
 
+**部署阶段的考量（对应 slide p.22）**：协议设计不只到"能跑"为止，还要回答部署问题：
+- **多成熟才能上线？**（how finished before deploy）——过早发布会被用户当"事实标准"锁死，过晚则错过反馈
+- **新 spec 发布怎么办？**（what happens on new spec release）——版本协商、向后兼容、灰度 rolled out
+- **公开发布前如何充分测试？**（how to test thoroughly before public release）——协议一旦部署到互联网就很难收回，测试要在受控环境里穷举边界情况
+
 ---
 
 ### 4. Remote Procedure Call (RPC)（远程过程调用）

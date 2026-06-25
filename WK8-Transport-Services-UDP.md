@@ -119,7 +119,7 @@ App3 (port 80)   ──┘                └── App3 (port 80)
 
 ### 5. 端口号分配
 
-**What**: 端口号是 16 位整数（0-65535），由 IANA（Internet Assigned Numbers Authority）管理。
+**What**: 端口号是 16 位整数（0-65535），由 IANA（Internet Assigned Numbers Authority）管理。端口的官方注册表在 **`http://www.iana.org/assignments/port-numbers`**（对应 slide p.15），可查到每个 well-known/registered 端口对应的服务。
 
 **Why**: 需要一种标准化的方式来标识常用服务，同时为客户端动态分配端口。
 
@@ -206,6 +206,10 @@ App3 (port 80)   ──┘                └── App3 (port 80)
 1. **简单的请求-响应交互**: 客户端发送短请求，期望短响应。如 DNS 查询。如果丢失，客户端超时重试。
 2. **实时应用**: VoIP、视频会议。如果包丢失，不希望等待重传，而是用"最佳猜测"来填充（loss concealment）。
 3. **需要精确控制的应用**: 某些游戏、流媒体应用。
+
+**非考补充（Not Examinable，对应 slide p.22–34）**：课件后半段提到一些**不在考试范围**的传输层相关内容，了解即可：
+- **RTP（Real-time Transport Protocol）**：为实时音视频提供帧化、序号、时间戳；它在协议栈里的归属有争议（有人当应用层、有人当传输层、有人当表示层），常与 **RTCP** 配合做反馈/抖动/同步，用 **jitter buffer** 平滑到达抖动
+- **OSI 的 Session / Presentation 层**：Session 层管会话（认证、会话恢复，QUIC 实际承担了这些）；Presentation 层管表示（加密、压缩、字符集映射）。TCP/IP 把它们折叠进了应用层，所以 TCP/IP 模型只有 4 层
 
 ---
 

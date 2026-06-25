@@ -82,6 +82,10 @@ Tracing route to bbc.com [151.101.0.81] over 30 hops:
 - 每一行是路径上的一个 hop
 - IP 地址是每个 router 的接口地址
 
+**国际 traceroute（对应 slide p.10）**：课件还有一个**跨洲**的 traceroute 例子，能看到长距离跳的 RTT 明显更大（例如 **169 ms**、**325 ms** 级别的单跳延迟），并且响应里带**运营商域名**（如 `telia.net`、`cogentco.com`、`atlas.cogentco.com`）——因为跨洲流量通常经过 Tier-1 运营商的骨干。这与上面 `bbc.com` 的短距离例子对比，能直观看到"跳数少 ≠ 延迟低"，延迟主要由光速传播距离决定。
+
+**海底电缆（对应 slide p.20–21，非考背景）**：全球互联网的跨洲连接**物理上依赖海底通信电缆**（submarine cables），不是卫星。可查 **`submarinecablemap.com`** 看全球海缆走向。了解即可——它解释了为什么跨洲 traceroute 的 RTT 那么大：信号要沿几千公里海缆走，受光速限制。
+
 ---
 
 ### 4. DHCP (Dynamic Host Configuration Protocol)
@@ -128,7 +132,8 @@ Client                              DHCP Server
 ### 5. MAC Address
 
 #### What（是什么）
-- **MAC (Media Access Control) Address**: 网络接口的**硬件地址**
+- **MAC (Media Access Control) Address**: 网络接口的**硬件地址**，常被称为 "**physical address**"（对应 slide p.15）
+- ⚠️ 命名陷阱：MAC 虽叫 "physical address"，但**它不在 physical layer**——它工作在 **Data Link layer（host-to-network layer）**，是链路层概念。物理层只管比特如何在介质上传输，不涉及地址。
 - 可以看作是接口的**全局唯一标识符**
 - 通常由制造商**硬编码**
 - 48 或 64 bits 长，例如：`00:1A:2B:3C:4D:5E`

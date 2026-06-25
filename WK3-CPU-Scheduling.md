@@ -21,7 +21,13 @@ CPU调度是操作系统决定哪个进程或线程获得CPU使用权的过程�
 **调度单元**：
 - 可以是进程（单线程进程）
 - 也可以是线程（多线程进程）
-- 本课件主要关注进程调度，但调度策略对两者都适用
+- 调度策略是 **task-agnostic**（任务无关）的——同一套算法既能调度进程也能调度线程；本课件主要用进程举例，但策略对两者都适用（对应 slide p.3）
+
+> **非考补充（Not Examinable，对应 slide p.29）**：课件末尾提到一些**线程专属**的调度策略，明确标注不在考试范围，仅作了解：
+> - **Gang scheduling**（成组调度）：把同一进程的多个线程同时调度到多核上，减少同步等待
+> - **Processor affinity**（处理器亲和性）：尽量让线程留在同一核上，利用热缓存
+> - **Hierarchical scheduling**（分层调度）：先选进程、再在进程内选线程
+> 线程级调度更多见 Week 4 及之后内容。
 
 #### Why（为什么重要）
 CPU调度的重要性：
@@ -290,7 +296,7 @@ CPU调度的实现机制：
 
 **调度目标**：
 - **所有系统**：
-  - 公平性：进程获得公平的CPU份额
+  - 公平性：**comparable processes should get comparable service**（可比的进程应得到可比的服务，对应 slide p.10 原文）；进程获得公平的CPU份额
   - 资源高效使用：例如，让I/O密集型进程使用CPU以保持I/O设备忙碌，同时通过减少不必要的上下文切换次数来降低开销（Reducing overhead by minimising context switches）
 - **批处理系统**：
   - 最大化吞吐量：单位时间内完成的进程数
@@ -407,6 +413,25 @@ FCFS的实现：
 就绪队列：A, B, C, D
 执行顺序：A → B → C → D
 ```
+
+**FCFS 带 blocking 的队列动态（对应 slide p.14，A–F 六进程）**：真实场景中进程会在运行中阻塞、之后又变 ready，队列会反复变动：
+```
+初始 ready queue（按到达）：F E D C B A
+调度 A 运行 → A 执行中请求 I/O → A 阻塞（移出 ready queue，进 blocked）
+调度 B 运行 → ... → A 的 I/O 完成 → A 重新进入 ready queue 尾部
+继续调度队首...
+```
+关键点：**阻塞的进程离开 ready queue**，I/O 完成后**回到队尾**（不是队首），所以 FCFS 的"先来先服务"是对 ready 状态而言，blocked→ready 是一次重新入队。
+
+**RR 带 blocking 的队列动态（对应 slide p.21–22）**：RR 中进程可能在中途阻塞，也可能时间片没用完就阻塞：
+```
+ready queue: A B C
+A 跑满 quantum → 回队尾；B 跑
+B 跑到一半请求 I/O → B 阻塞（不回队尾，因为 quantum 没用完）
+C 接着跑 → 此时 B 的 I/O 完成 → B 回 ready queue 尾部
+注意：B 重新入队时不会"补"上它没用完的 quantum
+```
+关键点：**阻塞（时间片未用完）≠ 用完时间片降级**；进程阻塞后重新 ready 时按"新到"处理，排在队尾。
 
 **SJF示例**：
 
@@ -525,6 +550,14 @@ Round Robin的实现：
 - **队列数量**（Number of queues）
 - **每队列的调度算法**（Scheduling algorithm per queue，例如RR或FCFS）
 - **每队列的时间片**（Quantum for each queue）
+
+**课件具体配额（对应 slide p.26–27，4 级队列）**：
+- Priority 4（最高）= 2 quanta
+- Priority 3 = 4 quanta
+- Priority 2 = 8 quanta
+- Priority 1（最低）= 16 quanta
+
+即**优先级越低、时间片越长**：交互/I/O 进程在高优先级队列用小时间片快速响应；CPU 密集进程沉到低队列后获得大时间片，减少切换开销。
 
 **MLFQ分析**：
 - 优点：

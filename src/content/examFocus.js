@@ -61,6 +61,24 @@ export const examFocus = {
         distinction: "A frame holds arguments, return address, saved registers, local variables; SP moves toward lower addresses.",
         distinctionZh: "栈帧含参数、返回地址、保存的寄存器、局部变量；SP 向低地址增长。",
         trap: "Assuming the call order equals the hardware push order — calling convention decides what lives in registers vs on the stack."
+      },
+      {
+        en: "Interrupt Return Outcomes",
+        zh: "中断返回的三种结局",
+        asks: "After handling an interrupt, does the interrupted program always resume?",
+        asksZh: "中断处理完之后，被中断的程序一定继续跑吗？",
+        distinction: "Three outcomes: resume the interrupted program; OS kills it (fatal exception); OS schedules another process (e.g. time slice expired via clock interrupt).",
+        distinctionZh: "三种结局：恢复被中断程序；OS 杀掉它（致命异常）；OS 调度另一个进程（时钟中断时间片用完）。",
+        trap: "Assuming 'return from interrupt' always means 'resume exactly what was running' — the kernel may use the interrupt as a scheduling point."
+      },
+      {
+        en: "System Call Can Block the Caller",
+        zh: "系统调用可能阻塞调用者",
+        asks: "Is a system call guaranteed to return immediately? What does the kernel do meanwhile?",
+        asksZh: "系统调用一定立即返回吗？此时内核做什么？",
+        distinction: "A syscall like read() may block the caller (→ blocked state); the kernel then schedules another ready process until an interrupt wakes the blocker. Synchronous for the caller, still a scheduling opportunity for the kernel.",
+        distinctionZh: "read() 等可能把调用者阻塞（→ blocked），内核转去调度另一个 ready 进程，等中断唤醒它。对调用者同步，对内核仍是调度点。",
+        trap: "Equating 'system call = synchronous' with 'returns immediately' — synchronous refers to the caller waiting for the result, not to instant return."
       }
     ]
   },
@@ -122,6 +140,15 @@ export const examFocus = {
         distinction: "Code, Data, Heap (grows up), free space, Stack (grows down); threads share all but the stack.",
         distinctionZh: "Code、Data、Heap（向上）、空闲、Stack（向下）；线程共享除 stack 外的全部。",
         trap: "Drawing the stack at the top growing up — it sits at the high end and grows toward low addresses."
+      },
+      {
+        en: "Thread Context vs Running Thread",
+        zh: "未运行线程的上下文",
+        asks: "When a thread is not running, where are its PC/SP, and what do the CPU's PC/SP point to?",
+        asksZh: "线程不在运行时，它的 PC/SP 在哪？CPU 的 PC/SP 指向什么？",
+        distinction: "An idle thread's context (PC, SP, registers) lives in memory (its TCB); the CPU's PC/SP currently point at whichever thread is running.",
+        distinctionZh: "未运行线程的上下文（PC、SP、寄存器）在内存（TCB）里；CPU 的 PC/SP 当前指向正在运行的那个线程。",
+        trap: "Thinking each thread 'owns' the CPU registers permanently — registers belong to the running thread; others' register state is saved in memory."
       }
     ]
   },
@@ -183,6 +210,15 @@ export const examFocus = {
         distinction: "Too small → context-switch overhead dominates; too large → RR degrades to FCFS.",
         distinctionZh: "太小 → 上下文切换开销占主导；太大 → RR 退化为 FCFS。",
         trap: "Saying smaller quantum always means better response — past a point, overhead cancels the gain."
+      },
+      {
+        en: "MLFQ Quanta Trade-off",
+        zh: "MLFQ 配额权衡",
+        asks: "In the lecture's 4-level MLFQ, why are the quanta 2 / 4 / 8 / 16 — smaller at the top, larger at the bottom?",
+        asksZh: "课件 4 级 MLFQ 的配额 2/4/8/16，为什么上小下大？",
+        distinction: "High-priority queues serve interactive/I/O jobs that need fast response → small quantum; low-priority queues hold CPU-bound jobs that already sank down → large quantum to amortise context-switch cost.",
+        distinctionZh: "高优先级队列服务交互/I/O 作业，需要快响应 → 小时间片；低队列是沉下来的 CPU 密集作业 → 大时间片摊薄切换开销。",
+        trap: "Thinking all MLFQ queues share one quantum — each level has its own, and the ratio (doubling here) is the design knob."
       }
     ]
   },
@@ -244,6 +280,15 @@ export const examFocus = {
         distinction: "Mutual exclusion, hold-and-wait, no preemption, circular wait — all four must hold.",
         distinctionZh: "互斥、占有并等待、不可抢占、循环等待 — 四者同时成立。",
         trap: "Saying any three are enough — deadlock requires all four; breaking any one prevents it."
+      },
+      {
+        en: "Strict Alternation Failure Mode",
+        zh: "严格交替的失败模式",
+        asks: "Why does strict alternation violate the mutual-exclusion requirements even though it provides mutual exclusion?",
+        asksZh: "严格交替明明提供了互斥，为什么仍违反互斥的几个条件？",
+        distinction: "It provides mutual exclusion but breaks the progress requirement: a thread outside the critical region can still block another from entering, because the turn variable forces strict turns.",
+        distinctionZh: "它给了互斥，但破坏了进展性：临界区外的线程仍能阻塞别人进入，因为 turn 变量强制轮流。",
+        trap: "Conflating 'mutual exclusion' (which strict alternation has) with the full set of four conditions (which it fails on progress)."
       }
     ]
   },
@@ -305,6 +350,15 @@ export const examFocus = {
         distinction: "EAT = hit_ratio × (TLB + mem) + (1 − hit_ratio) × (TLB + pagetable + mem); fault cost adds disk time.",
         distinctionZh: "EAT = 命中率×(TLB+访存) + (1−命中率)×(TLB+查表+访存)；缺页还要加磁盘时间。",
         trap: "Forgetting to add the page-table lookup on a TLB miss."
+      },
+      {
+        en: "Aging Counter Mechanics",
+        zh: "老化计数器演算",
+        asks: "Walk through how an 8-bit aging counter changes over clock ticks, and how you pick the victim.",
+        asksZh: "演示 8 位 aging 计数器逐 tick 的变化，以及如何选牺牲页。",
+        distinction: "Each tick: shift every counter right 1 bit, prepend that page's R bit to the left, clear all R bits; evict the page with the smallest counter (most leading zeros).",
+        distinctionZh: "每 tick：所有计数器右移 1 位，把本页 R 追加到最左，清所有 R；驱逐计数器最小（前导 0 最多）的页。",
+        trap: "Treating aging as exact LRU — a page referenced 9 ticks ago and one referenced 1000 ticks ago can both read 0 once the history shifts out."
       }
     ]
   },
@@ -366,6 +420,15 @@ export const examFocus = {
         distinction: "Encrypt-then-MAC lets the receiver reject tampered ciphertext before decrypting, avoiding oracle attacks; MAC-then-encrypt requires decryption to check the tag.",
         distinctionZh: "先加密后 MAC 可在解密前拒绝被篡改的密文；先 MAC 后加密必须先解密才能验。",
         trap: "Putting the MAC inside the encryption and believing it is authenticated — that is MAC-then-encrypt, the riskier order."
+      },
+      {
+        en: "TLS 1.2 vs 1.3 Handshake (Not Examinable)",
+        zh: "TLS 1.2 vs 1.3 握手（非考）",
+        asks: "What key-exchange change does TLS 1.3 make, and what security property does it gain?",
+        asksZh: "TLS 1.3 在密钥交换上做了什么改变？获得了什么安全属性？",
+        distinction: "TLS 1.3 drops RSA key exchange, uses Diffie-Hellman key share (gx/gy) in the first round trip, and CertificateVerify signs the whole handshake; this yields forward secrecy.",
+        distinctionZh: "TLS 1.3 取消 RSA 密钥交换，改用 DH key share 在首轮往返完成协商，CertificateVerify 对整个握手签名；由此获得前向保密。",
+        trap: "Thinking forward secrecy comes from encrypting with RSA — it comes from one-time DH keys that are discarded, so a later private-key leak can't decrypt old sessions."
       }
     ]
   },
@@ -427,6 +490,15 @@ export const examFocus = {
         distinction: "Connection-oriented (TCP) sets up state first, gives reliability; connectionless (UDP) sends at once, no per-flow state.",
         distinctionZh: "面向连接（TCP）先建状态、给可靠性；无连接（UDP）直接发、无流状态。",
         trap: "Equating connection-oriented with reliable — they are correlated in TCP but are independent properties in general."
+      },
+      {
+        en: "IS-IS and the Narrow Waist",
+        zh: "IS-IS 与窄腰",
+        asks: "Give an example of an OSI-originated protocol that the TCP/IP community adopted, and explain the narrow waist.",
+        asksZh: "举一个 OSI 起源、被 TCP/IP 社区采用的协议，并解释窄腰。",
+        distinction: "IS-IS was designed by OSI but is widely used for IP routing; the IP narrow waist means many apps run over IP and IP runs over many links, so IP is the single interop point.",
+        distinctionZh: "IS-IS 由 OSI 设计但广泛用于 IP 路由；IP 窄腰指众多应用跑在 IP 上、IP 跑在众多链路上，IP 是唯一互通点。",
+        trap: "Believing the narrow waist is TCP — it is IP; and that OSI produced nothing usable — IS-IS is a counter-example."
       }
     ]
   },
@@ -488,6 +560,15 @@ export const examFocus = {
         distinction: "UDP uses socket, (optional bind), sendto/recvfrom, close — no listen, accept, or connect (connect on UDP only sets the default destination).",
         distinctionZh: "UDP 用 socket、(可选 bind)、sendto/recvfrom、close — 无 listen/accept；UDP 的 connect 只设默认目的地。",
         trap: "Calling accept() on a UDP socket — UDP is connectionless, accept() does not exist for it."
+      },
+      {
+        en: "Listen Backlog & AI_PASSIVE",
+        zh: "listen backlog 与被动绑定",
+        asks: "What is the second argument to listen(), and why does a server call getaddrinfo with NULL host + AI_PASSIVE?",
+        asksZh: "listen() 第二个参数是什么？服务器为何用 NULL 主机 + AI_PASSIVE 调 getaddrinfo？",
+        distinction: "listen(fd, N) caps the backlog of pending (not-yet-accept) connections at N (lecture uses 10); NULL + AI_PASSIVE binds to the wildcard address on all interfaces, suitable for a passive listener.",
+        distinctionZh: "listen(fd, N) 限制待 accept 的排队连接上限为 N（课件用 10）；NULL + AI_PASSIVE 绑到所有接口的通配地址，适合被动监听。",
+        trap: "Passing a concrete hostname like 'localhost' on the server side — that binds only to the loopback, refusing external connections."
       }
     ]
   },
@@ -549,6 +630,15 @@ export const examFocus = {
         distinction: "Marshalling encodes arguments into network bytes; a pointer is only meaningful in the caller's address space, so it cannot be sent.",
         distinctionZh: "marshalling 把参数编码成网络字节；指针只在调用方地址空间有意义，不能发送。",
         trap: "Believing RPC can hand a pointer across machines — the callee's address space is unrelated to the caller's."
+      },
+      {
+        en: "WebSocket vs HTTP Streaming",
+        zh: "WebSocket vs HTTP 流",
+        asks: "How does a WebSocket differ from plain HTTP for streaming, and on what ports does it run?",
+        asksZh: "WebSocket 与普通 HTTP 在流式传输上有何不同？用什么端口？",
+        distinction: "WebSocket (ws://, wss://) upgrades an HTTP connection to a persistent bidirectional byte stream on ports 80/443; plain HTTP is request/response and server push is a workaround, not a true bidirectional channel.",
+        distinctionZh: "WebSocket（ws://、wss://）把 HTTP 连接升级为持久双向字节流，跑在 80/443；普通 HTTP 是请求/响应，服务端推送是 workaround 而非真双向。",
+        trap: "Thinking WebSocket needs a new port — it reuses 80/443 and starts life as an HTTP upgrade handshake."
       }
     ]
   },
@@ -574,6 +664,15 @@ export const examFocus = {
         distinction: "On arrival the OS reads the (proto, dst port, dst IP, src port, src IP) tuple and matches it to a registered socket.",
         distinctionZh: "到达时 OS 读 5 元组，匹配已注册的 socket。",
         trap: "Thinking only the destination port matters — for connected TCP sockets the full 5-tuple is matched."
+      },
+      {
+        en: "Port Registry & Well-known Ranges",
+        zh: "端口注册表与范围",
+        asks: "Name the three IANA port ranges and where the official registry lives.",
+        asksZh: "说出 IANA 端口三段范围，以及官方注册表在哪。",
+        distinction: "Well-known 0–1023, registered 1024–49151, dynamic 49152–65535; registry at iana.org/assignments/port-numbers.",
+        distinctionZh: "公认 0–1023、注册 1024–49151、动态 49152–65535；注册表在 iana.org/assignments/port-numbers。",
+        trap: "Putting 1024 in the well-known range — well-known ends at 1023; 1024 starts the registered range."
       },
       {
         en: "UDP Header (8 bytes)",
@@ -671,6 +770,15 @@ export const examFocus = {
         distinction: "HTTP/2 adds multiplexing over one TCP + binary framing + header compression; HTTP/3 runs over QUIC (UDP) to avoid TCP head-of-line blocking.",
         distinctionZh: "HTTP/2 在一条 TCP 上多路复用 + 二进制帧 + 头压缩；HTTP/3 跑在 QUIC(UDP) 上避免 TCP 队头阻塞。",
         trap: "Thinking HTTP/3 runs over TCP — it runs over QUIC, which is UDP-based."
+      },
+      {
+        en: "URI vs URL",
+        zh: "URI vs URL",
+        asks: "Is every URL a URI? Is every URI a URL? Give a URI that is not a URL.",
+        asksZh: "每个 URL 都是 URI 吗？每个 URI 都是 URL 吗？举一个不是 URL 的 URI。",
+        distinction: "URI is the superset (URL + URN); URLs locate by address and can be absolute or relative; a URN like an ISBN is a URI but not a URL.",
+        distinctionZh: "URI 是超集（URL + URN）；URL 按地址定位，可绝对可相对；像 ISBN 这样的 URN 是 URI 但不是 URL。",
+        trap: "Treating URI and URL as synonyms — an ISBN/URN identifies without locating, so it is a URI but not a URL."
       }
     ]
   },
@@ -723,6 +831,15 @@ export const examFocus = {
         distinction: "The receiver advertises rwnd; the sender keeps unacknowledged bytes ≤ rwnd, so the receiver's buffer cannot overflow.",
         distinctionZh: "接收方通告 rwnd；发送方未确认字节 ≤ rwnd，接收缓冲不会溢出。",
         trap: "Confusing rwnd (flow control, receiver-driven) with cwnd (congestion control, sender-driven)."
+      },
+      {
+        en: "Sliding Window Byte Trace",
+        zh: "滑动窗口字节追踪",
+        asks: "Walk a sliding-window exchange with segment size 10: after sending bytes 1–10 and the app reading them, what ACK and Window does the receiver send?",
+        asksZh: "用 seg size 10 走一遍：发出 1–10 字节且应用读走后，接收方回什么 ACK 和 Window？",
+        distinction: "After receiving 1–10: ACK:11, Window:40 (buffer holds 10); after the app reads those 10 bytes: a WindowUpdate with ACK:11, Window:50; invariant LastByteSent − LastByteAcked ≤ RWND throughout.",
+        distinctionZh: "收到 1–10：ACK:11, Window:40（缓冲占 10）；应用读走后：WindowUpdate，ACK:11, Window:50；全程满足 LastByteSent − LastByteAcked ≤ RWND。",
+        trap: "Thinking ACK advances the moment data arrives but Window stays fixed — the Window shrinks on arrival and reopens on a WindowUpdate after the app reads."
       },
       {
         en: "TCP 5-tuple & Service Primitives",
@@ -786,6 +903,15 @@ export const examFocus = {
         trap: "Trying to 'send the data the pointer points to' without copying it explicitly — RPC needs the data marshalled, not the address."
       },
       {
+        en: "Protocol Deployment & Rollout",
+        zh: "协议部署与上线",
+        asks: "Name three deployment questions a protocol designer must answer before releasing a spec publicly.",
+        asksZh: "说出协议公开发布前必须回答的三个部署问题。",
+        distinction: "How finished before deploy; what happens on a new spec release (versioning/back-compat); how to test thoroughly before public release.",
+        distinctionZh: "多成熟才上线；新 spec 发布怎么办（版本协商/向后兼容）；公开发布前如何充分测试。",
+        trap: "Thinking the job ends at 'it works in the lab' — once deployed on the Internet a protocol is nearly impossible to un-deploy."
+      },
+      {
         en: "Synchronous vs Asynchronous RPC",
         zh: "同步 vs 异步 RPC",
         asks: "Contrast synchronous RPC and asynchronous RPC for the caller.",
@@ -836,6 +962,15 @@ export const examFocus = {
         distinction: "Several prefixes sharing a common high-order bits are advertised as one shorter prefix (e.g. 4 × /24 → one /22).",
         distinctionZh: "若干共享高位的前缀合并为一个更短前缀（如 4 个 /24 → 一个 /22）。",
         trap: "Aggregating prefixes that do not share enough leading bits — the merged prefix would include addresses you don't own."
+      },
+      {
+        en: "Prefix Membership Drill",
+        zh: "前缀归属判断",
+        asks: "Is 128.250.73.5 in 128.250.0.0/16? /24? /17? Can you infer its netmask from the IP alone?",
+        asksZh: "128.250.73.5 在 /16? /24? /17? 内吗？能单从 IP 推断掩码吗？",
+        distinction: "/16 yes; /24 no (third byte 73≠0); /17 yes (73<128, the 17th bit is 0); you cannot infer the netmask from the IP alone — it is a per-interface config.",
+        distinctionZh: "/16 是；/24 否（第三字节 73≠0）；/17 是（73<128，第 17 位为 0）；不能单从 IP 推掩码，它是接口配置。",
+        trap: "Assuming a single 'correct' prefix for an IP — the same IP belongs to different prefixes under different masks; the mask must be configured."
       },
       {
         en: "Packet Switching vs Virtual Circuit",
@@ -915,6 +1050,15 @@ export const examFocus = {
         distinction: "The sender periodically sends a 1-byte probe to elicit a fresh window advertisement, driven by the persist timer (not the retransmit timer).",
         distinctionZh: "发送方周期性发 1 字节探测，由持续计时器（非重传计时器）驱动，以获取新窗口通告。",
         trap: "Using the retransmission timer for probes — that is a different timer with a different purpose."
+      },
+      {
+        en: "Zero-window Deadlock & Persist Timer",
+        zh: "零窗口死锁与持续计时器",
+        asks: "Trace the full path: seg 21 lost → fast retransmit → Window:0 → deadlock → recovery.",
+        asksZh: "走完整路径：seg 21 丢→fast retransmit→Window:0→死锁→恢复。",
+        distinction: "3 DupACK:21 (Window:50) triggers fast retransmit of seg 21; receiver then ACKs 71 but Window:0 (buffer full); if the WindowUpdate is lost, the persist timer fires a ZeroWindowProbe and the receiver replies ZeroWindowProbeACK with the new window.",
+        distinctionZh: "3 个 DupACK:21（Window:50）触发重传 seg 21；接收方回 ACK:71 但 Window:0（缓冲满）；若 WindowUpdate 丢失，persist timer 发 ZeroWindowProbe，接收方回 ZeroWindowProbeACK 带新窗口。",
+        trap: "Conflating the persist timer with the retransmission timer — the persist timer exists precisely because there is nothing to retransmit (the window, not data, is stuck)."
       }
     ]
   },
@@ -958,6 +1102,15 @@ export const examFocus = {
         distinction: "Sequence number lets a receiver keep the newest copy; age (TTL) lets old LSAs expire so stale info cannot persist forever.",
         distinctionZh: "序号让接收方保留最新副本；age（TTL）让旧 LSA 过期，陈旧信息不会永久存在。",
         trap: "Keeping an LSA purely by 'larger sequence' and forgetting age — a crashed router's last LSA would otherwise live forever."
+      },
+      {
+        en: "IPv6 Header & Address Format",
+        zh: "IPv6 头部与地址格式",
+        asks: "Name the key IPv6 header fields and write 8000:0000:0000:0000:0123:4567:89AB:CDEF in compressed form; what is ::ffff:192.31.2.46?",
+        asksZh: "说出 IPv6 关键头部字段，把上述地址压缩；::ffff:192.31.2.46 是什么？",
+        distinction: "Fields: Version=6, Differentiated services (6-bit class + 2-bit ECN), Flow label, Payload length, Next header, Hop limit (=TTL), 16-byte src/dst; compressed: 8000::123:4567:89AB:CDEF; ::ffff:192.31.2.46 is an IPv4-mapped IPv6 address.",
+        distinctionZh: "字段：Version=6、Differentiated services、Flow label、Payload length、Next header、Hop limit(=TTL)、16 字节 src/dst；压缩：8000::123:4567:89AB:CDEF；::ffff:192.31.2.46 是 IPv4-mapped IPv6 地址。",
+        trap: "Using :: more than once to compress different zero runs — only one :: is allowed, otherwise the address is ambiguous."
       },
       {
         en: "Count-to-Infinity (DV)",
@@ -1037,6 +1190,15 @@ export const examFocus = {
         distinction: "Separation lets forwarding stay fast/simple in hardware while control logic runs slower in software and can change without disrupting forwarding.",
         distinctionZh: "分离让转发在硬件里快而简单，控制逻辑在软件里慢跑且可更新而不打断转发。",
         trap: "Believing control-plane changes always pause forwarding — well-designed networks keep forwarding alive during recomputation."
+      },
+      {
+        en: "Traceroute across International Hops",
+        zh: "跨洲 traceroute",
+        asks: "Why can a traceroute with few hops still show large RTTs, and what do carrier names in the output reveal?",
+        asksZh: "为什么跳数少的 traceroute 仍可能有大 RTT？输出里的运营商名说明了什么？",
+        distinction: "RTT is dominated by propagation distance (speed of light along cables), not hop count; carrier domains like telia.net/cogentco.com show the packet is crossing a Tier-1 backbone, often over submarine cables.",
+        distinctionZh: "RTT 主要由传播距离（光速沿电缆）决定，而非跳数；telia.net/cogentco.com 等运营商名说明在穿越 Tier-1 骨干，常走海底电缆。",
+        trap: "Equating 'few hops' with 'low latency' — a single cross-Pacific hop can be ~150 ms while 10 local hops may be < 5 ms."
       }
     ]
   },
@@ -1089,6 +1251,15 @@ export const examFocus = {
         distinction: "It violates the end-to-end principle (peers cannot assume a raw IP path) and layering (it rewrites port numbers, a transport-layer field, in a network-layer box).",
         distinctionZh: "它违反端到端原则（对端不能假设有原始 IP 路径）与分层（在网络层设备里改写传输层端口号）。",
         trap: "Defending NAT as clean layering — it is the textbook example of a layering violation."
+      },
+      {
+        en: "Layered Debugging Matrix",
+        zh: "分层调试矩阵",
+        asks: "How does the lecture's debugging matrix help isolate 'the internet is not working'?",
+        asksZh: "课件的调试矩阵如何帮助定位'网络不工作'？",
+        distinction: "Rows = spatial location (host, LAN, gateway, ISP, remote), columns = stack layer (physical/link/network/transport/app); place the symptom in a cell to shrink the hypothesis space, then verify each cell with a matching tool.",
+        distinctionZh: "行 = 空间位置（主机、LAN、网关、ISP、远端），列 = 协议栈层（物理/链路/网络/传输/应用）；把症状填进格子缩小假设空间，再用对应工具逐格验证。",
+        trap: "Jumping straight to 'the server is down' before checking DNS or local routing — work the matrix cell by cell instead."
       },
       {
         en: "Network Debugging Checklist",

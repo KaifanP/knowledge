@@ -25,6 +25,12 @@ https://www.example.com:443/path/page.html?name=value#section1
 scheme    host           port path           query     fragment
 ```
 
+**URI vs URL（对应 slide p.10，重要区分）**：
+- **URI（Uniform Resource Identifier）** 是更广的概念，**包含 URL 和 URN**；甚至像 **ISBN** 这种标识符也属于 URI（它标识了一本书，但不是"定位"它的地址）
+- **URL** 是 URI 中"通过位置定位资源"的子集，可以是**绝对**的（`http://www.google.com`）也可以是**相对**的（`./nextpage.html`，相对当前页面解析）
+- 完整语法示例：`abc://user:passwd@example.com:123/path/data?key=value#frag1`——可带**认证信息** `user:passwd@`，这是简单 URL 模板里常省略的部分
+- 一句话：**所有 URL 都是 URI，但不是所有 URI 都是 URL**（URN/ISBN 是 URI 但不是 URL）
+
 ![WWW组成部分：Client通过Browser连接Server，URL = Protocol + DNS Name + file name](./images/WK8-WWW-Components.png)
 
 > **图片来源：** WK8-HTTP课件第6页。Client通过浏览器访问Web Server，Server通过daemon提供内容。Hyperlink在不同Server之间链接。URL ≈ Protocol + DNS Name + file name。
@@ -45,6 +51,8 @@ scheme    host           port path           query     fragment
 5. 服务器处理请求并返回 HTTP 响应消息
 6. 浏览器渲染页面，可能需要获取其他资源（图片、CSS、JS）
 7. 关闭 TCP 连接
+
+**课件 11 步流程（对应 slide p.15）**：完整版还包含——浏览器**边收边渲染**（progressive page display，HTML 到一部分就开始布局）；对新发现的每个嵌入对象重复"DNS→TCP→请求→响应"；persistent 连接下复用同一条 TCP 减少握手；最后由一方关闭连接。关键加细：**渲染不是等全部对象到齐才开始**，而是渐进式的。
 
 ---
 
@@ -234,6 +242,11 @@ Content-Type: text/html
 - HTTP 层面与 HTTP/2 基本相同
 - 融合了 TLS 握手与连接建立
 
+**部署现状（对应 slide p.24–25，了解即可）**：
+- HTTP/2 已被约 **1/3 的网站** 支持（"Supported by 1 in 3 web sites"）
+- HTTP/3 已成为 **Proposed standard**，同样约 **1/3 的服务器** 支持
+- 两者都在快速普及，但 HTTP/1.1 仍是兜底，协商失败时回落
+
 ---
 
 ### 10. Cookies ⚠️ 背景补充，非核心考试范围
@@ -275,6 +288,23 @@ Content-Type: text/html
 | 消息格式 | 每个对象独立封装 | 所有内容在一个消息中 |
 | 编码 | 二进制数据可直接传输 | 需要编码（如 Base64） |
 | 用途 | 获取 Web 资源 | 发送电子邮件 |
+
+**SMTP 对话示例（对应 slide p.21）**：SMTP 是命令/响应式的，每条命令后服务器回一个**3 位状态码**：
+```
+C: MAIL FROM:<alice@example.com>
+C: RCPT TO:<bob@example.com>
+C: DATA
+C: From: alice@example.com
+C: To: bob@example.com
+C: Subject: Hello
+C:
+C: body text
+C: .
+S: 250 Message accepted
+```
+关键：服务器用 `250` 表示成功接受；`DATA` 之后输入正文，以单独一行 `.` 结束；这和 HTTP"一次性发完整请求"不同，SMTP 是**逐条命令交互**的。
+
+**Wireshark 抓包（对应 slide p.17，了解即可）**：课件用 Wireshark 演示了真实的 HTTP 交互——能看到 TCP 三次握手、HTTP 请求行、各 header、响应状态行和 body 在网络上的实际字节。这是把"协议格式"和"线上真实数据"对应起来的最佳工具，期末不考 Wireshark 操作，但理解它展示的字节能帮你想清楚格式。
 
 ---
 
