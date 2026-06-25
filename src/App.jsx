@@ -8,10 +8,14 @@ import {
   GitBranch,
   ListChecks,
   Map,
+  ScrollText,
   Search,
-  Star
+  Star,
+  Target,
+  TriangleAlert
 } from "lucide-react";
 import { chapters } from "./content/chapters.js";
+import { examFocus } from "./content/examFocus.js";
 import { knowledgeEdges, knowledgeNodes, weekPlans } from "./content/plans.js";
 import { quizzes } from "./content/quizzes.js";
 import { LabRouter } from "./components/Labs.jsx";
@@ -19,11 +23,12 @@ import { excerpt, extractHeadings, renderMarkdown, stripMarkdown } from "./lib/m
 import { loadProgress, saveProgress, updateChapterProgress } from "./lib/storage.js";
 
 const tabs = [
-  { id: "read", label: "阅读", icon: BookOpen },
-  { id: "lab", label: "实验", icon: Beaker },
-  { id: "quiz", label: "题卡", icon: ListChecks },
-  { id: "map", label: "地图", icon: GitBranch },
-  { id: "plan", label: "规划", icon: Map }
+  { id: "read", label: "阅读 Read", icon: BookOpen },
+  { id: "exam", label: "考点 Exam", icon: Target },
+  { id: "lab", label: "实验 Lab", icon: Beaker },
+  { id: "quiz", label: "题卡 Quiz", icon: ListChecks },
+  { id: "map", label: "地图 Map", icon: GitBranch },
+  { id: "plan", label: "规划 Plan", icon: Map }
 ];
 
 export default function App() {
@@ -69,10 +74,11 @@ export default function App() {
         <div className="brand">
           <span>COMP30023</span>
           <strong>Interactive Revision</strong>
+          <small>期末复习工作台 · bilingual exam focus</small>
         </div>
         <label className="search-box">
           <Search size={16} />
-          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索知识点" />
+          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索知识点 · search notes" />
         </label>
         {query.trim() ? (
           <SearchResults
@@ -98,7 +104,7 @@ export default function App() {
           <div className="progress-pill">
             <CheckCircle2 size={18} />
             <strong>{completion}%</strong>
-            <span>{completeCount}/{chapters.length}</span>
+            <span>{completeCount}/{chapters.length} done</span>
           </div>
         </header>
 
@@ -117,6 +123,7 @@ export default function App() {
         {tab === "read" && (
           <article className="markdown-panel" dangerouslySetInnerHTML={{ __html: rendered }} />
         )}
+        {tab === "exam" && <ExamPanel chapterId={selected.id} onJumpToLab={() => setTab("lab")} />}
         {tab === "lab" && <LabRouter chapter={selected} />}
         {tab === "quiz" && (
           <QuizPanel
@@ -137,7 +144,9 @@ export default function App() {
           onPatch={patchSelected}
           onOpenLab={() => setTab("lab")}
           onOpenQuiz={() => setTab("quiz")}
+          onOpenExam={() => setTab("exam")}
         />
+        <ExamQuickView chapterId={selected.id} onOpenExam={() => setTab("exam")} />
         <Toc headings={headings} />
       </aside>
     </div>
@@ -171,7 +180,7 @@ function ChapterNav({ selectedId, onPick, progress }) {
 function SearchResults({ results, query, onPick }) {
   return (
     <div className="search-results">
-      <p>{results.length} 个结果</p>
+      <p>{results.length} 个结果 · results</p>
       {results.map(({ chapter }) => (
         <button key={chapter.id} onClick={() => onPick(chapter.id)}>
           <strong>{chapter.week} · {chapter.title}</strong>
@@ -182,19 +191,19 @@ function SearchResults({ results, query, onPick }) {
   );
 }
 
-function ChapterCard({ chapter, progress, onPatch, onOpenLab, onOpenQuiz }) {
+function ChapterCard({ chapter, progress, onPatch, onOpenLab, onOpenQuiz, onOpenExam }) {
   const plan = weekPlans[chapter.id];
   return (
     <section className="side-card hero-card">
       <img src={chapter.image} alt="" />
       <div className="side-actions">
-        <button className={progress.done ? "active" : ""} onClick={() => onPatch({ done: !progress.done })} title="完成">
+        <button className={progress.done ? "active" : ""} onClick={() => onPatch({ done: !progress.done })} title="完成 Done">
           <CheckCircle2 size={18} />
         </button>
-        <button className={progress.star ? "active" : ""} onClick={() => onPatch({ star: !progress.star })} title="收藏">
+        <button className={progress.star ? "active" : ""} onClick={() => onPatch({ star: !progress.star })} title="收藏 Star">
           <Bookmark size={18} />
         </button>
-        <button className={progress.weak ? "active warn" : ""} onClick={() => onPatch({ weak: !progress.weak })} title="不熟">
+        <button className={progress.weak ? "active warn" : ""} onClick={() => onPatch({ weak: !progress.weak })} title="不熟 Weak">
           <AlertTriangle size={18} />
         </button>
       </div>
@@ -204,6 +213,7 @@ function ChapterCard({ chapter, progress, onPatch, onOpenLab, onOpenQuiz }) {
         {chapter.focus.map((item) => <span key={item}>{item}</span>)}
       </div>
       <div className="mini-buttons">
+        <button onClick={onOpenExam}><Target size={16} />考点</button>
         <button onClick={onOpenLab}><Beaker size={16} />实验</button>
         <button onClick={onOpenQuiz}><ListChecks size={16} />题卡</button>
       </div>
@@ -214,11 +224,34 @@ function ChapterCard({ chapter, progress, onPatch, onOpenLab, onOpenQuiz }) {
   );
 }
 
+function ExamQuickView({ chapterId, onOpenExam }) {
+  const focus = examFocus[chapterId];
+  if (!focus) return null;
+  return (
+    <section className="side-card exam-quick">
+      <div className="exam-quick-head">
+        <ScrollText size={16} />
+        <h3>考点速览 Exam Focus</h3>
+      </div>
+      <p className="exam-summary">{focus.summaryZh}</p>
+      <ul className="exam-quick-list">
+        {focus.topics.slice(0, 6).map((topic) => (
+          <li key={topic.en}>
+            <strong>{topic.en}</strong>
+            <span>{topic.zh}</span>
+          </li>
+        ))}
+      </ul>
+      <button className="exam-quick-open" onClick={onOpenExam}>展开全部 · open full list</button>
+    </section>
+  );
+}
+
 function Toc({ headings }) {
   const visible = headings.filter((heading) => heading.depth <= 3).slice(0, 24);
   return (
     <section className="side-card toc">
-      <h3>目录</h3>
+      <h3>目录 Outline</h3>
       {visible.map((heading) => (
         <button
           key={`${heading.id}-${heading.title}`}
@@ -246,7 +279,7 @@ function QuizPanel({ chapterId, questions, bestScore, onScore }) {
       <div className="lab-head">
         <div>
           <p className="eyebrow">Exam cards</p>
-          <h3>易错题卡</h3>
+          <h3>易错题卡 Trap cards</h3>
         </div>
         <div className="step-count">{correct}/{questions.length}</div>
       </div>
@@ -282,13 +315,65 @@ function QuizPanel({ chapterId, questions, bestScore, onScore }) {
   );
 }
 
+function ExamPanel({ chapterId, onJumpToLab }) {
+  const focus = examFocus[chapterId];
+  if (!focus) {
+    return <div className="empty-panel">本章考点整理中 · exam focus coming soon.</div>;
+  }
+  return (
+    <section className="exam-panel">
+      <div className="lab-head">
+        <div>
+          <p className="eyebrow">Exam focus · 双语考点</p>
+          <h3>考点详解 Exam Focus</h3>
+        </div>
+        <button className="lab-link" onClick={onJumpToLab}><Beaker size={15} />配套实验 Lab</button>
+      </div>
+      <p className="exam-lead">{focus.summaryZh}<span className="exam-lead-en">{focus.summary}</span></p>
+      <ol className="exam-list">
+        {focus.topics.map((topic, index) => (
+          <li key={topic.en} className="exam-card">
+            <div className="exam-card-head">
+              <span className="exam-index">{String(index + 1).padStart(2, "0")}</span>
+              <div>
+                <h4>{topic.en}</h4>
+                <span className="exam-zh">{topic.zh}</span>
+              </div>
+            </div>
+            <div className="exam-fields">
+              <ExamField icon="listChecks" label="考试会问 Asks" en={topic.asks} zh={topic.asksZh} tone="asks" />
+              <ExamField icon="gitCompare" label="核心区分 Distinction" en={topic.distinction} zh={topic.distinctionZh} tone="distinction" />
+              <ExamField icon="triangleAlert" label="常见陷阱 Trap" en={topic.trap} zh={topic.trap} tone="trap" bare />
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+function ExamField({ label, en, zh, tone, bare }) {
+  return (
+    <div className={`exam-field tone-${tone}`}>
+      <div className="exam-field-label">
+        {tone === "trap" && <TriangleAlert size={14} />}
+        {tone === "asks" && <ListChecks size={14} />}
+        {tone === "distinction" && <GitBranch size={14} />}
+        {label}
+      </div>
+      <p className="exam-field-en">{en}</p>
+      {!bare && <p className="exam-field-zh">{zh}</p>}
+    </div>
+  );
+}
+
 function KnowledgeMap({ activeId, onPick }) {
   return (
     <section className="map-panel">
       <div className="lab-head">
         <div>
           <p className="eyebrow">Knowledge graph</p>
-          <h3>知识点地图</h3>
+          <h3>知识点地图 Knowledge Map</h3>
         </div>
       </div>
       <div className="map-grid">
@@ -318,7 +403,7 @@ function PlanBoard({ onPick }) {
       <div className="lab-head">
         <div>
           <p className="eyebrow">Build plan</p>
-          <h3>每章互动规划</h3>
+          <h3>每章互动规划 Study Plan</h3>
         </div>
       </div>
       <div className="plan-grid">
@@ -335,7 +420,7 @@ function PlanBoard({ onPick }) {
               <ul>
                 {plan.exam.map((item) => <li key={item}>{item}</li>)}
               </ul>
-              <button onClick={() => onPick(chapter.id)}>打开实验</button>
+              <button onClick={() => onPick(chapter.id)}>打开实验 Open lab</button>
             </article>
           );
         })}
