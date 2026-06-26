@@ -20,6 +20,7 @@ import { recitation } from "./content/recitation.js";
 import { knowledgeEdges, knowledgeNodes, weekPlans } from "./content/plans.js";
 import { quizzes } from "./content/quizzes.js";
 import { LabRouter } from "./components/Labs.jsx";
+import { TabPanel } from "./components/TeachingMotion.jsx";
 import { excerpt, extractHeadings, renderMarkdown, stripMarkdown } from "./lib/markdown.js";
 import { loadProgress, saveProgress, updateChapterProgress } from "./lib/storage.js";
 
@@ -104,6 +105,7 @@ export default function App() {
             <span className="filename">{selected.filename}</span>
           </div>
           <div className="progress-pill">
+            <div className="progress-pill-fill" style={{ width: `${completion}%` }} />
             <CheckCircle2 size={18} />
             <strong>{completion}%</strong>
             <span>{completeCount}/{chapters.length} done</span>
@@ -122,28 +124,30 @@ export default function App() {
           })}
         </div>
 
-        {tab === "read" && (
-          <article className="markdown-panel" dangerouslySetInnerHTML={{ __html: rendered }} />
-        )}
-        {tab === "exam" && <ExamPanel chapterId={selected.id} onJumpToLab={() => setTab("lab")} />}
-        {tab === "recite" && (
-          <RecitePanel
-            chapterId={selected.id}
-            memorized={selectedProgress.reciteDone || []}
-            onMemorizedChange={(reciteDone) => patchSelected({ reciteDone })}
-          />
-        )}
-        {tab === "lab" && <LabRouter chapter={selected} />}
-        {tab === "quiz" && (
-          <QuizPanel
-            chapterId={selected.id}
-            questions={quizzes[selected.id] || []}
-            bestScore={selectedProgress.bestScore}
-            onScore={(bestScore) => patchSelected({ bestScore })}
-          />
-        )}
-        {tab === "map" && <KnowledgeMap onPick={(id) => pickChapter(id, "read")} activeId={selected.id} />}
-        {tab === "plan" && <PlanBoard onPick={(id) => pickChapter(id, "lab")} />}
+        <TabPanel key={`${selected.id}-${tab}`}>
+          {tab === "read" && (
+            <article className="markdown-panel" dangerouslySetInnerHTML={{ __html: rendered }} />
+          )}
+          {tab === "exam" && <ExamPanel chapterId={selected.id} onJumpToLab={() => setTab("lab")} />}
+          {tab === "recite" && (
+            <RecitePanel
+              chapterId={selected.id}
+              memorized={selectedProgress.reciteDone || []}
+              onMemorizedChange={(reciteDone) => patchSelected({ reciteDone })}
+            />
+          )}
+          {tab === "lab" && <LabRouter chapter={selected} />}
+          {tab === "quiz" && (
+            <QuizPanel
+              chapterId={selected.id}
+              questions={quizzes[selected.id] || []}
+              bestScore={selectedProgress.bestScore}
+              onScore={(bestScore) => patchSelected({ bestScore })}
+            />
+          )}
+          {tab === "map" && <KnowledgeMap onPick={(id) => pickChapter(id, "read")} activeId={selected.id} />}
+          {tab === "plan" && <PlanBoard onPick={(id) => pickChapter(id, "lab")} />}
+        </TabPanel>
       </main>
 
       <aside className="inspector">
@@ -337,7 +341,7 @@ function RecitePanel({ chapterId, memorized, onMemorizedChange }) {
         </div>
       </div>
       <p className="exam-lead">{block.summaryZh}<span className="exam-lead-en">{block.summary}</span></p>
-      <ol className="recite-list">
+      <ol className="recite-list stagger-children">
         {items.map((item, index) => {
           const isRevealed = revealed[index];
           const isMemorized = memorizedSet.has(index);
@@ -420,7 +424,7 @@ function QuizPanel({ chapterId, questions, bestScore, onScore }) {
         </div>
         <div className="step-count">{correct}/{questions.length}</div>
       </div>
-      <div className="quiz-list">
+      <div className="quiz-list stagger-children">
         {questions.map((question, index) => (
           <article key={question.question} className="quiz-item">
             <h4>{index + 1}. {question.question}</h4>
@@ -467,7 +471,7 @@ function ExamPanel({ chapterId, onJumpToLab }) {
         <button className="lab-link" onClick={onJumpToLab}><Beaker size={15} />配套实验 Lab</button>
       </div>
       <p className="exam-lead">{focus.summaryZh}<span className="exam-lead-en">{focus.summary}</span></p>
-      <ol className="exam-list">
+      <ol className="exam-list stagger-children">
         {focus.topics.map((topic, index) => (
           <li key={topic.en} className="exam-card">
             <div className="exam-card-head">

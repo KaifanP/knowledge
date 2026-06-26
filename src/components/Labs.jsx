@@ -1,9 +1,34 @@
 import { useMemo, useState } from "react";
+import { DnsFlowVisual, TcpHandshakeVisual } from "./TeachingMotion.jsx";
+import {
+  CidrBitVisual,
+  ControlPlaneVisual,
+  CryptoFlowVisual,
+  CwndBarVisual,
+  DijkstraGraphVisual,
+  EncapsulationVisual,
+  HttpMessageVisual,
+  NatTopologyVisual,
+  PagingVisual,
+  ProcessThreadVisual,
+  RaceTimelineVisual,
+  RpcFlowVisual,
+  SchedulingTimelineVisual,
+  SocketLifecycleVisual,
+  SystemCallVisual,
+  UdpDemuxVisual
+} from "./LabVisuals.jsx";
 
 export function LabRouter({ chapter }) {
   switch (chapter.lab) {
     case "system-call":
-      return <StepperLab title="System call journey" steps={systemCallSteps} />;
+      return (
+        <StepperLab
+          title="System call journey"
+          steps={systemCallSteps}
+          renderVisual={(index) => <SystemCallVisual step={index} />}
+        />
+      );
     case "process-thread":
       return <ProcessThreadLab />;
     case "scheduling":
@@ -19,13 +44,25 @@ export function LabRouter({ chapter }) {
     case "sockets":
       return <SocketLab />;
     case "dns":
-      return <StepperLab title="DNS lookup path" steps={dnsSteps} />;
+      return (
+        <StepperLab
+          title="DNS lookup path"
+          steps={dnsSteps}
+          renderVisual={(index) => <DnsFlowVisual step={index} />}
+        />
+      );
     case "udp-demux":
       return <UdpDemuxLab />;
     case "http":
       return <HttpBuilderLab />;
     case "tcp-handshake":
-      return <StepperLab title="TCP three-way handshake" steps={tcpSteps} />;
+      return (
+        <StepperLab
+          title="TCP three-way handshake"
+          steps={tcpSteps}
+          renderVisual={(index) => <TcpHandshakeVisual step={index} />}
+        />
+      );
     case "rpc":
       return <RpcLab />;
     case "cidr":
@@ -35,7 +72,13 @@ export function LabRouter({ chapter }) {
     case "dijkstra":
       return <DijkstraLab />;
     case "control-plane":
-      return <StepperLab title="Traceroute and ARP flow" steps={controlSteps} />;
+      return (
+        <StepperLab
+          title="Traceroute and ARP flow"
+          steps={controlSteps}
+          renderVisual={(index) => <ControlPlaneVisual step={index} />}
+        />
+      );
     case "nat":
       return <NatLab />;
     default:
@@ -43,9 +86,10 @@ export function LabRouter({ chapter }) {
   }
 }
 
-function StepperLab({ title, steps }) {
+function StepperLab({ title, steps, renderVisual }) {
   const [index, setIndex] = useState(0);
   const step = steps[index];
+  const progress = ((index + 1) / steps.length) * 100;
   return (
     <section className="lab">
       <div className="lab-head">
@@ -67,7 +111,11 @@ function StepperLab({ title, steps }) {
           </button>
         ))}
       </div>
-      <div className="lab-stage">
+      <div className="stepper-progress" aria-hidden="true">
+        <div className="stepper-progress-fill" style={{ width: `${progress}%` }} />
+      </div>
+      {renderVisual?.(index)}
+      <div className="lab-stage lab-stage-swap" key={`${title}-${index}`}>
         <h4>{step.label}</h4>
         <p>{step.body}</p>
         <code>{step.note}</code>
@@ -140,6 +188,7 @@ function ProcessThreadLab() {
           <button className={mode === "thread" ? "active" : ""} onClick={() => setMode("thread")}>Thread</button>
         </div>
       </div>
+      <ProcessThreadVisual mode={mode} />
       <div className="memory-map">
         {rows.map(([label, value]) => (
           <div key={label} className="memory-row">
@@ -197,7 +246,7 @@ function SchedulingLab() {
         {schedule.segments.map((segment, index) => (
           <div
             key={`${segment.id}-${segment.start}-${index}`}
-            className={`gantt-bar tone-${segment.id}`}
+            className={`gantt-bar gantt-bar-anim tone-${segment.id}`}
             style={{ flexGrow: segment.end - segment.start }}
             title={`${segment.id}: ${segment.start}-${segment.end}`}
           >
@@ -206,6 +255,7 @@ function SchedulingLab() {
           </div>
         ))}
       </div>
+      <SchedulingTimelineVisual segments={schedule.segments} />
       <div className="metric-grid">
         {schedule.metrics.map((metric) => (
           <div key={metric.id}>
@@ -293,6 +343,7 @@ function RaceConditionLab() {
   const [value, setValue] = useState(0);
   const [locals, setLocals] = useState({ A: null, B: null });
   const [log, setLog] = useState([]);
+  const [bump, setBump] = useState(false);
   function read(thread) {
     setLocals((current) => ({ ...current, [thread]: value }));
     setLog((current) => [`${thread}: read ${value}`, ...current].slice(0, 5));
@@ -301,6 +352,8 @@ function RaceConditionLab() {
     if (locals[thread] === null) return;
     const next = locals[thread] + 1;
     setValue(next);
+    setBump(true);
+    setTimeout(() => setBump(false), 400);
     setLog((current) => [`${thread}: write ${next}`, ...current].slice(0, 5));
   }
   function reset() {
@@ -317,7 +370,8 @@ function RaceConditionLab() {
         </div>
         <button onClick={reset}>Reset</button>
       </div>
-      <div className="counter-display">shared counter = {value}</div>
+      <RaceTimelineVisual log={log} />
+      <div className={`counter-display ${bump ? "counter-bump" : ""}`}>shared counter = {value}</div>
       <div className="thread-grid">
         {["A", "B"].map((thread) => (
           <div key={thread}>
@@ -356,6 +410,14 @@ function PagingLab() {
         <span>Logical address</span>
         <input type="number" min="0" max="4095" value={logical} onChange={(event) => setLogical(Number(event.target.value))} />
       </label>
+      <PagingVisual
+        logical={logical}
+        page={page}
+        offset={offset}
+        frame={frame}
+        physical={physical}
+        pageSize={pageSize}
+      />
       <div className="translation-grid">
         <div><span>page number</span><strong>{page}</strong></div>
         <div><span>offset</span><strong>{offset}</strong></div>
@@ -398,7 +460,8 @@ function CryptoLab() {
           </button>
         ))}
       </div>
-      <div className="lab-stage">
+      <CryptoFlowVisual step={step} />
+      <div className="lab-stage lab-stage-swap" key={step}>
         <h4>{steps[step][0]}</h4>
         <p>{steps[step][1]}</p>
       </div>
@@ -423,6 +486,7 @@ function EncapsulationLab() {
         </div>
         <input type="range" min="1" max="4" value={depth} onChange={(event) => setDepth(Number(event.target.value))} />
       </div>
+      <EncapsulationVisual depth={depth} layers={layers} />
       <div className="stack-view">
         {layers.slice(0, depth).map(([layer, unit, payload]) => (
           <div key={layer}>
@@ -448,6 +512,7 @@ function SocketLab() {
         </div>
         <button onClick={() => setIndex((index + 1) % steps.length)}>Next</button>
       </div>
+      <SocketLifecycleVisual stepIndex={index} steps={steps} />
       <div className="socket-columns">
         <div>
           <h4>Listening socket</h4>
@@ -485,6 +550,7 @@ function UdpDemuxLab() {
           {sockets.map((socket) => <option key={socket.port} value={socket.port}>port {socket.port}</option>)}
         </select>
       </div>
+      <UdpDemuxVisual dest={dest} sockets={sockets} targetApp={target?.app} />
       <div className="packet-box">UDP segment: src 62000 {"->"} dst {dest}</div>
       <div className="socket-list">
         {sockets.map((socket) => (
@@ -519,6 +585,7 @@ function HttpBuilderLab() {
       <label className="input-row"><span>Path</span><input value={path} onChange={(event) => setPath(event.target.value)} /></label>
       <label className="input-row"><span>Host</span><input value={host} onChange={(event) => setHost(event.target.value)} /></label>
       <label className="check-row"><input type="checkbox" checked={cookie} onChange={(event) => setCookie(event.target.checked)} /> Cookie</label>
+      <HttpMessageVisual method={method} path={path} host={host} cookie={cookie} />
       <pre className="request-box">{request}</pre>
     </section>
   );
@@ -535,6 +602,7 @@ function RpcLab() {
         </div>
       </div>
       <label className="input-row"><span>Call</span><input value={payload} onChange={(event) => setPayload(event.target.value)} /></label>
+      <RpcFlowVisual payload={payload} hex={toHex(payload)} />
       <div className="rpc-flow">
         <div><strong>Client stub</strong><span>{payload}</span></div>
         <div><strong>Bytes on network</strong><code>{toHex(payload)}</code></div>
@@ -567,6 +635,7 @@ function CidrLab() {
         <input type="range" min="8" max="30" value={prefix} onChange={(event) => setPrefix(Number(event.target.value))} />
         <strong>/{prefix}</strong>
       </label>
+      <CidrBitVisual ip={ip} prefix={prefix} />
       <div className="translation-grid">
         <div><span>mask</span><strong>{result.mask}</strong></div>
         <div><span>network</span><strong>{result.network}</strong></div>
@@ -617,14 +686,7 @@ function CwndLab() {
       </div>
       <label className="slider-row"><span>ssthresh</span><input type="range" min="4" max="16" value={ssthresh} onChange={(event) => setSsthresh(Number(event.target.value))} /><strong>{ssthresh}</strong></label>
       <label className="slider-row"><span>loss round</span><input type="range" min="3" max="12" value={lossRound} onChange={(event) => setLossRound(Number(event.target.value))} /><strong>{lossRound}</strong></label>
-      <div className="bar-chart">
-        {points.map((point) => (
-          <div key={point.round} className={point.loss ? "loss" : ""}>
-            <span style={{ height: `${(point.cwnd / max) * 100}%` }} />
-            <small>{point.round}</small>
-          </div>
-        ))}
-      </div>
+      <CwndBarVisual points={points} max={max} />
       <p className="lab-note">当前模型：Tahoe 风格，loss 后 ssthresh = cwnd / 2，并重新 slow start。</p>
     </section>
   );
@@ -688,6 +750,7 @@ function DijkstraLab() {
           <button onClick={step} disabled={!current}>Step</button>
         </div>
       </div>
+      <DijkstraGraphVisual settled={state.settled} candidate={current} dist={state.dist} />
       <div className="node-grid">
         {Object.keys(graph).map((node) => (
           <div key={node} className={state.settled.includes(node) ? "settled" : current === node ? "candidate" : ""}>
@@ -742,6 +805,7 @@ function NatLab() {
         </div>
         <button onClick={addMapping}>New flow</button>
       </div>
+      <NatTopologyVisual rows={rows} highlightHost={host} />
       <select value={host} onChange={(event) => setHost(event.target.value)}>
         <option>192.168.0.10</option>
         <option>192.168.0.11</option>

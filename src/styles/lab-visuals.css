@@ -1,0 +1,835 @@
+/* Per-unit lab teaching visuals */
+
+.lab-visual {
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(180deg, #f8fbf9, #fbfcfa);
+}
+
+.viz-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.viz-hint {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.viz-arrow {
+  color: var(--green-deep);
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.viz-arrow.anim {
+  animation: packet-right 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.viz-arrow.down { display: block; text-align: center; }
+.viz-arrow.up { display: block; text-align: center; }
+
+/* System call */
+.syscall-visual {
+  display: grid;
+  gap: 8px;
+}
+
+.syscall-zone {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+}
+
+.syscall-zone.lit {
+  border-color: var(--green);
+  background: var(--green-soft);
+  box-shadow: 0 0 0 2px rgba(47, 125, 87, 0.12);
+}
+
+.syscall-zone code {
+  font-size: 12px;
+  color: var(--blue-deep);
+}
+
+.syscall-zone.hw.lit {
+  border-color: var(--amber);
+  background: var(--amber-soft);
+}
+
+.syscall-phase-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.syscall-phase {
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--muted);
+  transition: all 0.25s;
+}
+
+.syscall-phase.active {
+  border-color: var(--green);
+  background: var(--green-soft);
+  color: var(--green-deep);
+  transform: scale(1.04);
+}
+
+/* Process / thread */
+.pt-visual .pt-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.pt-box {
+  padding: 12px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 8px;
+  background: var(--panel);
+  transition: border-color 0.3s;
+}
+
+.pt-box.lit {
+  border-color: var(--green);
+  border-style: solid;
+}
+
+.pt-box.wide {
+  max-width: 100%;
+}
+
+.pt-inner {
+  margin-top: 8px;
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.pt-inner.separate {
+  background: var(--blue-soft);
+  color: var(--blue-deep);
+  margin-top: 6px;
+}
+
+.pt-inner.shared {
+  background: var(--green-soft);
+  color: var(--green-deep);
+}
+
+.pt-threads {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.pt-thread {
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  background: var(--amber-soft);
+  color: var(--amber);
+  transition: transform 0.25s;
+}
+
+.pt-thread.lit {
+  animation: quiz-pop-correct 0.4s ease;
+}
+
+/* Race timeline */
+.race-lanes {
+  display: grid;
+  gap: 10px;
+}
+
+.race-lane {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.race-track {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 32px;
+}
+
+.race-chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.race-chip.a { background: var(--blue); }
+.race-chip.b { background: var(--green); }
+.race-chip.anim { animation: log-slide-in 0.35s ease both; }
+
+.race-shared {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--soft);
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.race-shared strong {
+  display: block;
+  margin-top: 4px;
+  color: var(--ink);
+  font-size: 16px;
+}
+
+/* Paging */
+.paging-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.paging-block {
+  min-width: 100px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  text-align: center;
+  font-size: 12px;
+}
+
+.paging-block.table.lit,
+.paging-block strong {
+  color: var(--green-deep);
+}
+
+.bit-row {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.bit-page,
+.bit-offset {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.bit-page.lit { background: var(--green-soft); color: var(--green-deep); }
+.bit-offset.lit { background: var(--blue-soft); color: var(--blue-deep); }
+
+.page-table-mini {
+  margin-top: 6px;
+  padding: 6px;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 11px;
+}
+
+.page-table-mini.lit {
+  background: var(--green-soft);
+  color: var(--green-deep);
+  animation: pulse-ring 1s ease-out;
+}
+
+.bit-legend {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Crypto flow */
+.crypto-flow-visual {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr) 72px;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.crypto-lanes {
+  display: grid;
+  gap: 6px;
+}
+
+.crypto-lane {
+  height: 26px;
+  position: relative;
+  border-radius: 6px;
+  background: rgba(36, 49, 42, 0.04);
+}
+
+.crypto-packet {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.crypto-packet.to-right {
+  left: 8%;
+  background: var(--blue);
+  animation: packet-right 0.5s ease both;
+}
+
+.crypto-packet.to-left {
+  right: 8%;
+  background: var(--green);
+  animation: packet-left 0.5s ease both;
+}
+
+.crypto-packet.both {
+  left: 20%;
+  right: 20%;
+  text-align: center;
+  background: linear-gradient(90deg, var(--blue), var(--green));
+  animation: packet-right 0.6s ease both;
+}
+
+/* Encapsulation onion */
+.encap-visual {
+  display: flex;
+  justify-content: center;
+}
+
+.encap-onion {
+  position: relative;
+  min-width: 200px;
+  padding: 20px;
+}
+
+.encap-layer {
+  padding: 10px 16px;
+  margin: 4px 0;
+  border: 2px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--panel);
+  text-align: center;
+  animation: encap-wrap 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--layer) * 0.08s);
+}
+
+.encap-payload {
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--amber-soft);
+  color: var(--amber);
+  font-weight: 800;
+  text-align: center;
+  font-size: 12px;
+}
+
+@keyframes encap-wrap {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Socket */
+.socket-visual {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.socket-col {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.socket-col strong {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.socket-col span {
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  transition: all 0.25s;
+}
+
+.socket-col span.lit {
+  border-color: var(--green);
+  background: var(--green-soft);
+  color: var(--green-deep);
+  font-weight: 750;
+}
+
+.socket-col span.lit.anim {
+  animation: log-slide-in 0.35s ease both;
+}
+
+.socket-sub {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--muted);
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+}
+
+.socket-wire {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  gap: 8px;
+}
+
+.wire-line {
+  width: 4px;
+  height: 80px;
+  border-radius: 999px;
+  background: var(--line);
+  transition: background 0.4s, height 0.4s;
+}
+
+.wire-line.connected {
+  background: linear-gradient(180deg, var(--blue), var(--green));
+  animation: gantt-grow 0.5s ease both;
+}
+
+.wire-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--green-deep);
+}
+
+/* UDP demux */
+.udp-visual {
+  text-align: center;
+}
+
+.udp-packet {
+  display: inline-block;
+  padding: 8px 16px;
+  margin-bottom: 12px;
+  border-radius: 999px;
+  background: var(--blue);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  animation: packet-right 0.5s ease both;
+}
+
+.udp-sockets {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.udp-socket {
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  font-size: 12px;
+  transition: all 0.3s;
+}
+
+.udp-socket.lit {
+  border-color: var(--green);
+  background: var(--green-soft);
+  transform: scale(1.03);
+}
+
+.udp-hit {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--green-deep);
+}
+
+/* HTTP */
+.http-visual {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.http-line {
+  padding: 4px 8px;
+  border-radius: 4px;
+  animation: log-slide-in 0.35s ease both;
+}
+
+.http-line.request {
+  background: var(--green-soft);
+  color: var(--green-deep);
+  font-weight: 800;
+}
+
+.http-line.header { color: var(--blue-deep); }
+.http-line.cookie { color: var(--amber); font-weight: 700; }
+.http-line.blank { color: var(--muted); font-style: italic; }
+
+.http-body {
+  margin-top: 8px;
+  padding: 8px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 6px;
+  color: var(--muted);
+  text-align: center;
+  animation: encap-wrap 0.4s ease both;
+}
+
+/* RPC */
+.rpc-visual {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.rpc-node {
+  position: relative;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  text-align: center;
+  min-width: 100px;
+  animation: stagger-rise 0.4s ease both;
+}
+
+.rpc-node strong {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.rpc-node code {
+  font-size: 10px;
+  word-break: break-all;
+}
+
+.rpc-arrow {
+  font-weight: 900;
+  color: var(--green);
+  font-size: 18px;
+}
+
+/* CIDR bits */
+.cidr-bits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  justify-content: center;
+}
+
+.cidr-bit {
+  width: 14px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 800;
+  font-family: monospace;
+}
+
+.cidr-bit.network {
+  background: var(--green-soft);
+  color: var(--green-deep);
+}
+
+.cidr-bit.host {
+  background: var(--blue-soft);
+  color: var(--blue-deep);
+}
+
+.cidr-bit.boundary {
+  box-shadow: 2px 0 0 var(--amber);
+}
+
+.cidr-legend {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cidr-legend .network { color: var(--green-deep); }
+.cidr-legend .host { color: var(--blue-deep); }
+
+/* CWND chart override */
+.cwnd-chart .cwnd-bar-anim {
+  display: block;
+  border-radius: 6px 6px 0 0;
+  background: var(--blue);
+  animation: gantt-grow 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.cwnd-chart .loss .cwnd-bar-anim {
+  background: var(--red);
+}
+
+/* Dijkstra SVG */
+.dijk-svg {
+  width: 100%;
+  max-height: 200px;
+}
+
+.dijk-edge {
+  stroke: var(--line-strong);
+  stroke-width: 2;
+}
+
+.dijk-weight {
+  font-size: 10px;
+  fill: var(--muted);
+  font-weight: 800;
+}
+
+.dijk-node circle {
+  fill: var(--panel);
+  stroke: var(--line-strong);
+  stroke-width: 2;
+  transition: fill 0.3s, stroke 0.3s;
+}
+
+.dijk-node text {
+  font-size: 13px;
+  font-weight: 850;
+  fill: var(--ink);
+}
+
+.dijk-node .dijk-dist {
+  font-size: 10px;
+  fill: var(--muted);
+  font-weight: 700;
+}
+
+.dijk-node.settled circle {
+  fill: var(--green-soft);
+  stroke: var(--green);
+}
+
+.dijk-node.candidate circle {
+  fill: var(--amber-soft);
+  stroke: var(--amber);
+  animation: pulse-ring 1.2s ease-out infinite;
+}
+
+/* Control plane */
+.control-topology {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.control-node {
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  font-size: 12px;
+  font-weight: 800;
+  transition: all 0.3s;
+}
+
+.control-node.lit {
+  border-color: var(--green);
+  background: var(--green-soft);
+  color: var(--green-deep);
+}
+
+.control-link {
+  position: relative;
+  min-width: 80px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-packet {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.control-packet.broadcast {
+  background: var(--amber);
+  animation: packet-right 0.5s ease both;
+}
+
+.control-packet.reply {
+  background: var(--green);
+  animation: packet-left 0.5s ease both;
+}
+
+.control-packet.icmp {
+  background: var(--blue);
+  animation: packet-right 0.5s ease both;
+}
+
+.control-ttl {
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--red-soft);
+  color: var(--red);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* NAT */
+.nat-visual {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.nat-zone {
+  padding: 10px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 8px;
+}
+
+.nat-host {
+  margin-top: 6px;
+  padding: 8px;
+  border-radius: 6px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  font-size: 11px;
+  font-family: monospace;
+  transition: all 0.3s;
+}
+
+.nat-host.lit {
+  border-color: var(--green);
+  background: var(--green-soft);
+  color: var(--green-deep);
+  font-weight: 700;
+}
+
+.nat-router {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border: 2px solid var(--green);
+  border-radius: 10px;
+  background: var(--green-soft);
+  text-align: center;
+  font-size: 12px;
+}
+
+.nat-map-mini {
+  font-size: 9px;
+  font-family: monospace;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.nat-map-mini .anim {
+  animation: log-slide-in 0.35s ease both;
+}
+
+/* Scheduling mini timeline */
+.sched-timeline {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.sched-ruler {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+.sched-ticks {
+  display: flex;
+  height: 28px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.sched-tick {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+  color: #fff;
+  min-width: 24px;
+}
+
+@media (max-width: 720px) {
+  .pt-visual .pt-split,
+  .socket-visual,
+  .nat-visual,
+  .crypto-flow-visual {
+    grid-template-columns: 1fr;
+  }
+
+  .udp-sockets {
+    grid-template-columns: 1fr;
+  }
+
+  .cidr-bit {
+    width: 11px;
+    height: 18px;
+    font-size: 8px;
+  }
+}

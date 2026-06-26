@@ -1,0 +1,415 @@
+/* Teaching motion — subtle, exam-prep friendly */
+
+@keyframes panel-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes stagger-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes stage-swap {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes gantt-grow {
+  from {
+    transform: scaleX(0);
+    opacity: 0.4;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes packet-right {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes packet-left {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(47, 125, 87, 0.35);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(47, 125, 87, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(47, 125, 87, 0);
+  }
+}
+
+@keyframes answer-reveal {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    max-height: 320px;
+    transform: translateY(0);
+  }
+}
+
+@keyframes quiz-pop-correct {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes quiz-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes progress-shimmer {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+@keyframes log-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.panel-enter {
+  animation: panel-enter 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.stagger-children > * {
+  animation: stagger-rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.stagger-children > *:nth-child(1) { animation-delay: 0.02s; }
+.stagger-children > *:nth-child(2) { animation-delay: 0.05s; }
+.stagger-children > *:nth-child(3) { animation-delay: 0.08s; }
+.stagger-children > *:nth-child(4) { animation-delay: 0.11s; }
+.stagger-children > *:nth-child(5) { animation-delay: 0.14s; }
+.stagger-children > *:nth-child(6) { animation-delay: 0.17s; }
+.stagger-children > *:nth-child(7) { animation-delay: 0.2s; }
+.stagger-children > *:nth-child(8) { animation-delay: 0.23s; }
+.stagger-children > *:nth-child(9) { animation-delay: 0.26s; }
+.stagger-children > *:nth-child(10) { animation-delay: 0.29s; }
+.stagger-children > *:nth-child(n+11) { animation-delay: 0.32s; }
+
+.lab-stage-swap {
+  animation: stage-swap 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.stepper-progress {
+  position: relative;
+  height: 4px;
+  margin: -8px 0 14px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.stepper-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--green), #4aa876);
+  transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.step-dot.active {
+  animation: pulse-ring 1.6s ease-out infinite;
+}
+
+.gantt-bar-anim {
+  transform-origin: left center;
+  animation: gantt-grow 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.gantt-bar-anim:nth-child(1) { animation-delay: 0.04s; }
+.gantt-bar-anim:nth-child(2) { animation-delay: 0.1s; }
+.gantt-bar-anim:nth-child(3) { animation-delay: 0.16s; }
+.gantt-bar-anim:nth-child(4) { animation-delay: 0.22s; }
+.gantt-bar-anim:nth-child(5) { animation-delay: 0.28s; }
+.gantt-bar-anim:nth-child(n+6) { animation-delay: 0.34s; }
+
+.tcp-handshake-visual {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) 88px;
+  gap: 10px;
+  align-items: stretch;
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: linear-gradient(180deg, #f8fbf9, #fbfcfa);
+}
+
+.tcp-node {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 8px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--panel);
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--green-deep);
+  text-align: center;
+}
+
+.tcp-lanes {
+  display: grid;
+  gap: 8px;
+  min-height: 120px;
+}
+
+.tcp-lane {
+  position: relative;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(36, 49, 42, 0.04);
+}
+
+.tcp-lane::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 8%;
+  right: 8%;
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--line-strong) 0,
+    var(--line-strong) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+  transform: translateY(-50%);
+}
+
+.tcp-packet {
+  position: absolute;
+  top: 50%;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #fff;
+  white-space: nowrap;
+  transform: translateY(-50%);
+}
+
+.tcp-packet.to-right {
+  left: 10%;
+  background: var(--blue);
+  animation: packet-right 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.tcp-packet.to-left {
+  right: 10%;
+  background: var(--green);
+  animation: packet-left 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.tcp-packet.stream {
+  left: 15%;
+  right: 15%;
+  width: auto;
+  text-align: center;
+  background: linear-gradient(90deg, var(--blue), var(--green));
+  animation: packet-right 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.dns-flow-visual {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 14px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fbfcfa;
+}
+
+.dns-flow-node {
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  font-size: 11.5px;
+  font-weight: 750;
+  color: var(--muted);
+  transition: border-color 0.25s, background 0.25s, color 0.25s, transform 0.25s;
+}
+
+.dns-flow-node.active {
+  border-color: var(--green);
+  background: var(--green-soft);
+  color: var(--green-deep);
+  transform: scale(1.05);
+}
+
+.dns-flow-arrow {
+  color: var(--line-strong);
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.progress-pill {
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-pill-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(47, 125, 87, 0.14),
+    rgba(74, 168, 118, 0.22),
+    rgba(47, 125, 87, 0.14)
+  );
+  background-size: 200% auto;
+  animation: progress-shimmer 3s linear infinite;
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.progress-pill > svg,
+.progress-pill > strong,
+.progress-pill > span {
+  position: relative;
+  z-index: 1;
+}
+
+.recite-card.recite-revealed .recite-answer:not(.recite-hidden) {
+  animation: answer-reveal 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.recite-card.recite-memorized {
+  transition: border-color 0.25s, background 0.25s;
+}
+
+.recite-check input:checked + span {
+  color: var(--green-deep);
+}
+
+.answer-grid button.correct {
+  animation: quiz-pop-correct 0.4s ease;
+}
+
+.answer-grid button.wrong {
+  animation: quiz-shake 0.35s ease;
+}
+
+.log-list li {
+  animation: log-slide-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-card img {
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-card:hover img {
+  transform: scale(1.02);
+}
+
+.counter-display.counter-bump {
+  animation: quiz-pop-correct 0.35s ease;
+}
+
+.page-table div.active {
+  animation: pulse-ring 1.2s ease-out;
+}
+
+.tabbar button.active {
+  transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .progress-pill-fill {
+    animation: none;
+  }
+}
