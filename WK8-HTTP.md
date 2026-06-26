@@ -392,3 +392,22 @@ HTTP 是 Web 的核心协议，从 HTTP/1.0 的简单请求-响应模型演进�
 4. 对比 HTTP/1.1、HTTP/2、HTTP/3 的主要区别
 5. 了解 HTTPS 如何保护通信（结合 WK5 的 TLS 知识）
 6. Cookies/Web Cache只作背景了解，不要作为主要背诵点
+## 默写背诵 Dictation
+
+> 以下为本章必须能默写的中英对照；网站「默写 Recite」Tab 提供自测模式。
+
+| # | 默写提示 Prompt | 标准答案 Answer |
+|---|----------------|----------------|
+| 1 | URI vs URL. · URI vs URL。 | **EN:** URI = identifier (includes URN like ISBN); URL = locator with access mechanism (http://…). All URLs are URIs. / **中文：** URI = 标识符（含 URN 如 ISBN）；URL = 带访问机制的定位符（http://…）。所有 URL 都是 URI。 |
+| 2 | Persistent vs non-persistent HTTP. · 持久 vs 非持久 HTTP 连接。 | **EN:** Non-persistent = one object per TCP connection; persistent = multiple objects over same connection. / **中文：** 非持久 = 每个对象一条 TCP 连接；持久 = 同一连接传多个对象。 |
+| 3 | HTTP 11-step flow — progressive display (slide p.15). · HTTP 11 步流程——渐进渲染（课件 p.15）。 | **EN:** DNS → TCP setup → HTTP request → response; browser renders progressively; repeat for embedded objects; may reuse persistent connection. / **中文：** DNS → TCP 建立 → HTTP 请求 → 响应；HTML 边收边渲染；嵌入对象重复此流程；可复用持久连接。 |
+| 4 | HTTP request line — GET example. · HTTP 请求行——GET 例子。 | **EN:** GET /path HTTP/1.1 — method, URI/path, HTTP version. / **中文：** GET /path HTTP/1.1——方法、URI/路径、HTTP 版本。 |
+| 5 | HTTP response status line format. · HTTP 响应状态行格式。 | **EN:** HTTP/version status-code reason-phrase (e.g. HTTP/1.1 200 OK). / **中文：** HTTP/版本 状态码 原因短语（如 HTTP/1.1 200 OK）。 |
+| 6 | Conditional GET — 304 Not Modified (slide p.19–22). · Conditional GET——304 Not Modified（课件 p.19–22）。 | **EN:** Client sends If-Modified-Since; if unchanged server returns 304 Not Modified with no body. / **中文：** 客户端发 If-Modified-Since；未修改则服务器回 304 Not Modified，无 body。 |
+| 7 | HTTPS — port (slide p.23). · HTTPS 端口（课件 p.23）。 | **EN:** HTTPS uses port 443 (HTTP over TLS). / **中文：** HTTPS 使用端口 443（HTTP 跑在 TLS 之上）。 |
+| 8 | HTTP/2 main improvement — multiplexing (slide p.24). · HTTP/2 主要改进——多路复用（课件 p.24）。 | **EN:** Many streams multiplexed over one TCP connection; header compression. / **中文：** 单 TCP 连接上多路复用多条流；首部压缩。 |
+| 9 | HTTP GET vs POST. · GET vs POST。 | **EN:** GET retrieves data (should be safe/idempotent); POST submits data and may change server state. / **中文：** GET 获取数据（应安全/幂等）；POST 提交数据并可能改变服务器状态。 |
+| 10 | SMTP success reply code example (slide p.21). · SMTP 成功应答码例子（课件 p.21）。 | **EN:** 250 Message accepted for delivery. / **中文：** 250 Message accepted（接受投递）。 |
+| 11 | HTTP is stateless — meaning. · HTTP 无状态的含义。 | **EN:** Server retains no information about past requests between connections. / **中文：** 服务器在连接间不保留过去请求的信息。 |
+| 12 | Non-persistent HTTP cost. · 非持久 HTTP 的开销。 | **EN:** Each object needs new TCP connection — at least 2 RTT per object (TCP setup + request/response). / **中文：** 每个对象需新 TCP 连接——每对象至少 2 RTT（TCP 建立 + 请求/响应）。 |
+

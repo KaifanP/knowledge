@@ -330,3 +330,22 @@ Application Data
 3. **区分Service和Protocol：** 理解两者的关系和区别。
 4. **理解"窄腰"概念：** 为什么IP是窄腰？这对互联网的扩展性有什么影响？
 5. **历史背景只需简单看过：** 第23页之后是not assessable背景，不需要背ARPANET/NSFNET/OSI之争细节。
+## 默写背诵 Dictation
+
+> 以下为本章必须能默写的中英对照；网站「默写 Recite」Tab 提供自测模式。
+
+| # | 默写提示 Prompt | 标准答案 Answer |
+|---|----------------|----------------|
+| 1 | Service vs protocol. · Service vs protocol。 | **EN:** Service = what a layer offers to the layer above; protocol = rules for peer communication at the same layer. / **中文：** Service = 本层向上层提供什么；protocol = 同层对等实体通信的规则。 |
+| 2 | Why layering? (two benefits). · 为何分层？（两个好处） | **EN:** Modularity / easier to change one layer; abstraction hides complexity from other layers. / **中文：** 模块化/便于修改某一层；抽象向其他层隐藏复杂性。 |
+| 3 | Connection-oriented vs connectionless service. · 面向连接 vs 无连接服务。 | **EN:** Connection-oriented = setup phase before data transfer (e.g. TCP); connectionless = send without prior setup (e.g. UDP). / **中文：** 面向连接 = 传数据前先建立连接（如 TCP）；无连接 = 无预先建立直接发送（如 UDP）。 |
+| 4 | Point-to-point vs end-to-end — four tasks (slide p.17). · Point-to-point vs end-to-end——四项任务（课件 p.17）。 | **EN:** p2p (data link): get data p2p, tidy up p2p; e2e (transport): get data e2e, tidy up e2e. / **中文：** p2p（链路层）：get data p2p、tidy up p2p；e2e（传输层）：get data e2e、tidy up e2e。 |
+| 5 | List four TCP/IP layers bottom to top. · 自下而上列出 TCP/IP 四层。 | **EN:** Link (Network Access), Internet (Network), Transport, Application. / **中文：** 链路层（Network Access）、网际层（Internet）、传输层、应用层。 |
+| 6 | PDU name at transport layer. · 传输层的 PDU 叫什么？ | **EN:** Segment (TCP) or datagram (UDP). / **中文：** Segment（TCP）或 datagram（UDP）。 |
+| 7 | Encapsulation — what happens going down the stack? · 封装——数据向下经过协议栈时发生什么？ | **EN:** Each layer adds its own header (and sometimes trailer) around data from above. / **中文：** 每层在上层数据外加自己的首部（有时还有尾部）。 |
+| 8 | IP as the narrow waist — slide wording (p.22). · IP 窄腰——课件表述（p.22）。 | **EN:** IP over everything, and everything over IP — many upper protocols and lower link technologies converge on IP. / **中文：** IP over everything, and everything over IP——众多上层协议与下层链路技术以 IP 为汇合点。 |
+| 9 | Protocol stack example — HTTP/TCP/UDP/IP (slide p.21). · 协议栈例子——HTTP/TCP/UDP/IP（课件 p.21）。 | **EN:** Application (HTTP) → Transport (TCP or UDP) → Internet (IP) → Link layer. / **中文：** 应用层（HTTP）→ 传输层（TCP 或 UDP）→ 网际层（IP）→ 链路层。 |
+| 10 | Network layer main function. · 网络层主要功能。 | **EN:** Host-to-host delivery — routing datagrams across multiple networks. / **中文：** 主机到主机交付——跨多个网络路由数据报。 |
+| 11 | Transport layer main function. · 传输层主要功能。 | **EN:** Process-to-process delivery using port numbers on top of host-to-host IP. / **中文：** 在主机到主机 IP 之上用端口号实现进程到进程交付。 |
+| 12 | OSI vs TCP/IP — practical difference. · OSI vs TCP/IP——实用区别。 | **EN:** TCP/IP reflects what the Internet actually runs; OSI is a design/diagnostic reference model. / **中文：** TCP/IP 反映互联网实际运行；OSI 是设计/诊断参考模型。 |
+

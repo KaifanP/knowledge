@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { chapters } from "./content/chapters.js";
 import { examFocus } from "./content/examFocus.js";
+import { recitation } from "./content/recitation.js";
 import { knowledgeEdges, knowledgeNodes, weekPlans } from "./content/plans.js";
 import { quizzes } from "./content/quizzes.js";
 import { LabRouter } from "./components/Labs.jsx";
@@ -25,6 +26,7 @@ import { loadProgress, saveProgress, updateChapterProgress } from "./lib/storage
 const tabs = [
   { id: "read", label: "阅读 Read", icon: BookOpen },
   { id: "exam", label: "考点 Exam", icon: Target },
+  { id: "recite", label: "默写 Recite", icon: ScrollText },
   { id: "lab", label: "实验 Lab", icon: Beaker },
   { id: "quiz", label: "题卡 Quiz", icon: ListChecks },
   { id: "map", label: "地图 Map", icon: GitBranch },
@@ -124,6 +126,13 @@ export default function App() {
           <article className="markdown-panel" dangerouslySetInnerHTML={{ __html: rendered }} />
         )}
         {tab === "exam" && <ExamPanel chapterId={selected.id} onJumpToLab={() => setTab("lab")} />}
+        {tab === "recite" && (
+          <RecitePanel
+            chapterId={selected.id}
+            memorized={selectedProgress.reciteDone || []}
+            onMemorizedChange={(reciteDone) => patchSelected({ reciteDone })}
+          />
+        )}
         {tab === "lab" && <LabRouter chapter={selected} />}
         {tab === "quiz" && (
           <QuizPanel
@@ -145,8 +154,10 @@ export default function App() {
           onOpenLab={() => setTab("lab")}
           onOpenQuiz={() => setTab("quiz")}
           onOpenExam={() => setTab("exam")}
+          onOpenRecite={() => setTab("recite")}
         />
         <ExamQuickView chapterId={selected.id} onOpenExam={() => setTab("exam")} />
+        <ReciteQuickView chapterId={selected.id} onOpenRecite={() => setTab("recite")} />
         <Toc headings={headings} />
       </aside>
     </div>
@@ -191,7 +202,7 @@ function SearchResults({ results, query, onPick }) {
   );
 }
 
-function ChapterCard({ chapter, progress, onPatch, onOpenLab, onOpenQuiz, onOpenExam }) {
+function ChapterCard({ chapter, progress, onPatch, onOpenLab, onOpenQuiz, onOpenExam, onOpenRecite }) {
   const plan = weekPlans[chapter.id];
   return (
     <section className="side-card hero-card">
@@ -214,11 +225,15 @@ function ChapterCard({ chapter, progress, onPatch, onOpenLab, onOpenQuiz, onOpen
       </div>
       <div className="mini-buttons">
         <button onClick={onOpenExam}><Target size={16} />考点</button>
+        <button onClick={onOpenRecite}><ScrollText size={16} />默写</button>
         <button onClick={onOpenLab}><Beaker size={16} />实验</button>
         <button onClick={onOpenQuiz}><ListChecks size={16} />题卡</button>
       </div>
       {typeof progress.bestScore === "number" && (
         <div className="score-note"><Star size={15} /> best quiz {progress.bestScore}%</div>
+      )}
+      {Array.isArray(progress.reciteDone) && progress.reciteDone.length > 0 && (
+        <div className="score-note"><CheckCircle2 size={15} /> recite {progress.reciteDone.length} done</div>
       )}
     </section>
   );
@@ -243,6 +258,128 @@ function ExamQuickView({ chapterId, onOpenExam }) {
         ))}
       </ul>
       <button className="exam-quick-open" onClick={onOpenExam}>展开全部 · open full list</button>
+    </section>
+  );
+}
+
+function ReciteQuickView({ chapterId, onOpenRecite }) {
+  const block = recitation[chapterId];
+  if (!block) return null;
+  return (
+    <section className="side-card recite-quick">
+      <div className="exam-quick-head">
+        <ScrollText size={16} />
+        <h3>默写速览 Recite</h3>
+      </div>
+      <p className="exam-summary">{block.summaryZh}</p>
+      <ul className="exam-quick-list">
+        {block.items.slice(0, 5).map((item) => (
+          <li key={item.en}>
+            <strong>{item.en}</strong>
+            <span>{item.zh}</span>
+          </li>
+        ))}
+      </ul>
+      <button className="exam-quick-open" onClick={onOpenRecite}>开始默写 · start recite</button>
+    </section>
+  );
+}
+
+function RecitePanel({ chapterId, memorized, onMemorizedChange }) {
+  const block = recitation[chapterId];
+  const [revealed, setRevealed] = useState({});
+  useEffect(() => {
+    setRevealed({});
+  }, [chapterId]);
+
+  if (!block) {
+    return <div className="empty-panel">本章默写整理中 · recitation coming soon.</div>;
+  }
+
+  const items = block.items;
+  const revealedCount = items.filter((_, i) => revealed[i]).length;
+  const memorizedSet = new Set(memorized);
+
+  function toggleReveal(index) {
+    setRevealed((current) => ({ ...current, [index]: !current[index] }));
+  }
+
+  function revealAll(show) {
+    if (!show) {
+      setRevealed({});
+      return;
+    }
+    const all = {};
+    items.forEach((_, i) => {
+      all[i] = true;
+    });
+    setRevealed(all);
+  }
+
+  function toggleMemorized(index) {
+    const next = memorizedSet.has(index)
+      ? memorized.filter((i) => i !== index)
+      : [...memorized, index].sort((a, b) => a - b);
+    onMemorizedChange(next);
+  }
+
+  return (
+    <section className="recite-panel">
+      <div className="lab-head">
+        <div>
+          <p className="eyebrow">Dictation · 双语默写</p>
+          <h3>默写背诵 Recite</h3>
+        </div>
+        <div className="recite-toolbar">
+          <span className="recite-progress">{memorizedSet.size}/{items.length} 已掌握 · {revealedCount}/{items.length} 已揭示</span>
+          <button type="button" className="lab-link" onClick={() => revealAll(true)}>全部显示 Reveal all</button>
+          <button type="button" className="lab-link" onClick={() => revealAll(false)}>全部隐藏 Hide all</button>
+        </div>
+      </div>
+      <p className="exam-lead">{block.summaryZh}<span className="exam-lead-en">{block.summary}</span></p>
+      <ol className="recite-list">
+        {items.map((item, index) => {
+          const isRevealed = revealed[index];
+          const isMemorized = memorizedSet.has(index);
+          return (
+            <li key={item.en} className={`recite-card ${isRevealed ? "recite-revealed" : ""} ${isMemorized ? "recite-memorized" : ""}`}>
+              <div className="recite-card-head">
+                <span className="exam-index">{String(index + 1).padStart(2, "0")}</span>
+                <div className="recite-prompt">
+                  <h4>{item.en}</h4>
+                  <span className="exam-zh">{item.zh}</span>
+                </div>
+                <label className="recite-check">
+                  <input
+                    type="checkbox"
+                    checked={isMemorized}
+                    onChange={() => toggleMemorized(index)}
+                  />
+                  <span>已掌握 Got it</span>
+                </label>
+              </div>
+              <div className={`recite-answer ${isRevealed ? "" : "recite-hidden"}`}>
+                {isRevealed ? (
+                  <>
+                    <p className="recite-answer-en">{item.answerEn}</p>
+                    <p className="recite-answer-zh">{item.answerZh}</p>
+                    {item.slide && <span className="recite-slide">{item.slide}</span>}
+                  </>
+                ) : (
+                  <button type="button" className="recite-reveal-btn" onClick={() => toggleReveal(index)}>
+                    显示答案 Reveal answer
+                  </button>
+                )}
+              </div>
+              {isRevealed && (
+                <button type="button" className="recite-hide-btn" onClick={() => toggleReveal(index)}>
+                  隐藏 Hide
+                </button>
+              )}
+            </li>
+          );
+        })}
+      </ol>
     </section>
   );
 }

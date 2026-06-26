@@ -348,3 +348,22 @@ ARP **没有任何认证机制**，是安全噩梦。
 ---
 
 *课件来源: COMP30023 2026 S1 WK11*
+## 默写背诵 Dictation
+
+> 以下为本章必须能默写的中英对照；网站「默写 Recite」Tab 提供自测模式。
+
+| # | 默写提示 Prompt | 标准答案 Answer |
+|---|----------------|----------------|
+| 1 | ARP purpose (slide p.16). · ARP 用途（课件 p.16）。 | **EN:** Resolve next-hop IP address to MAC address on a LAN. / **中文：** 在同一 LAN 上将下一跳 IP 解析为 MAC 地址。 |
+| 2 | ARP request — broadcast or unicast? · ARP 请求是广播还是单播？ | **EN:** Broadcast on LAN — who has IP X? Target replies unicast. / **中文：** LAN 上广播——谁有 IP X？目标单播回复。 |
+| 3 | ARP cache (slide p.18). · ARP 缓存（课件 p.18）。 | **EN:** Resolved IP→MAC mappings cached temporarily; entries time out and must be refreshed. / **中文：** IP→MAC 映射临时缓存；表项超时后须重新解析。 |
+| 4 | ICMP purpose (slide p.6). · ICMP 用途（课件 p.6）。 | **EN:** Error reporting and network diagnostics between IP entities. / **中文：** IP 实体间的差错报告与网络诊断。 |
+| 5 | Traceroute — TTL mechanism (slide p.7). · Traceroute——TTL 机制（课件 p.7）。 | **EN:** Send packets with TTL=1,2,3…; each hop returns Time Exceeded; map path and RTTs. / **中文：** 发送 TTL=1,2,3… 的包；每跳返回 Time Exceeded；映射路径与 RTT。 |
+| 6 | ICMP Time Exceeded — when sent? · ICMP Time Exceeded 何时发送？ | **EN:** When a router decrements TTL to zero (or reassembly timeout). / **中文：** 路由器将 TTL 减到零时（或重组超时时）。 |
+| 7 | DHCP DISCOVER and OFFER (slide p.11–12). · DHCP DISCOVER 与 OFFER（课件 p.11–12）。 | **EN:** Client broadcasts DISCOVER; server replies OFFER with proposed IP address. / **中文：** 客户端广播 DISCOVER；服务器 OFFER 回复提议的 IP 地址。 |
+| 8 | DHCP also provides gateway and DNS (slide p.12). · DHCP 还提供网关与 DNS（课件 p.12）。 | **EN:** Besides IP address, DHCP can assign default gateway and DNS server. / **中文：** 除 IP 地址外，DHCP 可分配默认网关和 DNS 服务器。 |
+| 9 | DHCP — layer 7 control plane (slide p.13). · DHCP——第 7 层控制平面（课件 p.13）。 | **EN:** DHCP is an application-layer (Layer 7) control-plane protocol running over UDP. / **中文：** DHCP 是跑在 UDP 之上的应用层（第 7 层）控制平面协议。 |
+| 10 | Data plane vs control plane (slide p.4). · Data plane vs control plane（课件 p.4）。 | **EN:** Data plane forwards packets; control plane builds routing/forwarding state. / **中文：** Data plane 转发分组；control plane 构建路由/转发状态。 |
+| 11 | MAC address — layer note (slide p.15). · MAC 地址——层次说明（课件 p.15）。 | **EN:** Called physical address but works at data link layer, not physical layer. / **中文：** 虽叫 physical address，但工作在数据链路层，不在物理层。 |
+| 12 | Ping — ICMP Echo (slide p.6) and default gateway (slide p.12). · Ping——ICMP Echo（课件 p.6）与默认网关（课件 p.12）。 | **EN:** Ping sends ICMP Echo Request; target replies Echo Reply. Default gateway = router for off-subnet destinations. / **中文：** Ping 发 ICMP Echo Request；目标回 Echo Reply。默认网关 = 目的不在本地子网时的路由器。 |
+

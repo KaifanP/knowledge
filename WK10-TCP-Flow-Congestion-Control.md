@@ -398,3 +398,22 @@ TCP 的拥塞控制从最初的简单机制演进到 Tahoe（1988）和 Reno，�
 ---
 
 *课件来源: COMP30023 2026 S1 WK10*
+## 默写背诵 Dictation
+
+> 以下为本章必须能默写的中英对照；网站「默写 Recite」Tab 提供自测模式。
+
+| # | 默写提示 Prompt | 标准答案 Answer |
+|---|----------------|----------------|
+| 1 | rwnd vs cwnd — who sets each? (slide p.45) · rwnd vs cwnd——各由谁决定？（课件 p.45） | **EN:** rwnd = receiver advertises (flow control); cwnd = sender infers from network (congestion control). / **中文：** rwnd = 接收方通告（流量控制）；cwnd = 发送方根据网络推断（拥塞控制）。 |
+| 2 | Effective send window formula. · 有效发送窗口公式。 | **EN:** min(rwnd, cwnd) — unacknowledged data may not exceed this. / **中文：** min(rwnd, cwnd)——未确认数据不得超过此值。 |
+| 3 | Slow start — cwnd growth (slide p.46). · 慢启动——cwnd 增长（课件 p.46）。 | **EN:** Increase cwnd by one MSS for each ACK received (exponential growth per RTT). / **中文：** 每收到一个 ACK，cwnd 增加一个 MSS（每 RTT 近似翻倍）。 |
+| 4 | Congestion avoidance — cwnd growth (slide p.48). · 拥塞避免——cwnd 增长（课件 p.48）。 | **EN:** Linear increase: add MSS per window of ACKs (additive increase). / **中文：** 线性增加：每窗口 ACK 增加 MSS（加法增长）。 |
+| 5 | TCP Tahoe on loss (slide p.48). · TCP Tahoe 丢包时（课件 p.48）。 | **EN:** ssthresh = cwnd/2 before loss; cwnd = 1 MSS; restart slow start. / **中文：** 丢包前 cwnd 一半设为 ssthresh；cwnd = 1 MSS；重新慢启动。 |
+| 6 | Fast retransmit trigger — 3 DupACKs (slide p.27). · 快重传触发——3 个 DupACK（课件 p.27）。 | **EN:** Three duplicate ACKs for same sequence number — infer loss without waiting for timeout. / **中文：** 同一序号三个重复 ACK——不等超时就推断丢包。 |
+| 7 | TCP Reno vs Tahoe on fast retransmit (slide p.50). · Reno vs Tahoe 快重传后（课件 p.50）。 | **EN:** Reno: halve cwnd and enter fast recovery; Tahoe: cwnd=1 MSS and restart slow start. / **中文：** Reno：cwnd 减半并 fast recovery；Tahoe：cwnd=1 MSS 并重新慢启动。 |
+| 8 | Zero window — URGENT data and probe (slide p.8). · 零窗口——URGENT 数据与 probe（课件 p.8）。 | **EN:** When rwnd=0 sender stops data; may send URGENT data or zero-window probe to get new window. / **中文：** rwnd=0 时发送方停发数据；可发 URGENT 数据或 zero-window probe 获取新窗口。 |
+| 9 | Persist timer and ZeroWindowProbe. · Persist 定时器与 ZeroWindowProbe。 | **EN:** If window stays zero, persist timer fires → sender sends ZeroWindowProbe → receiver re-advertises rwnd. / **中文：** 窗口持续为零时 persist 定时器超时 → 发送 ZeroWindowProbe → 接收方重新通告 rwnd。 |
+| 10 | Full trace — SYN:1 Window:50 through seg21 dupACK (slide p.23–41). · 完整 trace——SYN:1 Window:50 到 seg21 dupACK（课件 p.23–41）。 | **EN:** Handshake Window:50 → send/receive → seg21 lost → DupACK:21 ×3 → fast retransmit → ACK:71 Window:0 → persist probe → Window:50 restored. / **中文：** 握手 Window:50 → 收发 → seg21 丢 → DupACK:21 三次 → 快重传 → ACK:71 Window:0 → persist probe → 窗口恢复 50。 |
+| 11 | Pre-Jacobson TCP — only rwnd (slide p.44). · Jacobson 之前——仅 rwnd（课件 p.44）。 | **EN:** Before Jacobson, TCP used only rwnd for flow control — no cwnd; senders could not detect network congestion. / **中文：** Jacobson 之前 TCP 仅用 rwnd 流控——无 cwnd；发送方无法感知网络拥塞。 |
+| 12 | ssthresh role and DupACK meaning. · ssthresh 作用与 DupACK 含义。 | **EN:** ssthresh = threshold between slow start and congestion avoidance; DupACK = receiver repeats same ACK when out-of-order segment arrives. / **中文：** ssthresh = 慢启动与拥塞避免之间的阈值；DupACK = 乱序段到达时接收方重复同一 ACK。 |
+

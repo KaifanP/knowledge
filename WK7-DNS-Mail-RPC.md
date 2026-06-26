@@ -394,3 +394,22 @@ MIME通过添加Content-Type等头部，支持多种内容类型。
 3. **重点掌握IMAP，POP3只高层了解：** IMAP在服务器端保留状态并支持在线邮箱操作；POP3命令和状态机不考。
 4. **理解邮件传输流程：** 从发件人到收件人的完整邮件传输路径。
 5. **了解MIME的作用：** 为什么需要MIME，它如何扩展邮件格式。
+## 默写背诵 Dictation
+
+> 以下为本章必须能默写的中英对照；网站「默写 Recite」Tab 提供自测模式。
+
+| # | 默写提示 Prompt | 标准答案 Answer |
+|---|----------------|----------------|
+| 1 | DNS hierarchy — three levels top to leaf. · DNS 层次自上而下三层。 | **EN:** Root DNS servers → TLD servers → authoritative DNS servers. / **中文：** 根 DNS 服务器 → 顶级域（TLD）服务器 → 权威 DNS 服务器。 |
+| 2 | Local DNS server role. · 本地 DNS 服务器角色。 | **EN:** Default nameserver for a host/ISP — caches answers and relays queries up the hierarchy. / **中文：** 主机/ISP 的默认域名服务器——缓存答案并向上层转发查询。 |
+| 3 | AAAA record example (slide p.14). · AAAA 记录例子（课件 p.14）。 | **EN:** AAAA maps hostname to IPv6, e.g. 1062::A22:AAE9:51C7:8451. / **中文：** AAAA 将主机名映射到 IPv6，如 1062::A22:AAE9:51C7:8451。 |
+| 4 | A record vs AAAA record. · A 记录 vs AAAA 记录。 | **EN:** A = hostname to IPv4; AAAA = hostname to IPv6. / **中文：** A = 主机名到 IPv4；AAAA = 主机名到 IPv6。 |
+| 5 | MX record purpose. · MX 记录用途。 | **EN:** Maps domain to mail server(s) that receive email for that domain. / **中文：** 将域名映射到接收该域邮件的邮件服务器。 |
+| 6 | NS record purpose. · NS 记录用途。 | **EN:** Delegates a subdomain to authoritative name servers for that zone. / **中文：** 将子域委派给该区域的权威名称服务器。 |
+| 7 | Four DNS components (slide p.7–8). · DNS 四个核心组成（课件 p.7–8）。 | **EN:** Domain name space, DNS database (RRs), name servers, resolvers. / **中文：** 域名空间、DNS 数据库（RR）、域名服务器、解析器（resolvers）。 |
+| 8 | Local resolver relay (slide p.21). · 本地 resolver 转发（课件 p.21）。 | **EN:** Resolver sends query to local DNS; local DNS fetches answer from hierarchy if not cached, then returns to client. / **中文：** Resolver 向本地 DNS 发查询；本地 DNS 无缓存则向上查询，再返回客户端。 |
+| 9 | SMTP role and port. · SMTP 角色与端口。 | **EN:** Push protocol for sending/transferring mail between MTAs; well-known port 25. / **中文：** 服务器间发送/转发邮件的推送协议；well-known 端口 25。 |
+| 10 | IMAP vs POP3 — main difference. · IMAP vs POP3 主要区别。 | **EN:** IMAP keeps mail on server and syncs folders; POP3 typically downloads and may delete from server. / **中文：** IMAP 邮件留服务器并同步文件夹；POP3 通常下载并可能从服务器删除。 |
+| 11 | MIME purpose. · MIME 用途。 | **EN:** Extends email format to support non-ASCII text, attachments, and multimedia. / **中文：** 扩展邮件格式以支持非 ASCII 文本、附件和多媒体。 |
+| 12 | CNAME record purpose. · CNAME 记录用途。 | **EN:** Alias — canonical name points one hostname to another hostname. / **中文：** 别名——将一个主机名指向另一个规范主机名。 |
+

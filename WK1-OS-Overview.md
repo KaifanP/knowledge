@@ -923,3 +923,22 @@ A：特权指令是只能在内核模式执行的指令（如I/O操作、修改�
 3. **联系实际**：结合实际操作系统（如Linux）理解这些概念
 4. **做练习题**：通过练习题巩固知识
 5. **重点复习**：系统调用、中断处理、内存保护是重点
+## 默写背诵 Dictation
+
+> 以下为本章必须能默写的中英对照；网站「默写 Recite」Tab 提供自测模式。
+
+| # | 默写提示 Prompt | 标准答案 Answer |
+|---|----------------|----------------|
+| 1 | Define operating system (slide wording). · 用课件原文定义操作系统。 | **EN:** A program that interfaces the machine with the application programs; its job is to make other programs run efficiently. / **中文：** 在机器与应用程序之间提供接口的程序；其任务是让其他程序高效运行。 |
+| 2 | State the two core functions of an OS. · 写出 OS 的两大核心功能。 | **EN:** Hardware abstraction and resource management. / **中文：** 硬件抽象（Hardware Abstraction）和资源管理（Resource Management）。 |
+| 3 | Hardware abstraction — two goals (slide p.3). · 硬件抽象的两个目标（课件 p.3）。 | **EN:** (1) Simplify the computer model; (2) provide each application a dedicated abstract machine. / **中文：** （1）简化计算机模型；（2）为每个应用提供看似专用的抽象机器。 |
+| 4 | Name four abstractions the OS provides over hardware. · 写出 OS 提供的四种硬件抽象。 | **EN:** Process, thread, address space, file (and socket). / **中文：** 进程（Process）、线程（Thread）、地址空间（Address Space）、文件（File）（及套接字 Socket）。 |
+| 5 | Define OS kernel (slide p.20). · 用课件 p.20 定义 OS kernel。 | **EN:** Part of the OS in kernel mode — core functions for scheduling, resource allocation, and I/O device access. / **中文：** 内核态运行的 OS 部分——调度、资源分配、访问 I/O 设备的核心功能。 |
+| 6 | User vs kernel mode (slide p.18–19). · 用户态 vs 内核态（课件 p.18–19）。 | **EN:** User: cannot issue privileged instructions; only OS-allowed memory. Kernel: all instructions; all memory. / **中文：** 用户态：不能执行特权指令；只能访问 OS 允许的内存。内核态：全部指令；全部内存。 |
+| 7 | Privileged instruction (slide p.19). · 特权指令（课件 p.19）。 | **EN:** Instructions that affect control of the machine or do I/O. / **中文：** 影响机器控制或执行 I/O 的指令。 |
+| 8 | Stack frame contents (slide p.12). · 栈帧内容（课件 p.12）。 | **EN:** Return address, saved registers, and local variables; stack pointer points to top of stack. / **中文：** 返回地址、保存的寄存器、局部变量；栈指针指向栈顶。 |
+| 9 | List three outcomes after interrupt handling returns. · 列出中断处理返回后的三种结局。 | **EN:** (1) Resume interrupted program; (2) OS kills it (fatal exception); (3) OS schedules another process. / **中文：** （1）恢复被中断程序；（2）OS 杀掉它（致命异常）；（3）OS 调度另一个进程。 |
+| 10 | Can a system call block the caller? What does the kernel do meanwhile? · 系统调用会阻塞调用者吗？此时内核做什么？ | **EN:** Yes (e.g. read()); the kernel may schedule another ready process until an interrupt wakes the blocker. / **中文：** 会（如 read()）；内核可调度另一个 ready 进程，直到中断唤醒阻塞者。 |
+| 11 | System call execution — five steps (slide p.25). · 系统调用执行的五个步骤（课件 p.25）。 | **EN:** (1) Put syscall number in register; (2) execute syscall instruction; (3) CPU switches to kernel mode; (4) kernel looks up syscall table; (5) execute handler and return. / **中文：** （1）系统调用号放入寄存器；（2）执行 syscall 指令；（3）CPU 切换到内核态；（4）内核查系统调用表；（5）执行处理程序并返回。 |
+| 12 | Interrupt vs system call — sync/async and who triggers. · 中断 vs 系统调用：同步/异步与触发者。 | **EN:** Interrupt = asynchronous event (hardware or exception); system call = synchronous request initiated by the program. / **中文：** Interrupt = 异步事件（硬件或异常）；system call = 程序主动发起的同步请求。 |
+

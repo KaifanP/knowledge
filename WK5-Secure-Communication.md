@@ -378,3 +378,22 @@
 3. **对比分析：** 对比对称vs非对称、MAC vs 数字签名的优缺点。
 4. **理解攻击场景：** 理解中间人攻击以及证书如何防御此类攻击。
 5. **综合应用：** 能够设计一个同时提供机密性、完整性和认证的安全通信协议。TLS握手细节明确不考，只需知道TLS综合使用了这些技术。
+## 默写背诵 Dictation
+
+> 以下为本章必须能默写的中英对照；网站「默写 Recite」Tab 提供自测模式。
+
+| # | 默写提示 Prompt | 标准答案 Answer |
+|---|----------------|----------------|
+| 1 | CIA triad — expand each letter. · CIA 三元组各指什么？ | **EN:** Confidentiality, Integrity, Authentication. / **中文：** 保密性（Confidentiality）、完整性（Integrity）、认证（Authentication）。 |
+| 2 | Confidentiality vs integrity — one line each. · 保密性与完整性各一句话。 | **EN:** Confidentiality = prevent unauthorised reading; integrity = detect/prevent unauthorised modification. / **中文：** 保密性 = 防止未授权读取；完整性 = 检测/防止未授权篡改。 |
+| 3 | Symmetric vs public-key cryptography. · 对称密码 vs 公钥密码。 | **EN:** Symmetric = same secret key encrypts and decrypts; public-key = key pair — public encrypts/verify, private decrypts/signs. / **中文：** 对称 = 同一密钥加解密；公钥 = 密钥对——公钥加密/验证，私钥解密/签名。 |
+| 4 | Kerckhoffs' principle (slide wording). · Kerckhoffs 原则（课件表述）。 | **EN:** Security depends on the decryption key, not secrecy of the algorithm. / **中文：** 安全性依赖解密密钥，而非算法保密。 |
+| 5 | MAC vs digital signature. · MAC vs 数字签名。 | **EN:** MAC uses shared secret key (both parties); signature uses private key to sign, public key to verify. / **中文：** MAC 用共享密钥（双方持有）；签名用私钥签、公钥验。 |
+| 6 | Hash function — collision resistance and one-way (slide p.19). · 哈希函数——抗碰撞与单向性（课件 p.19）。 | **EN:** Collision resistance: hard to find m ≠ m' with H(m)=H(m'); one-way: given H(m), hard to recover m. / **中文：** 抗碰撞：难找 m≠m' 使 H(m)=H(m')；单向：给定 H(m) 难恢复 m。 |
+| 7 | What problem does a digital certificate solve? · 数字证书解决什么问题？ | **EN:** Bind a public key to an identity in a trustworthy way (CA signature). / **中文：** 可信地将公钥与身份绑定（CA 签名背书）。 |
+| 8 | Man-in-the-middle attack — how certificates help. · 中间人攻击——证书如何防御？ | **EN:** Client verifies server certificate chain to ensure it talks to the real server, not an impostor. / **中文：** 客户端验证服务器证书链，确保连接真实服务器而非冒充者。 |
+| 9 | Hybrid encryption — why and how (slide p.15–16). · 混合加密——为何与如何（课件 p.15–16）。 | **EN:** Use public-key crypto to exchange a symmetric session key, then encrypt bulk data with symmetric crypto (efficient + no pre-shared secret). / **中文：** 用公钥密码交换对称会话密钥，再用对称密码加密大量数据（高效且无需预共享密钥）。 |
+| 10 | Encrypt-then-MAC strategy (slide p.28). · Encrypt-then-MAC 策略（课件 p.28）。 | **EN:** Encrypt message first, then MAC the ciphertext; verify MAC before decrypting. / **中文：** 先加密消息，再对密文计算 MAC；先验 MAC 再解密。 |
+| 11 | Public-key encrypt vs sign — which key for each? · 公钥加密 vs 签名各用哪个密钥？ | **EN:** Encrypt with recipient's public key; sign with sender's private key. / **中文：** 用接收方公钥加密；用发送方私钥签名。 |
+| 12 | Non-repudiation — which mechanism provides it? · 不可否认性由哪种机制提供？ | **EN:** Digital signature — only the private-key holder could have produced it. / **中文：** 数字签名——只有私钥持有者才能生成。 |
+

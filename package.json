@@ -7,6 +7,7 @@
     "sync-images": "rm -rf public/images && cp -R images public/images",
     "dev": "npm run sync-images && vite --host 127.0.0.1 --open /app.html",
     "build": "npm run sync-images && vite build && node scripts/finalize-build.mjs",
+    "validate:recitation": "node scripts/validate-recitation.mjs",
     "pages:sync": "npm run build && cp dist/index.html index.html && cp dist/favicon.svg favicon.svg && mkdir -p assets && rsync -a --delete dist/assets/ assets/",
     "preview": "vite preview --host 127.0.0.1"
   },

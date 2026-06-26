@@ -273,3 +273,22 @@ RPC 调用可能失败（网络超时、服务器崩溃、参数错误），设�
 ---
 
 *课件来源: COMP30023 2026 S1 WK9*
+## 默写背诵 Dictation
+
+> 以下为本章必须能默写的中英对照；网站「默写 Recite」Tab 提供自测模式。
+
+| # | 默写提示 Prompt | 标准答案 Answer |
+|---|----------------|----------------|
+| 1 | RPC definition. · RPC 定义。 | **EN:** Remote Procedure Call — invoke a procedure on a remote host as if it were local. / **中文：** 远程过程调用——像调用本地函数一样调用远程主机上的过程。 |
+| 2 | Marshalling definition. · Marshalling 定义。 | **EN:** Convert in-memory data structures to a canonical byte stream for transmission (unmarshalling reverses). / **中文：** 将内存数据结构转换为规范字节流以便传输（unmarshalling 反向转换）。 |
+| 3 | Client stub vs server stub roles. · Client stub vs server stub 角色。 | **EN:** Client stub marshals args, sends request, unmarshals result; server stub unmarshals args, calls procedure, marshals result. / **中文：** Client stub：marshal 参数、发请求、unmarshal 结果；Server stub：unmarshal 参数、调用过程、marshal 结果。 |
+| 4 | Protocol design — four core questions (slide p.9). · 协议设计——四个核心问题（课件 p.9）。 | **EN:** (1) What does interaction look like? (2) What data to communicate? (3) What format? (4) How handle errors? / **中文：** （1）交互模式？（2）传什么数据？（3）什么格式？（4）如何处理错误？ |
+| 5 | RPC challenges — pointers and global variables (slide p.13). · RPC 挑战——指针与全局变量（课件 p.13）。 | **EN:** Pointers cannot be passed directly across address spaces; global variables are not shared between client and server. / **中文：** 指针不能跨地址空间直接传递；全局变量在客户端与服务器间不共享。 |
+| 6 | Protocol deployment questions (slide p.22 exact). · 协议部署问题（课件 p.22 原文）。 | **EN:** How finished before deploy? What happens on new spec release? How to test thoroughly before public release? / **中文：** 多成熟才能上线？新 spec 发布怎么办？公开发布前如何充分测试？ |
+| 7 | TCP sync recap — SYN/ACK patterns (slide p.4–5). · TCP 同步回顾——SYN/ACK 模式（课件 p.4–5）。 | **EN:** Connection request: SYN=1, ACK=0; reply: SYN=1, ACK=1; third segment: ACK=1. / **中文：** 连接请求：SYN=1, ACK=0；回复：SYN=1, ACK=1；第三段：ACK=1。 |
+| 8 | TCP close recap — FIN directional (slide p.4–5). · TCP 关闭回顾——FIN 方向性（课件 p.4–5）。 | **EN:** FIN closes one direction; other direction may still send data; typically 4 segments (FIN+ACK each way). / **中文：** FIN 关闭一个方向；另一方向仍可发数据；通常 4 段（各向 FIN+ACK）。 |
+| 9 | RST vs FIN recap (slide p.4–5). · RST vs FIN 回顾（课件 p.4–5）。 | **EN:** FIN = orderly shutdown; RST = hard close when invalid data, crash, or no open connection. / **中文：** FIN = 有序关闭；RST = 无效数据、崩溃或无连接时的硬关闭。 |
+| 10 | Cumulative ACK recap. · 累积 ACK 回顾。 | **EN:** ACK number = next byte expected; does not advance past a gap even if later bytes arrived. / **中文：** ACK 号 = 期望下一字节；中间有 gap 时不前进，即使后续字节已到。 |
+| 11 | RPC — client thread suspended during call. · RPC——调用期间客户端线程。 | **EN:** Client thread is suspended while server executes; resumes when result returns. / **中文：** 客户端线程在服务器执行期间挂起；结果返回后恢复。 |
+| 12 | Protocol design — start simple, iterate. · 协议设计——从简开始迭代。 | **EN:** Begin with minimal functionality (e.g. one RPC function), then extend — do not lock API too early. / **中文：** 从最小功能开始（如单个 RPC 函数），再逐步扩展——不要过早锁定 API。 |
+

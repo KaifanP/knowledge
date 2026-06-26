@@ -720,3 +720,22 @@ Windows使用多级反馈队列：
 3. **画图辅助**：画出调度执行的时间线图
 4. **比较算法**：比较不同算法的性能特征
 5. **重点复习**：MLFQ的工作原理和优势
+## 默写背诵 Dictation
+
+> 以下为本章必须能默写的中英对照；网站「默写 Recite」Tab 提供自测模式。
+
+| # | 默写提示 Prompt | 标准答案 Answer |
+|---|----------------|----------------|
+| 1 | Turnaround time and response time formulas. · 周转时间与响应时间公式。 | **EN:** Turnaround = completion time − arrival time; response = time of first run − arrival time. / **中文：** 周转时间 = 完成时间 − 到达时间；响应时间 = 第一次运行时间 − 到达时间。 |
+| 2 | SJF example — average turnaround (slide p.16). · SJF 例子——平均周转时间（课件 p.16）。 | **EN:** Processes D(3), A(5), C(7), B(11) → turnarounds 3, 8, 15, 26 → TAVG = (3+8+15+26)/4 = 13. / **中文：** 进程 D(3)、A(5)、C(7)、B(11) → 周转 3、8、15、26 → 平均 = (3+8+15+26)/4 = 13。 |
+| 3 | Define convoy effect in FCFS (slide p.15 full wording). · 定义 FCFS 的 convoy effect（课件 p.15 原文）。 | **EN:** When a long CPU-bound process runs, all short I/O-bound processes wait behind it, leaving I/O devices idle. / **中文：** 长 CPU 密集型进程运行时，所有短 I/O 密集型进程在其后等待，导致 I/O 设备空闲。 |
+| 4 | Round Robin — what happens when time quantum is too small? · RR 时间片过小会怎样？ | **EN:** Context-switch overhead dominates; throughput drops. / **中文：** 上下文切换开销占主导，吞吐量下降。 |
+| 5 | SJF optimality for turnaround (slide p.17). · SJF 对周转时间的最优性（课件 p.17）。 | **EN:** For a given job set, SJF minimises average turnaround time (if burst times known). / **中文：** 对给定作业集，SJF 最小化平均周转时间（若已知 burst time）。 |
+| 6 | Preemptive vs non-preemptive scheduling. · 抢占式 vs 非抢占式调度。 | **EN:** Preemptive: OS can remove a running process (timer interrupt, higher priority); non-preemptive: process runs until it blocks or finishes. / **中文：** 抢占式：OS 可剥夺运行中进程；非抢占式：进程运行到阻塞或结束才切换。 |
+| 7 | MLFQ quanta per priority queue (slide p.26–27). · MLFQ 各优先级队列的时间片（课件 p.26–27）。 | **EN:** Priority 4 (highest): 2 quanta; Priority 3: 4; Priority 2: 8; Priority 1 (lowest): 16. New processes start at highest priority; use up quanta → move down. / **中文：** Priority 4（最高）：2；Priority 3：4；Priority 2：8；Priority 1（最低）：16。新进程从最高优先级队列开始，用完配额则降级。 |
+| 8 | MLFQ — what if a process blocks before using its quantum? · MLFQ——进程在时间片用完前阻塞会怎样？ | **EN:** If a process blocks within its quantum, it stays in the same queue (does not demote). / **中文：** 若进程在时间片内阻塞，留在当前队列（不降级）。 |
+| 9 | Fairness in scheduling — slide wording. · 调度公平性的课件表述。 | **EN:** Comparable processes should get comparable service. / **中文：** 可比的进程应获得可比的服务（comparable processes get comparable service）。 |
+| 10 | Priority scheduling — starvation risk (slide p.25). · 优先级调度——饥饿风险（课件 p.25）。 | **EN:** Low-priority processes may never get CPU; aging can gradually raise priority over waiting time. / **中文：** 低优先级进程可能永远得不到 CPU；aging 可随等待时间逐渐提高优先级。 |
+| 11 | Process context switch — why flush TLB? · 进程 context switch——为何 flush TLB？ | **EN:** Process switch loads a new page table; TLB entries from the old process are invalid and must be flushed. / **中文：** 进程切换加载新页表；旧进程的 TLB 项失效，必须 flush TLB。 |
+| 12 | Blocked process re-queued — FCFS/RR with I/O. · 带 I/O 阻塞时，进程返回 ready 队列排到何处？ | **EN:** FCFS: return to tail of ready queue; RR: treated as new arrival at tail (unused quantum not restored). / **中文：** FCFS：回到 ready 队列尾部；RR：当作新到达排到队尾（未用完的时间片不补）。 |
+

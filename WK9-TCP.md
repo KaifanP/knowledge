@@ -377,3 +377,22 @@ TCP 是互联网的核心协议，理解其工作机制对于网络编程和故�
 ---
 
 *课件来源: COMP30023 2026 S1 WK9*
+## 默写背诵 Dictation
+
+> 以下为本章必须能默写的中英对照；网站「默写 Recite」Tab 提供自测模式。
+
+| # | 默写提示 Prompt | 标准答案 Answer |
+|---|----------------|----------------|
+| 1 | TCP vs UDP — slide analogy. · TCP vs UDP——课件类比。 | **EN:** UDP is like text messages; TCP is like a phone call (connection-oriented, ongoing session). / **中文：** UDP 像短信；TCP 像电话（面向连接、持续会话）。 |
+| 2 | Three-way handshake — SYN bit patterns (slide p.22–28). · 三次握手——SYN 位模式（课件 p.22–28）。 | **EN:** Client: SYN=1, ACK=0; Server: SYN=1, ACK=1; Client: ACK=1 — exchange initial sequence numbers. / **中文：** Client: SYN=1, ACK=0；Server: SYN=1, ACK=1；Client: ACK=1——交换初始序号。 |
+| 3 | TCP sequence number field purpose. · TCP 序号字段用途。 | **EN:** Byte offset in sender's byte stream — first data byte in segment. / **中文：** 发送方字节流中的字节偏移——段中第一个数据字节的序号。 |
+| 4 | Receive window (rwnd) — meaning. · 接收窗口（rwnd）含义。 | **EN:** Bytes the receiver is willing to accept — flow control limit on sender. / **中文：** 接收方愿意接收的字节数——对发送方的流量控制上限。 |
+| 5 | Sliding window invariant (slide p.52). · 滑动窗口不变式（课件 p.52）。 | **EN:** LastByteSent − LastByteAcked ≤ ReceiveWindowAdvertised. / **中文：** LastByteSent − LastByteAcked ≤ ReceiveWindowAdvertised。 |
+| 6 | ACK number meaning — cumulative. · ACK 号含义——累积确认。 | **EN:** Next byte sequence number the receiver expects (cumulative ACK). / **中文：** 接收方期望的下一个字节序号（累积确认）。 |
+| 7 | Four-way connection teardown. · 四次挥手关闭连接。 | **EN:** FIN → ACK → FIN → ACK (each direction closed separately). / **中文：** FIN → ACK → FIN → ACK（每个方向单独关闭）。 |
+| 8 | FIN retransmit behaviour (slide p.31). · FIN 重传行为（课件 p.31）。 | **EN:** Sender retransmits unacknowledged segments including FIN if ACK not received. / **中文：** 若收不到 ACK，发送方重传未确认段（包括 FIN）。 |
+| 9 | RST vs FIN (slide p.32). · RST vs FIN（课件 p.32）。 | **EN:** FIN = orderly shutdown; RST = hard close — immediately terminate, no further listening. / **中文：** FIN = 有序关闭；RST = 硬关闭——立即终止，不再监听。 |
+| 10 | SYN segment consumes one sequence number? · SYN 段是否占用一个序号？ | **EN:** Yes — SYN counts as one byte in the sequence space. / **中文：** 是——SYN 在序号空间中占一个字节。 |
+| 11 | Byte trace — ACK:11 Window:40 then WindowUpdate Window:50 (slide p.43–50). · 字节追踪——ACK:11 Window:40 后 WindowUpdate Window:50（课件 p.43–50）。 | **EN:** After bytes 1–10 received: ACK:11, Window:40; after app reads 10 B: ACK:11, Window:50 (WindowUpdate). / **中文：** 收到 1–10 后：ACK:11, Window:40；应用读走 10 B 后：ACK:11, Window:50（WindowUpdate）。 |
+| 12 | TCP buffering trade-off (slide p.13). · TCP 缓冲权衡（课件 p.13）。 | **EN:** Larger buffers reduce header overhead but increase delay. / **中文：** 更大缓冲减少首部开销但增加延迟。 |
+

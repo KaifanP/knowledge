@@ -465,3 +465,22 @@ TLB                     FIFO, Second-chance, LRU, Aging
 3. **理解Page Table Entry的各个bit：** Present/Absent、Referenced、Modified bit的作用和在page fault处理中的使用。
 4. **对比分析：** 对比Base&Limit vs Paging、各种页面置换算法的优缺点。
 5. **计算题：** 练习计算内部碎片大小、逻辑地址结构（page number + offset）、TLB命中率等。
+## 默写背诵 Dictation
+
+> 以下为本章必须能默写的中英对照；网站「默写 Recite」Tab 提供自测模式。
+
+| # | 默写提示 Prompt | 标准答案 Answer |
+|---|----------------|----------------|
+| 1 | Early multiprogramming — swap on every context switch (slide p.3). · 早期多道程序——每次 context switch 做什么（课件 p.3）？ | **EN:** Only the running process stays in RAM; each context switch fully swaps the current process out to disk and the next one in. / **中文：** 只有运行中进程在 RAM；每次 context switch 把当前进程整进程换出磁盘、把下一个换进来。 |
+| 2 | Logical address split in paging. · 分页系统中逻辑地址如何拆分？ | **EN:** Page number + offset within page. / **中文：** 页号（page number）+ 页内偏移（offset）。 |
+| 3 | Paging trace — LA0→PA20, LA5→PA25 (slide p.24). · 分页演算——LA0→PA20，LA5→PA25（课件 p.24）。 | **EN:** Page size 4: LA0 = page 0 offset 0, frame 5 → PA20; LA5 = page 1 offset 1, frame 6 → PA25. / **中文：** 页大小 4：LA0 = 页 0 偏移 0，帧 5 → PA20；LA5 = 页 1 偏移 1，帧 6 → PA25。 |
+| 4 | Offset example: logical 9, page size 4. · 例子：逻辑地址 9，页大小 4，offset 是多少？ | **EN:** 9 mod 4 = 1. / **中文：** 9 mod 4 = 1。 |
+| 5 | Base/limit address translation. · Base/limit 地址翻译公式。 | **EN:** If logical address < limit: physical = logical + base; else trap (protection fault). / **中文：** 若逻辑地址 < limit：物理地址 = 逻辑地址 + base；否则触发保护异常。 |
+| 6 | Internal fragmentation example (slide p.28). · 内部碎片例子（课件 p.28）。 | **EN:** Page size 4 B, process 13 B → needs 4 pages = 16 B → internal fragmentation = 16 − 13 = 3 B. / **中文：** 页大小 4 B，进程 13 B → 需 4 页 = 16 B → 内部碎片 = 16 − 13 = 3 B。 |
+| 7 | Page fault — OS handling steps (slide p.30). · Page fault——OS 处理步骤（课件 p.30）。 | **EN:** (1) Evict a page if no free frame (write back if modified); (2) load required page from disk; (3) update page table; (4) re-execute faulting instruction. / **中文：** （1）无空闲帧则驱逐一页（modified 则写回）；（2）从磁盘加载所需页；（3）更新页表；（4）重新执行触发缺页的指令。 |
+| 8 | PTE fields — present, referenced, modified (slide p.29). · PTE 字段——present、referenced、modified（课件 p.29）。 | **EN:** Present = in RAM or on disk; Referenced set on access; Modified set on write (must write back if evicted). / **中文：** Present = 在 RAM 或磁盘；Referenced 访问时置位；Modified 写入时置位（驱逐须写回）。 |
+| 9 | Temporal vs spatial locality (slide p.33). · 时间局部性 vs 空间局部性（课件 p.33）。 | **EN:** Temporal = recently used data likely reused soon; spatial = nearby addresses likely accessed together. / **中文：** 时间局部性 = 刚用的数据很快再用；空间局部性 = 相邻地址很可能一起访问。 |
+| 10 | TLB purpose (slide p.44). · TLB 的作用（课件 p.44）。 | **EN:** Cache recent page-table translations to avoid a full page-table walk on every memory access. / **中文：** 缓存最近页表翻译，避免每次内存访问都做完整页表查找。 |
+| 11 | Second-chance at time 20 — page A with R=1 (slide p.35). · Second-chance：时刻 20 缺页，队头页 A 的 R=1（课件 p.35）。 | **EN:** Do not evict A; clear R to 0 and move A to tail; check new head instead. / **中文：** 不驱逐 A；R 清 0 并移到队尾；改检查新队头。 |
+| 12 | Aging trace — X1000000 → 11000000 (slide p.38–40). · Aging 演算——X1000000 → 11000000（课件 p.38–40）。 | **EN:** Previous pattern X1000000, R=1 this tick → shift right → append R as MSB → 11000000; lowest value = victim. / **中文：** 上一 tick X1000000，本 tick R=1 → 右移 → 追加 R 为最高位 → 11000000；值最小者被驱逐。 |
+

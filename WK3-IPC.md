@@ -825,3 +825,22 @@ void transfer(Account *from, Account *to, int amount) {
 3. **问题识别**：重点识别竞态条件、临界区和互斥失败；死锁只需背景了解
 4. **解决方案**：理解不同同步机制的优缺点
 5. **重点复习**：TSL实现、忙等待vs阻塞；死锁条件不作为考试重点
+## 默写背诵 Dictation
+
+> 以下为本章必须能默写的中英对照；网站「默写 Recite」Tab 提供自测模式。
+
+| # | 默写提示 Prompt | 标准答案 Answer |
+|---|----------------|----------------|
+| 1 | Define race condition. · 定义 race condition。 | **EN:** Outcome depends on the interleaving of accesses to shared mutable state by concurrent threads. / **中文：** 结果取决于并发线程对共享可变状态访问的交错顺序。 |
+| 2 | Critical region vs mutual exclusion. · Critical region 与 mutual exclusion 的关系。 | **EN:** Critical region = code accessing shared data; mutual exclusion = property that only one thread is in its critical region at a time. / **中文：** Critical region = 访问共享数据的代码段；mutual exclusion = 同一时刻只有一个线程在其 critical region 内的性质。 |
+| 3 | Four conditions for a good mutual-exclusion solution. · 良好互斥解的四个条件。 | **EN:** (1) Mutual exclusion; (2) no assumptions about CPU speed/count; (3) no blocking outside CR (progress); (4) no starvation. / **中文：** （1）互斥；（2）不对 CPU 速度/数量做假设；（3）临界区外不阻塞他人（progress）；（4）无饥饿。 |
+| 4 | Why is a plain lock variable unsafe? · 普通 lock 变量为何不安全？ | **EN:** Test-and-set is not atomic — two threads can both see unlocked and enter the critical region. / **中文：** 检测-设置不是原子操作——两线程可能都看到 unlocked 并进入 critical region。 |
+| 5 | Busy waiting definition (slide wording). · Busy waiting 的课件原文表述。 | **EN:** Busy waiting — spin until lock becomes 0; repeatedly test the lock without yielding. / **中文：** Busy waiting——自旋直到锁变为 0；反复检测锁而不让出 CPU。 |
+| 6 | TSL (Test-and-Set Lock) — one-line mechanism. · TSL 一句话机制。 | **EN:** Atomically read old value and set lock to 1 in one indivisible hardware instruction. / **中文：** 一条不可分割的硬件指令原子地读出旧值并将锁置 1。 |
+| 7 | Strict alternation failure — exact slide quote (p.35). · 严格交替失败——课件原文（p.35）。 | **EN:** Thread B is blocking Thread A … but Thread B is outside of the critical region. / **中文：** Thread B is blocking Thread A … but Thread B is outside of the critical region（B 在临界区外仍阻塞 A）。 |
+| 8 | Define context switch. · 定义 context switch。 | **EN:** OS stops one thread and starts another — save/restore register state (PC, SP, registers). / **中文：** OS 停一线程、启另一线程——保存/恢复寄存器状态（PC、SP、寄存器）。 |
+| 9 | Busy-waiting lock vs blocking mutex (slide p.20). · 忙等待锁 vs 阻塞 mutex（课件 p.20）。 | **EN:** Busy waiting = spin until lock free; blocking mutex = thread sleeps until lock available (releases CPU). / **中文：** 忙等待 = 自旋直到锁可用；阻塞 mutex = 线程挂起直到锁可用（释放 CPU）。 |
+| 10 | Stack pop race — what goes wrong? (slide p.7–8). · 栈 pop 竞态——错在哪？（课件 p.7–8）。 | **EN:** Two threads both see stack non-empty, both pop — second pop on empty stack violates program logic. / **中文：** 两线程都看到栈非空，都 pop——第二次 pop 空栈，违反程序逻辑。 |
+| 11 | Define priority inversion. · 定义 priority inversion。 | **EN:** High-priority thread waits for a lock held by low-priority thread; low-priority thread cannot run (e.g. busy-waiting high-priority thread blocks it). / **中文：** 高优先级线程等待低优先级线程持有的锁；低优先级线程无法运行（如高优先级忙等待阻塞了它）。 |
+| 12 | Read-modify-write race — counter example. · Read-modify-write 竞态——counter 例子。 | **EN:** Two threads both read counter=5, both write 6 — one update lost. / **中文：** 两线程都读到 counter=5，都写 6——一次更新丢失。 |
+

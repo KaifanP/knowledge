@@ -358,3 +358,22 @@ OSPF是本课件提到的Link State Routing实现；BGP不在本课件核心范�
 ---
 
 *课件来源: COMP30023 2026 S1 WK11*
+## 默写背诵 Dictation
+
+> 以下为本章必须能默写的中英对照；网站「默写 Recite」Tab 提供自测模式。
+
+| # | 默写提示 Prompt | 标准答案 Answer |
+|---|----------------|----------------|
+| 1 | Forwarding vs routing. · Forwarding vs routing。 | **EN:** Forwarding = data plane, move packet to next hop using table; routing = control plane, build the table. / **中文：** Forwarding = 数据平面，查表转下一跳；routing = 控制平面，构建转发表。 |
+| 2 | Link State Routing — five steps (slide p.42). · 链路状态路由——五步（课件 p.42）。 | **EN:** (1) Discover neighbours; (2) set link costs; (3) construct link-state packet; (4) reliable flooding to all routers; (5) run Dijkstra locally. / **中文：** （1）发现邻居；（2）设置链路代价；（3）构造链路状态包；（4）可靠洪泛到所有路由器；（5）本地运行 Dijkstra。 |
+| 3 | OSPF — what is it? · OSPF 是什么？ | **EN:** Open Shortest Path First — most common link-state routing protocol (within a domain). / **中文：** Open Shortest Path First——最常见的链路状态路由协议（域内）。 |
+| 4 | Dijkstra early termination condition (slide p.41). · Dijkstra 提前终止条件（课件 p.41）。 | **EN:** Stop when destination node has smallest tentative distance (e.g. D=10 is minimum). / **中文：** 当目的节点 tentative 距离最小时停止（如 D=10 已为最小）。 |
+| 5 | Flooding — duplicate control (slide p.14). · Flooding 如何控制重复（课件 p.14）。 | **EN:** Sequence numbers / record seen packets — forward each packet at most once per link. / **中文：** 序号/记录已见分组——每条链路最多转发一次。 |
+| 6 | IPv6 address length (slide p.2). · IPv6 地址长度（课件 p.2）。 | **EN:** 128 bits. / **中文：** 128 位。 |
+| 7 | IPv6 Hop limit field (slide p.3). · IPv6 Hop limit 字段（课件 p.3）。 | **EN:** Same role as IPv4 TTL — decremented each hop, drop at zero. / **中文：** 同 IPv4 TTL——每跳减 1，为零则丢弃。 |
+| 8 | IPv4-mapped IPv6 address form (slide p.4). · IPv4-mapped IPv6 地址形式（课件 p.4）。 | **EN:** ::ffff:192.31.2.46 — IPv4 embedded in low 32 bits. / **中文：** ::ffff:192.31.2.46——IPv4 嵌入低 32 位。 |
+| 9 | Compress IPv6: 8000:0000:0000:0000:0123:4567:89AB:CDEF (slide p.4). · 压缩 IPv6（课件 p.4）。 | **EN:** 8000::123:4567:89AB:CDEF. / **中文：** 8000::123:4567:89AB:CDEF。 |
+| 10 | Link-state packet contents. · 链路状态包内容。 | **EN:** Router ID, sequence number, age, list of neighbours and costs. / **中文：** 路由器 ID、序号、age、邻居列表及代价。 |
+| 11 | Static vs adaptive routing. · 静态 vs 自适应路由。 | **EN:** Static = manually configured, does not adapt; adaptive = updates as topology changes. / **中文：** 静态 = 手工配置、不随拓扑变；自适应 = 拓扑变化时更新。 |
+| 12 | Sink tree from shortest paths. · 最短路径汇树。 | **EN:** Optimal routes from all routers to a destination form a sink tree (no loops). / **中文：** 所有路由器到同一目的的最优路由形成汇树（无环）。 |
+

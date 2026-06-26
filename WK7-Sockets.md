@@ -342,3 +342,22 @@ Socket API (本课件)
 3. **掌握5元组：** 理解Socket如何被唯一标识。
 4. **理解阻塞/非阻塞：** 能够描述两种模式的区别和适用场景。
 5. **掌握TLS概念，淡化QUIC：** TLS在socket之上提供加密；QUIC属于非考试背景，不背细节。
+## 默写背诵 Dictation
+
+> 以下为本章必须能默写的中英对照；网站「默写 Recite」Tab 提供自测模式。
+
+| # | 默写提示 Prompt | 标准答案 Answer |
+|---|----------------|----------------|
+| 1 | Define socket — slide doorway analogy (p.6). · 定义 socket——课件 doorway 类比（p.6）。 | **EN:** Socket is the doorway between application layer and transport layer — user-space code sends messages to kernel network code. / **中文：** Socket 是应用层与传输层之间的门——用户空间代码向内核网络代码发消息。 |
+| 2 | TCP connection 5-tuple. · TCP 连接的五元组。 | **EN:** Protocol, local IP, local port, remote IP, remote port. / **中文：** 协议、本地 IP、本地端口、远端 IP、远端端口。 |
+| 3 | Server socket setup order (four calls). · 服务器 socket 建立顺序（四个调用）。 | **EN:** socket() → bind() → listen() → accept(). / **中文：** socket() → bind() → listen() → accept()。 |
+| 4 | Client TCP connect — main calls. · 客户端 TCP 连接主要调用。 | **EN:** socket() then connect() to server address/port. / **中文：** socket() 之后 connect() 到服务器地址/端口。 |
+| 5 | Listening socket vs connected socket (slide p.17–18). · Listening socket vs connected socket（课件 p.17–18）。 | **EN:** Listening socket = half socket (protocol, local IP, port only); connected socket = full 5-tuple for read/write. / **中文：** Listening socket = 半 socket（仅协议、本地 IP、端口）；connected socket = 完整五元组，用于读写。 |
+| 6 | listen(listenfd, 10) — second argument. · listen(listenfd, 10) 第二个参数含义。 | **EN:** Maximum backlog — up to 10 pending connections queued before accept(). / **中文：** Backlog 上限——accept 前最多 10 个待完成连接排队。 |
+| 7 | Blocking read behaviour. · Blocking read 的行为。 | **EN:** Process waits until data arrives or an error occurs — does not return immediately with nothing. / **中文：** 进程等待直到有数据到达或出错——不会空读立即返回。 |
+| 8 | File descriptor after accept(). · accept() 返回什么？ | **EN:** A new connected socket file descriptor for communicating with that specific client. / **中文：** 与该特定客户端通信的新 connected socket 文件描述符。 |
+| 9 | Port number purpose — demultiplexing. · 端口号作用——解复用。 | **EN:** Demultiplex incoming segments to the correct application process/socket on a host. / **中文：** 将到达的分段解复用到主机上正确的应用进程/socket。 |
+| 10 | close() on listening socket effect. · close() 关闭 listening socket 的效果。 | **EN:** Stops accepting new connections; existing connected sockets may remain open until closed separately. / **中文：** 停止接受新连接；已有 connected socket 可继续直到单独关闭。 |
+| 11 | Server vs client role. · Server vs client 角色。 | **EN:** Server passively waits (bind/listen/accept); client actively initiates connect(). / **中文：** Server 被动等待（bind/listen/accept）；client 主动 connect()。 |
+| 12 | Socket identified by file descriptor. · Socket 如何标识？ | **EN:** In UNIX, socket is accessed via a file descriptor (integer) through system calls read/write/close. / **中文：** UNIX 中 socket 通过文件描述符（整数）经 read/write/close 等系统调用访问。 |
+

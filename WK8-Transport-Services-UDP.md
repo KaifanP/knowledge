@@ -318,3 +318,22 @@ TCP 将在后续课件中介绍，它在 UDP 的基础上提供了可靠性、�
 5. 对比 UDP 和 TCP 的特点（为 WK9 做准备）
 6. 理解 UDP 适用的场景和原因
 7. 了解 UDP 的安全风险（反射 DDoS）
+## 默写背诵 Dictation
+
+> 以下为本章必须能默写的中英对照；网站「默写 Recite」Tab 提供自测模式。
+
+| # | 默写提示 Prompt | 标准答案 Answer |
+|---|----------------|----------------|
+| 1 | Transport vs network layer scope. · 传输层 vs 网络层范围。 | **EN:** Network = host-to-host; transport = process-to-process using ports. / **中文：** 网络层 = 主机到主机；传输层 = 用端口实现进程到进程。 |
+| 2 | Well-known, registered, dynamic port ranges. · Well-known、registered、dynamic 端口范围。 | **EN:** 0–1023 well-known; 1024–49151 registered; 49152–65535 dynamic/ephemeral. / **中文：** 0–1023 well-known；1024–49151 registered；49152–65535 dynamic/ephemeral。 |
+| 3 | IANA port registry URL (slide p.15). · IANA 端口注册表 URL（课件 p.15）。 | **EN:** http://www.iana.org/assignments/port-numbers / **中文：** http://www.iana.org/assignments/port-numbers |
+| 4 | UDP header fields (four main). · UDP 首部四个主要字段。 | **EN:** Source port, destination port, length, checksum. / **中文：** 源端口、目的端口、长度、校验和。 |
+| 5 | UDP checksum — pseudo-header (slide p.20). · UDP 校验和——伪首部（课件 p.20）。 | **EN:** Checksum covers UDP segment plus pseudo-header (src/dst IP, protocol, length). / **中文：** 校验和覆盖 UDP 段加伪首部（源/目的 IP、协议、长度）。 |
+| 6 | Multiplexing at sender. · 发送端 multiplexing。 | **EN:** Gathering data from multiple application sockets and passing to network layer with proper headers. / **中文：** 从多个应用 socket 收集数据，加首部交给网络层。 |
+| 7 | Demultiplexing at receiver. · 接收端 demultiplexing。 | **EN:** Delivering incoming segments to correct socket using destination port (and IP for UDP). / **中文：** 用目的端口（UDP 还看 IP）将到达分段交给正确 socket。 |
+| 8 | 3-tuple vs 5-tuple (slide p.14). · 3 元组 vs 5 元组（课件 p.14）。 | **EN:** Full address = 5-tuple (protocol, local IP, local port, remote IP, remote port); TCP listen/most UDP sockets use 3-tuple (local IP, local port). / **中文：** 完整地址 = 5 元组；TCP listen/多数 UDP socket 用 3 元组（本地 IP、本地端口）。 |
+| 9 | UDP connectionless — meaning. · UDP 无连接的含义。 | **EN:** No handshake or connection state — each datagram is independent. / **中文：** 无握手或连接状态——每个 datagram 独立。 |
+| 10 | When prefer UDP over TCP? (two cases). · 何时选 UDP 而非 TCP？（两例） | **EN:** Simple request-response (DNS) and real-time apps tolerating loss (VoIP). / **中文：** 简单请求-响应（DNS）与可容忍丢包的实时应用（VoIP）。 |
+| 11 | UDP strengths and weaknesses (slide p.23). · UDP 优缺点（课件 p.23）。 | **EN:** Strengths: simple, low header overhead, no forced retransmission wait, multicast. Weaknesses: no flow/error/congestion control. / **中文：** 优点：简单、首部小、不强制等重传、支持 multicast。缺点：无流控/差错控制/拥塞控制。 |
+| 12 | Memcached reflected DDoS attack (slide p.25). · Memcached 反射 DDoS（课件 p.25）。 | **EN:** Attacker spoofs victim IP; small UDP query triggers huge response to victim (amplification). / **中文：** 攻击者伪造受害者 IP；小 UDP 查询触发大响应打向受害者（放大攻击）。 |
+

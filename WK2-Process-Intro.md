@@ -863,3 +863,22 @@ int pthread_join(
 3. **编程实践**：编写使用fork()和PThreads的程序
 4. **做练习题**：通过练习题巩固知识
 5. **重点复习**：进程状态转换、fork()机制、线程共享和同步
+## 默写背诵 Dictation
+
+> 以下为本章必须能默写的中英对照；网站「默写 Recite」Tab 提供自测模式。
+
+| # | 默写提示 Prompt | 标准答案 Answer |
+|---|----------------|----------------|
+| 1 | Define process (slide wording). · 用课件原文定义 process。 | **EN:** A running program. / **中文：** 运行中的程序（A running program）。 |
+| 2 | List the three basic process states. · 列出进程的三种基本状态。 | **EN:** Running, Ready, Blocked. / **中文：** Running（运行）、Ready（就绪）、Blocked（阻塞）。 |
+| 3 | When does a running process enter Blocked state? · 运行中的进程何时进入 Blocked？ | **EN:** When it waits for an event it cannot complete immediately (e.g. disk I/O, waiting for input). / **中文：** 等待无法立即完成的事件时（如磁盘 I/O、等待输入）。 |
+| 4 | PCB fields (slide p.14). · PCB 字段（课件 p.14）。 | **EN:** PID, parent process, memory management info, file descriptors, priority, used CPU time; execution context: PC, SP, registers. / **中文：** PID、父进程、内存管理信息、文件描述符、优先级、已用 CPU 时间；执行上下文：PC、SP、寄存器。 |
+| 5 | After fork() — same vs different (slide p.9). · fork() 后相同与不同（课件 p.9）。 | **EN:** Different address spaces; same memory image, PC, registers, and open file handles. / **中文：** 不同地址空间；相同内存映像、PC、寄存器、打开文件句柄。 |
+| 6 | What does exec() do? · exec() 做什么？ | **EN:** Replaces the current process image with a new program; typically called after fork(). / **中文：** 用新程序替换当前进程映像；通常在 fork() 之后调用。 |
+| 7 | Ready → Running — who decides? · Ready → Running 由谁决定？ | **EN:** The OS scheduler selects a ready process/thread and dispatches it to the CPU. / **中文：** OS 调度器从 ready 队列选出进程/线程并分派到 CPU。 |
+| 8 | Define thread. · 定义 thread。 | **EN:** A unit of execution within a process. / **中文：** 进程内的执行单元（unit of execution within a process）。 |
+| 9 | Where is an idle thread's PC and SP stored? · 未运行线程的 PC 和 SP 存在哪里？ | **EN:** In its TCB in memory; the CPU's PC/SP point at whichever thread is currently running. / **中文：** 存在内存中该线程的 TCB 里；CPU 的 PC/SP 指向当前正在运行的线程。 |
+| 10 | Threads share vs own — code, data, heap, stack. · 线程共享什么、各自拥有什么？ | **EN:** Share code, data, and heap; each thread has its own stack. / **中文：** 共享 code、data、heap；每个线程拥有独立 stack。 |
+| 11 | Thread vs process — which is lighter to create? · 创建 thread 还是 process 更轻？ | **EN:** Thread — it shares the address space and does not require a full resource duplicate. / **中文：** Thread 更轻——共享地址空间，无需复制全部资源。 |
+| 12 | Two benefits of multithreading (slide p.22). · 多线程的两个好处（课件 p.22）。 | **EN:** (1) Overlap I/O with computation — one thread waits while another uses CPU; (2) parallel speedup on multi-core (e.g. each thread processes a segment of a large array). / **中文：** （1）I/O 与计算重叠——一线程等待 I/O 时另一线程用 CPU；（2）多核并行加速（如大数组分段并行处理）。 |
+

@@ -308,3 +308,22 @@ NAT 是互联网的重要组成部分，理解它有助于网络编程和故障�
 ---
 
 *课件来源: COMP30023 2026 S1 WK12*
+## 默写背诵 Dictation
+
+> 以下为本章必须能默写的中英对照；网站「默写 Recite」Tab 提供自测模式。
+
+| # | 默写提示 Prompt | 标准答案 Answer |
+|---|----------------|----------------|
+| 1 | NAT main purpose. · NAT 主要目的。 | **EN:** Allow many private hosts to share one or few public IP addresses. / **中文：** 让多台私有主机共享一个或少数公网 IP。 |
+| 2 | RFC1918 private ranges (three) (slide p.4–5). · RFC1918 三个私有地址范围（课件 p.4–5）。 | **EN:** 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16. / **中文：** 10.0.0.0/8、172.16.0.0/12、192.168.0.0/16。 |
+| 3 | NAT outbound — replace IP+port with table index (slide p.7). · NAT 出站——用表索引替换 IP+端口（课件 p.7）。 | **EN:** Replace private source IP with public IP; replace source port with NAT table entry index (stores original IP:port). / **中文：** 私有源 IP 换为公网 IP；源端口换为 NAT 表项索引（存原始 IP:port）。 |
+| 4 | NAT — checksum recalculation (slide p.7). · NAT——校验和重算（课件 p.7）。 | **EN:** IP and TCP/UDP checksums must be recalculated after header fields change. / **中文：** 首部字段改变后须重新计算 IP 与 TCP/UDP 校验和。 |
+| 5 | NAT is stateful — meaning. · NAT 有状态——含义。 | **EN:** NAT box maintains mapping table for active flows — inbound packets matched to entries. / **中文：** NAT 设备维护活跃流的映射表——入站包须匹配表项。 |
+| 6 | NAT is not a firewall (slide p.9). · NAT 不是防火墙（课件 p.9）。 | **EN:** NAT translates addresses; firewall filters by policy — NAT provides obscurity not full security. / **中文：** NAT 做地址翻译；防火墙按策略过滤——NAT 仅提供隐蔽性而非完整安全。 |
+| 7 | End-to-end connectivity break (slide p.8). · 端到端连接性破坏（课件 p.8）。 | **EN:** Private hosts can receive inbound packets only after outbound flow created mapping (unless port forwarding). / **中文：** 私有主机只有出站流建立映射后才能收 inbound 包（除非端口转发）。 |
+| 8 | Inbound connection to private host — NAT issue (slide p.8–9). · 外部主动连内网主机——NAT 问题（课件 p.8–9）。 | **EN:** No mapping exists unless port forwarding or similar configured. / **中文：** 无映射表项除非配置端口转发等。 |
+| 9 | Layered debugging — four guiding questions (slide p.13–16). · 分层调试——四个引导问题（课件 p.13–16）。 | **EN:** (1) Which part of user experience failed? (2) What to ask colleagues? (3) What could fail at each location? (4) How to test each hypothesis? / **中文：** （1）用户体验哪部分失败？（2）问同事什么？（3）各位置可能什么问题？（4）如何验证假设？ |
+| 10 | ping works but TCP fails — likely layer? · ping 通但 TCP 失败——可能哪层？ | **EN:** Transport or application — IP works; check port/firewall/app. / **中文：** 传输或应用层——IP 可达；查端口/防火墙/应用。 |
+| 11 | DNS resolves but HTTP fails — check what? · DNS 能解析但 HTTP 失败——查什么？ | **EN:** Application/transport — port 80/443 blocked, server down, or wrong Host header. / **中文：** 应用/传输——80/443 被挡、服务器宕机或 Host 头错误。 |
+| 12 | Debug tools by function (slide p.16) and traceroute one hop. · 按功能记调试工具（课件 p.16）与 traceroute 只走一跳。 | **EN:** Know tool functions (ping connectivity, traceroute path, dig DNS, curl HTTP) not every command name. One hop only → local gateway/first router. / **中文：** 记工具功能（ping 连通、traceroute 路径、dig DNS、curl HTTP），不背所有命令名。只走一跳 → 本地网关/第一跳路由器。 |
+

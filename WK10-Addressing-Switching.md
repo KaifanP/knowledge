@@ -394,3 +394,22 @@ IP 地址分配给**接口（interface）**，不是主机。一个主机可以�
 ---
 
 *课件来源: COMP30023 2026 S1 WK10*
+## 默写背诵 Dictation
+
+> 以下为本章必须能默写的中英对照；网站「默写 Recite」Tab 提供自测模式。
+
+| # | 默写提示 Prompt | 标准答案 Answer |
+|---|----------------|----------------|
+| 1 | IP address binds to what? · IP 地址绑定到什么？ | **EN:** An interface (host-router port), not the host as a whole. / **中文：** 接口（interface），而非整台主机。 |
+| 2 | CIDR notation meaning. · CIDR 表示法含义。 | **EN:** a.b.c.d/x — x is prefix length (number of leading network bits). / **中文：** a.b.c.d/x——x 为前缀长度（网络位前导位数）。 |
+| 3 | Number of addresses in /n prefix. · /n 前缀有多少地址？ | **EN:** 2^(32−n) addresses (IPv4). / **中文：** 2^(32−n) 个地址（IPv4）。 |
+| 4 | Network vs broadcast vs host in a subnet. · 子网中网络地址、广播地址与主机地址。 | **EN:** Network = all host bits 0; broadcast = all host bits 1; usable hosts between them. / **中文：** 网络地址 = 主机位全 0；广播 = 主机位全 1；可用主机在中间。 |
+| 5 | Can you infer netmask from IP alone? (slide p.22) · 能否单从 IP 推断 netmask？（课件 p.22） | **EN:** No — netmask/prefix is configuration, not inherent in the address. / **中文：** 不能——掩码/前缀是配置信息，不是地址固有属性。 |
+| 6 | 128.250.73.5 prefix exercise (slide p.21–22). · 128.250.73.5 前缀练习（课件 p.21–22）。 | **EN:** In /16 yes; in 128.250.0.0/24 no (use 128.250.73.0/24); in /17 yes; /17 has 2^15 = 32768 addresses. / **中文：** 在 /16 是；在 128.250.0.0/24 否（属 128.250.73.0/24）；在 /17 是；/17 有 2^15 = 32768 地址。 |
+| 7 | Longest prefix match rule. · 最长前缀匹配规则。 | **EN:** Router chooses forwarding entry with longest matching network prefix. / **中文：** 路由器选择匹配网络前缀最长的转发表项。 |
+| 8 | Route aggregation benefit. · 路由聚合好处。 | **EN:** One forwarding-table entry covers many networks — smaller tables, faster lookup. / **中文：** 一条转发表项覆盖多个网络——表更小、查找更快。 |
+| 9 | Datagram vs virtual circuit network. · Datagram vs 虚电路网络。 | **EN:** Datagram = connectionless per-packet routing; VC = setup phase, fixed path, local VC numbers per hop. / **中文：** Datagram = 无连接逐包路由；VC = 有建立阶段、固定路径、VC 号逐跳本地。 |
+| 10 | Store-and-forward — five steps (slide p.9). · 存储转发——五步（课件 p.9）。 | **EN:** (1) Host sends to router; (2) buffer on arrival, verify checksum; (3) store until out interface free; (4) forward to next router; (5) repeat. / **中文：** （1）主机发到路由器；（2）到达缓冲、校验 checksum；（3）存到出接口空闲；（4）转发下一跳；（5）重复。 |
+| 11 | Private address range 10.0.0.0/8. · 私有地址 10.0.0.0/8 范围。 | **EN:** 10.0.0.0 through 10.255.255.255. / **中文：** 10.0.0.0 至 10.255.255.255。 |
+| 12 | IPv6 basics — 128-bit, hop limit, ::ffff, compression (slide p.26–28). · IPv6 基础——128 位、hop limit、::ffff、压缩（课件 p.26–28）。 | **EN:** 128-bit addresses; hop limit like TTL; IPv4-mapped ::ffff:x.x.x.x; compress longest zero run (8000::123:4567:89AB:CDEF). / **中文：** 128 位地址；hop limit 同 TTL；IPv4-mapped ::ffff:x.x.x.x；压缩最长零段（8000::123:4567:89AB:CDEF）。 |
+
