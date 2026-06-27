@@ -1029,9 +1029,9 @@ export const examFocus = {
         zh: "超时 vs 快速重传",
         asks: "What triggers a timeout retransmit vs a fast retransmit?",
         asksZh: "什么触发超时重传？什么触发快速重传？",
-        distinction: "Timeout = no ACK in time (coarse, strong congestion signal → cwnd = 1); fast retransmit = 3 duplicate ACKs (mild signal → cwnd halved, not 1).",
-        distinctionZh: "超时 = 时间内无 ACK（强信号 → cwnd=1）；快速重传 = 3 个重复 ACK（弱信号 → cwnd 减半，不归 1）。",
-        trap: "Resetting cwnd to 1 on 3 duplicate ACKs — that is the timeout behaviour, not fast retransmit."
+        distinction: "Timeout = no ACK in time (coarse, strong congestion signal). Fast retransmit = 3 duplicate ACKs; Tahoe restarts slow start, while Reno treats it as a milder signal and uses fast recovery.",
+        distinctionZh: "超时 = 时间内无 ACK（强拥塞信号）。快速重传 = 3 个重复 ACK；Tahoe 回到慢启动，Reno 把它当较弱信号并进入 fast recovery。",
+        trap: "Applying Reno's halved-window fast recovery answer to Tahoe — Tahoe does not have fast recovery."
       },
       {
         en: "Tahoe vs Reno",
@@ -1047,8 +1047,8 @@ export const examFocus = {
         zh: "零窗口探测与持续计时器",
         asks: "How does TCP avoid deadlock when the receiver advertises a zero window?",
         asksZh: "接收方通告零窗口时，TCP 如何防死锁？",
-        distinction: "The sender periodically sends a 1-byte probe to elicit a fresh window advertisement, driven by the persist timer (not the retransmit timer).",
-        distinctionZh: "发送方周期性发 1 字节探测，由持续计时器（非重传计时器）驱动，以获取新窗口通告。",
+        distinction: "The sender periodically sends a zero-window probe (0-byte segment in the lecture trace) to elicit a fresh window advertisement, driven by the persist timer (not the retransmit timer).",
+        distinctionZh: "发送方周期性发 zero-window probe（课件 trace 中为 0 字节 segment），由持续计时器（非重传计时器）驱动，以获取新窗口通告。",
         trap: "Using the retransmission timer for probes — that is a different timer with a different purpose."
       },
       {
